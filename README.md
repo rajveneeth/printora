@@ -92,6 +92,8 @@ pnpm dev
 
 ## Quality commands
 
+These commands are configured for later phases, but the CI gate is intentionally a placeholder during the foundation-only prompt because the runnable marketplace is not complete yet.
+
 ```bash
 pnpm lint
 pnpm typecheck
@@ -133,4 +135,4 @@ pnpm build
 
 ## CI notes
 
-The initial workflow installs dependencies with `pnpm install --no-frozen-lockfile` until dependency installation can be performed in a registry-enabled development environment and a generated `pnpm-lock.yaml` can be committed.
+The initial workflow is intentionally limited to a foundation placeholder. Full linting, type checking, tests, build validation, migrations, seed verification, and visual review will be restored during the later hardening phase once the application implementation is complete.

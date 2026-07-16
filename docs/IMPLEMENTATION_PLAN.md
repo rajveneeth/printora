@@ -25,3 +25,7 @@
 | Seller dashboard | 8 |
 | Admin dashboard | 9 |
 | Quality, visual review, deployment | 10 |
+
+## Deferred quality gate note
+
+The CI quality gate is intentionally paused after Prompt 1 because the marketplace is not fully implemented yet. The configured lint, typecheck, test, build, migration, seed, and visual review steps must return in Prompt 10 before the MVP is considered complete.

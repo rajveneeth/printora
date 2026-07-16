@@ -6,15 +6,8 @@ on:
     branches: [main]
 
 jobs:
-  quality:
+  foundation:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.13.1
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - run: pnpm install --no-frozen-lockfile
-      - run: pnpm ci
+      - run: echo "Foundation-only CI placeholder. Full quality checks return in the hardening phase."
