@@ -92,7 +92,7 @@ pnpm dev
 
 ## Quality commands
 
-These commands are configured for later phases, but the CI gate is intentionally a placeholder during the foundation-only prompt because the runnable marketplace is not complete yet.
+These commands are configured for later phases, but the CI gate is intentionally a placeholder during the foundation-only prompt because the runnable marketplace is not complete yet. Linting uses the ESLint CLI rather than `next lint`, which is not available in Next.js 16.
 
 ```bash
 pnpm lint

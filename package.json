@@ -45,6 +45,7 @@
     "jest-environment-jsdom": "latest",
     "postcss": "latest",
     "prettier": "latest",
+    "sass": "latest",
     "tailwindcss": "latest",
     "ts-jest": "latest",
     "typescript": "latest"
