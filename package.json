@@ -18,7 +18,11 @@
     "db:generate": "echo \"Prisma is introduced in phase 3\"",
     "db:migrate": "echo \"Prisma migrations are introduced in phase 3\"",
     "db:seed": "echo \"Seed data is introduced in phase 3\"",
-    "db:reset": "echo \"Database reset is introduced in phase 3\""
+    "db:reset": "echo \"Database reset is introduced in phase 3\"",
+    "prepare": "husky",
+    "commitlint": "commitlint --edit",
+    "precommit": "lint-staged",
+    "prepush": "pnpm ci"
   },
   "dependencies": {
     "@next/env": "latest",
@@ -31,6 +35,8 @@
     "zod": "latest"
   },
   "devDependencies": {
+    "@commitlint/cli": "latest",
+    "@commitlint/config-conventional": "latest",
     "@eslint/eslintrc": "latest",
     "@testing-library/jest-dom": "latest",
     "@testing-library/react": "latest",
@@ -41,13 +47,20 @@
     "@types/react-dom": "latest",
     "eslint": "latest",
     "eslint-config-next": "latest",
+    "husky": "latest",
     "jest": "latest",
     "jest-environment-jsdom": "latest",
+    "lint-staged": "latest",
     "postcss": "latest",
     "prettier": "latest",
     "sass": "latest",
     "tailwindcss": "latest",
     "ts-jest": "latest",
     "typescript": "latest"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mjs,cjs,json,md,scss,css,yml,yaml}": [
+      "prettier --check"
+    ]
   }
 }
