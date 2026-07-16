@@ -1,0 +1,7 @@
+.field { display: grid; gap: var(--space-2); }
+.label { font-size: var(--font-size-sm); font-weight: 700; color: var(--ink); }
+.control { min-height: 2.75rem; width: 100%; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); padding: 0 var(--space-4); color: var(--ink); transition: border-color 160ms ease, box-shadow 160ms ease; }
+.control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgb(137 199 167 / 0.28); outline: none; }
+.control[aria-invalid='true'] { border-color: var(--error); }
+.hint { font-size: var(--font-size-xs); color: var(--muted-foreground); }
+.error { font-size: var(--font-size-xs); color: var(--error); }

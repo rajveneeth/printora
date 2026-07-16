@@ -1,0 +1,8 @@
+@mixin reduce-motion {
+  @media (prefers-reduced-motion: reduce) {
+    transition-duration: 0.01ms;
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    scroll-behavior: auto;
+  }
+}
