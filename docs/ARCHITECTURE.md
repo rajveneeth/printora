@@ -93,6 +93,8 @@ tests/
 
 - Central product identity lives in `src/config/site.ts`.
 - Environment variables are validated with Zod in `src/lib/validation/env.ts`.
-- Styling starts from CSS variables that match the green marketplace reference.
+- Styling starts from CSS variables that match the green marketplace reference and is organised into token, base, and component-module SCSS layers.
+- Tailwind v4 theme tokens are mapped to CSS custom properties in `src/styles/globals.scss`.
+- Reusable UI primitives expose public APIs through local barrels and keep accessibility states in native HTML where possible.
 - Strict TypeScript, ESLint, Prettier, Jest, React Testing Library, and CI are established before feature work.
 - Database, authentication, and marketplace features are intentionally deferred to later prompts to keep this phase controlled.

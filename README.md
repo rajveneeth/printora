@@ -1,6 +1,6 @@
 # Formivo 3D
 
-Formivo 3D is a planned full-stack marketplace for ready-made and custom 3D-printed products. This repository currently contains Prompt 1: the architecture and project foundation.
+Formivo 3D is a planned full-stack marketplace for ready-made and custom 3D-printed products. This repository currently contains Prompt 2: the architecture foundation plus the green design-system and reusable UI foundation.
 
 ## Product identity
 
@@ -14,8 +14,8 @@ Formivo 3D is a planned full-stack marketplace for ready-made and custom 3D-prin
 - Next.js App Router
 - React
 - TypeScript strict mode
-- Tailwind CSS entrypoint with CSS design tokens
-- SCSS-compatible global styling
+- Tailwind CSS v4 entrypoint mapped to shared CSS variables
+- SCSS token, base, and component-module styling architecture
 - Zod environment validation
 - Jest and React Testing Library
 - ESLint and Prettier
@@ -80,7 +80,7 @@ tests/
 .github/workflows/
 ```
 
-Later prompts will add feature modules, repositories, services, Prisma, authentication, storefront, dashboards, and end-to-end tests.
+Prompt 2 adds reusable UI primitives under `src/components/ui`, SCSS token files under `src/styles/tokens`, base responsive rules, and Tailwind theme bindings. Later prompts will add domain feature modules, repositories, services, Prisma, authentication, storefront, dashboards, and end-to-end tests.
 
 ## Local setup
 
@@ -127,9 +127,13 @@ pnpm build
 9. Admin moderation, content, settings, and audit workflows.
 10. Hardening, tests, visual review, performance, and deployment readiness.
 
+## Design system
+
+The visual foundation follows the approved green reference: fern primary actions, clay orange custom-order emphasis, warm neutral surfaces, thin borders, restrained radius, and subtle shadows. Runtime design tokens live in SCSS partials and are exposed to Tailwind utilities through `src/styles/globals.scss`. Reusable components use local barrels and colocated tests.
+
 ## Known limitations
 
-- Prompt 1 intentionally does not implement feature pages, database models, authentication, payments, storage, or seed data.
+- Prompt 2 intentionally does not implement feature pages, database models, authentication, payments, storage, or seed data.
 - Database scripts are placeholders until the Prisma phase.
 
 

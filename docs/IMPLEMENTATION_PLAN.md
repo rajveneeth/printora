@@ -1,6 +1,6 @@
 # Implementation Plan
 
-## Prompt 1 completion checklist
+## Prompt 2 completion checklist
 
 - Architecture proposal documented.
 - Mermaid diagrams added to architecture documentation and README.
@@ -10,6 +10,9 @@
 - Environment validation created.
 - Path alias `@/*` configured.
 - Base README and CI workflow created.
+- Central green colour, spacing, typography, radius, shadow, and breakpoint tokens created.
+- Tailwind theme bindings and SCSS base architecture created.
+- Reusable Button, Input, Select, Card, Badge, Modal, Skeleton, EmptyState, and ErrorState components created with barrel exports and tests.
 
 ## Requirement mapping
 
@@ -28,4 +31,4 @@
 
 ## Deferred quality gate note
 
-The CI quality gate is intentionally paused after Prompt 1 because the marketplace is not fully implemented yet. The configured lint, typecheck, test, build, migration, seed, and visual review steps must return in Prompt 10 before the MVP is considered complete.
+The CI quality gate note originated after Prompt 1 because the marketplace is not fully implemented yet. The configured lint, typecheck, test, build, migration, seed, and visual review steps must return in Prompt 10 before the MVP is considered complete.
