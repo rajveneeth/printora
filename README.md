@@ -19,7 +19,7 @@ Formivo 3D is a planned full-stack marketplace for ready-made and custom 3D-prin
 - Zod environment validation
 - Jest and React Testing Library
 - ESLint and Prettier
-- pnpm
+- pnpm 10
 
 ## Architecture
 
@@ -129,3 +129,8 @@ pnpm build
 
 - Prompt 1 intentionally does not implement feature pages, database models, authentication, payments, storage, or seed data.
 - Database scripts are placeholders until the Prisma phase.
+
+
+## CI notes
+
+The initial workflow installs dependencies with `pnpm install --no-frozen-lockfile` until dependency installation can be performed in a registry-enabled development environment and a generated `pnpm-lock.yaml` can be committed.

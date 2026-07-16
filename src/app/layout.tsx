@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
 import { Geist, Geist_Mono, Manrope } from 'next/font/google';
 import '@/styles/globals.scss';
 import { siteConfig } from '@/config/site';
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
   description: siteConfig.description,
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en" className={`${manrope.variable} ${geist.variable} ${geistMono.variable}`}>
       <body>{children}</body>
