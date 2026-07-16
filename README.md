@@ -101,17 +101,6 @@ pnpm test
 pnpm build
 ```
 
-
-## Local commit safeguards
-
-Husky is configured for local repository safeguards once dependencies are installed.
-
-- `pre-commit` runs `pnpm precommit`, which delegates staged-file checks to `lint-staged`.
-- `commit-msg` runs Commitlint with the Conventional Commits preset.
-- `pre-push` runs `pnpm prepush`, which currently delegates to the deferred `pnpm ci` placeholder and will expand to full checks in the hardening phase.
-
-Use Conventional Commit messages such as `feat: add product model` or `fix: correct seller permission check`.
-
 ## Environment variables
 
 | Variable | Required now | Purpose |
