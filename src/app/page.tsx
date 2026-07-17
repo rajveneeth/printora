@@ -14,7 +14,7 @@ export default function HomePage() {
           <div className="flex flex-wrap gap-3">
             <Button>Shop products</Button>
             <Button variant="accent">Post your idea</Button>
-            <Button variant="outline">Become a seller</Button>
+            <a href="/sign-up"><Button variant="outline">Become a seller</Button></a>
           </div>
         </div>
         <Card as="section" className="grid gap-4 bg-surface-subtle">

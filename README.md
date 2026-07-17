@@ -1,6 +1,6 @@
 # Formivo 3D
 
-Formivo 3D is a planned full-stack marketplace for ready-made and custom 3D-printed products. This repository currently contains Prompt 3: the architecture foundation, green design-system, and database/domain-model foundation.
+Formivo 3D is a planned full-stack marketplace for ready-made and custom 3D-printed products. This repository currently contains Prompt 4: authentication, sessions, role management, protected routes, and the existing architecture, design-system, and database/domain-model foundation.
 
 ## Product identity
 
@@ -80,7 +80,7 @@ tests/
 .github/workflows/
 ```
 
-Prompt 3 adds Prisma schema files under `prisma/`, repository contracts under `src/repositories`, domain model contracts under `src/models`, Docker Compose PostgreSQL setup, idempotent seed data, and database documentation. Later prompts will add concrete repository implementations, authentication, storefront, dashboards, integrations, and end-to-end tests.
+Prompt 4 adds credential sign-up, sign-in, sign-out, HTTP-only session handling, buyer/seller/admin route protection, server-side role authorisation helpers, unauthorised states, and authentication unit tests. Later prompts will add concrete catalogue, dashboard, integration, and end-to-end workflows.
 
 ## Local setup
 
@@ -107,8 +107,8 @@ pnpm build
 | ---------------------- | --------------------- | -------------------------------------------- |
 | `NEXT_PUBLIC_APP_URL`  | Yes                   | Canonical local application URL.             |
 | `DATABASE_URL`         | Yes for database work | PostgreSQL connection string used by Prisma. |
-| `BETTER_AUTH_SECRET`   | No                    | Added for future authentication phases.      |
-| `BETTER_AUTH_URL`      | No                    | Added for future authentication phases.      |
+| `BETTER_AUTH_SECRET`   | No                    | Reserved for future Auth.js or Better Auth adapter work. |
+| `BETTER_AUTH_URL`      | No                    | Reserved for future Auth.js or Better Auth adapter work. |
 | `GOOGLE_CLIENT_ID`     | No                    | Optional future Google OAuth.                |
 | `GOOGLE_CLIENT_SECRET` | No                    | Optional future Google OAuth.                |
 | `RAZORPAY_KEY_ID`      | No                    | Optional future Razorpay sandbox.            |
@@ -133,7 +133,7 @@ The visual foundation follows the approved green reference: fern primary actions
 
 ## Known limitations
 
-- Prompt 3 intentionally does not implement feature pages, authentication, payments, storage, concrete repository implementations, or checkout workflows.
+- Prompt 4 implements local credential authentication and role-protected route foundations, while payments, storage, concrete catalogue repository implementations, and checkout workflows remain deferred.
 - Payment and shipping integrations are intentionally deferred.
 
 ## CI notes

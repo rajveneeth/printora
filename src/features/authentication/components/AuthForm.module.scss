@@ -1,0 +1,10 @@
+.panel { width: min(100%, 520px); }
+.form { display: grid; gap: 1rem; }
+.heading { display: grid; gap: 0.5rem; }
+.heading h1 { color: var(--primary); font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 3rem); line-height: 1; }
+.heading p { color: var(--muted-foreground); }
+.kicker { color: var(--secondary) !important; font-size: 0.85rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+.roles { border: 1px solid var(--border); border-radius: var(--radius-md); display: grid; gap: 0.75rem; padding: 1rem; }
+.roles legend { color: var(--ink); font-weight: 700; padding: 0 0.4rem; }
+.roles label { align-items: center; color: var(--ink); display: flex; gap: 0.5rem; }
+.error { color: var(--error); font-weight: 700; }
