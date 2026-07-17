@@ -363,12 +363,12 @@ Do not duplicate the same entity definition across multiple features.
 Create separate contracts when responsibilities differ:
 
 ```ts
-Product
-ProductSummary
-ProductDetails
-CreateProductInput
-UpdateProductInput
-ProductApiResponse
+Product;
+ProductSummary;
+ProductDetails;
+CreateProductInput;
+UpdateProductInput;
+ProductApiResponse;
 ```
 
 Do not use one oversized interface for every workflow.
@@ -680,11 +680,7 @@ Avoid:
 Prefer modifier classes and data attributes:
 
 ```tsx
-<article
-  className={styles.root}
-  data-featured={featured}
-  data-disabled={disabled}
-/>
+<article className={styles.root} data-featured={featured} data-disabled={disabled} />
 ```
 
 Keep each SCSS file focused on its associated component.
@@ -905,18 +901,18 @@ Repository methods must use domain-specific names.
 Prefer:
 
 ```ts
-findPublishedProducts
-findSellerProducts
-createProductDraft
-updateInventoryQuantity
+findPublishedProducts;
+findSellerProducts;
+createProductDraft;
+updateInventoryQuantity;
 ```
 
 Avoid vague names such as:
 
 ```ts
-getData
-fetchItems
-runQuery
+getData;
+fetchItems;
+runQuery;
 ```
 
 ---
@@ -1023,32 +1019,32 @@ Use:
 Examples:
 
 ```ts
-isLoading
-hasPermission
-canEditProduct
-shouldDisplayDiscount
+isLoading;
+hasPermission;
+canEditProduct;
+shouldDisplayDiscount;
 ```
 
 Avoid vague names:
 
 ```ts
-data
-item
-obj
-temp
-res
-val
-handleThing
+data;
+item;
+obj;
+temp;
+res;
+val;
+handleThing;
 ```
 
 Prefer domain-specific names:
 
 ```ts
-productSummary
-sellerProfile
-orderLineItems
-searchFilters
-handleProductSelection
+productSummary;
+sellerProfile;
+orderLineItems;
+searchFilters;
+handleProductSelection;
 ```
 
 ---
@@ -1209,6 +1205,17 @@ Before considering a feature complete:
 16. Authorisation must be enforced on the server.
 17. Database migrations must be valid.
 18. README documentation must match the codebase.
+
+### Husky and generated-code verification
+
+For every code generation or automated modification, Codex must run the same checks that Husky would enforce before committing. At minimum, run or intentionally document the result of:
+
+- `pnpm typecheck`
+- `pnpm lint`
+- `pnpm format:check`
+- `pnpm test -- --runInBand`
+
+If a Husky hook, lint-staged task, or commit-msg rule fails, fix the underlying issue before finalising the change. Do not bypass Husky with `--no-verify` unless a human explicitly instructs it and the final response documents the reason.
 
 ---
 

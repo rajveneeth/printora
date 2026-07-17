@@ -1,3 +1,15 @@
-.root { display: grid; gap: var(--space-3); border: 1px solid rgb(200 75 75 / 0.28); border-radius: var(--radius-lg); background: rgb(200 75 75 / 0.06); padding: var(--space-6); }
-.title { color: var(--error); font-size: var(--font-size-xl); }
-.description { color: var(--ink); }
+.root {
+  display: grid;
+  gap: var(--space-3);
+  border: 1px solid rgb(200 75 75 / 0.28);
+  border-radius: var(--radius-lg);
+  background: rgb(200 75 75 / 0.06);
+  padding: var(--space-6);
+}
+.title {
+  color: var(--error);
+  font-size: var(--font-size-xl);
+}
+.description {
+  color: var(--ink);
+}

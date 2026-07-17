@@ -6,7 +6,6 @@ import { prisma } from '@/lib/prisma';
 import { canAccessRole } from './roles';
 import { sessionCookieName } from './constants';
 
-
 const sessionDays = 30;
 
 export interface AuthSessionUser {
@@ -32,7 +31,13 @@ export const createSession = async (userId: string): Promise<string> => {
 
 export const setSessionCookie = async (token: string): Promise<void> => {
   const cookieStore = await cookies();
-  cookieStore.set(sessionCookieName, token, { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', path: '/', maxAge: sessionDays * 24 * 60 * 60 });
+  cookieStore.set(sessionCookieName, token, {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    maxAge: sessionDays * 24 * 60 * 60,
+  });
 };
 
 export const clearSessionCookie = async (): Promise<void> => {
@@ -51,7 +56,17 @@ export const getCurrentSession = async (): Promise<AuthSession | null> => {
     await prisma.session.deleteMany({ where: { token } });
     return null;
   }
-  return { token: session.token, expiresAt: session.expiresAt, user: { id: session.user.id, email: session.user.email, name: session.user.name, role: session.user.role, status: session.user.status } };
+  return {
+    token: session.token,
+    expiresAt: session.expiresAt,
+    user: {
+      id: session.user.id,
+      email: session.user.email,
+      name: session.user.name,
+      role: session.user.role,
+      status: session.user.status,
+    },
+  };
 };
 
 export const requireSession = async (): Promise<AuthSession> => {

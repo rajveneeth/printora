@@ -15,5 +15,26 @@ export function Modal({ isOpen, title, children, onClose, footer }: ModalProps) 
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
-  return <div className={styles.backdrop} role="presentation" onMouseDown={onClose}><section aria-modal="true" className={styles.panel} role="dialog" aria-labelledby="modal-title" onMouseDown={(event) => event.stopPropagation()}><header className={styles.header}><h2 className={styles.title} id="modal-title">{title}</h2><button className={styles.close} type="button" aria-label="Close modal" onClick={onClose}>×</button></header><div className={styles.body}>{children}</div>{footer ? <footer className={styles.footer}>{footer}</footer> : null}</section></div>;
+  return (
+    <div className={styles.backdrop} role="presentation" onMouseDown={onClose}>
+      <section
+        aria-modal="true"
+        className={styles.panel}
+        role="dialog"
+        aria-labelledby="modal-title"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <header className={styles.header}>
+          <h2 className={styles.title} id="modal-title">
+            {title}
+          </h2>
+          <button className={styles.close} type="button" aria-label="Close modal" onClick={onClose}>
+            ×
+          </button>
+        </header>
+        <div className={styles.body}>{children}</div>
+        {footer ? <footer className={styles.footer}>{footer}</footer> : null}
+      </section>
+    </div>
+  );
 }

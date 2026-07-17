@@ -103,16 +103,16 @@ pnpm build
 
 ## Environment variables
 
-| Variable               | Required now          | Purpose                                      |
-| ---------------------- | --------------------- | -------------------------------------------- |
-| `NEXT_PUBLIC_APP_URL`  | Yes                   | Canonical local application URL.             |
-| `DATABASE_URL`         | Yes for database work | PostgreSQL connection string used by Prisma. |
+| Variable               | Required now          | Purpose                                                  |
+| ---------------------- | --------------------- | -------------------------------------------------------- |
+| `NEXT_PUBLIC_APP_URL`  | Yes                   | Canonical local application URL.                         |
+| `DATABASE_URL`         | Yes for database work | PostgreSQL connection string used by Prisma.             |
 | `BETTER_AUTH_SECRET`   | No                    | Reserved for future Auth.js or Better Auth adapter work. |
 | `BETTER_AUTH_URL`      | No                    | Reserved for future Auth.js or Better Auth adapter work. |
-| `GOOGLE_CLIENT_ID`     | No                    | Optional future Google OAuth.                |
-| `GOOGLE_CLIENT_SECRET` | No                    | Optional future Google OAuth.                |
-| `RAZORPAY_KEY_ID`      | No                    | Optional future Razorpay sandbox.            |
-| `RAZORPAY_KEY_SECRET`  | No                    | Optional future Razorpay sandbox.            |
+| `GOOGLE_CLIENT_ID`     | No                    | Optional future Google OAuth.                            |
+| `GOOGLE_CLIENT_SECRET` | No                    | Optional future Google OAuth.                            |
+| `RAZORPAY_KEY_ID`      | No                    | Optional future Razorpay sandbox.                        |
+| `RAZORPAY_KEY_SECRET`  | No                    | Optional future Razorpay sandbox.                        |
 
 ## Implementation phases
 
