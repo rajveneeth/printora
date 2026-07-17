@@ -7,6 +7,16 @@ const config = {
     '\\.(css|scss|sass)$': '<rootDir>/tests/styleMock.ts',
   },
   testPathIgnorePatterns: ['/node_modules/', '/.next/'],
+  transform: {
+    '^.+\\.(ts|tsx)$': [
+      'ts-jest',
+      {
+        tsconfig: {
+          jsx: 'react-jsx',
+        },
+      },
+    ],
+  },
 };
 
 export default config;
