@@ -1,0 +1,121 @@
+.root {
+  display: grid;
+  align-content: start;
+  gap: var(--space-5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  padding: var(--space-5);
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.heading h2 {
+  color: var(--ink);
+  font-size: var(--font-size-xl);
+}
+
+.heading a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--primary);
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+}
+
+.root fieldset {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+  padding: var(--space-5) 0 0;
+}
+
+.root legend {
+  padding: 0;
+  color: var(--ink);
+  font-size: var(--font-size-sm);
+  font-weight: 800;
+}
+
+.root select,
+.root input[type='number'] {
+  width: 100%;
+  min-height: 2.65rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: 0;
+  background: var(--surface);
+  color: var(--ink);
+  padding-inline: var(--space-3);
+}
+
+.root select:focus,
+.root input[type='number']:focus {
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 3px rgb(137 199 167 / 0.24);
+}
+
+.priceRange {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.priceRange label {
+  display: grid;
+  gap: var(--space-1);
+  color: var(--muted-foreground);
+  font-size: var(--font-size-xs);
+}
+
+.moneyInput {
+  position: relative;
+  display: block;
+}
+
+.moneyInput b {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: var(--space-3);
+  transform: translateY(-50%);
+  color: var(--muted-foreground);
+}
+
+.moneyInput input {
+  padding-left: 1.8rem;
+}
+
+.radioList,
+.checkList {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.radioList label,
+.checkList label {
+  display: flex;
+  min-height: 1.6rem;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--muted-foreground);
+  font-size: var(--font-size-sm);
+}
+
+.radioList input,
+.checkList input {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--primary);
+}
+
+.radioList span {
+  color: var(--warning);
+}

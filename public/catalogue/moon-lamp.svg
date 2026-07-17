@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" role="img" aria-label="Moon lamp in a sculptural wood filament holder">
+  <defs><radialGradient id="moon"><stop stop-color="#fffde2"/><stop offset=".72" stop-color="#f8e3a4"/><stop offset="1" stop-color="#d8b86e"/></radialGradient><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#e8e1d6"/><stop offset="1" stop-color="#bdb5aa"/></linearGradient></defs>
+  <rect width="800" height="640" fill="url(#bg)"/><ellipse cx="400" cy="523" rx="211" ry="43" fill="#7e7468" opacity=".35"/>
+  <circle cx="400" cy="287" r="145" fill="url(#moon)"/><g fill="none" stroke="#8e653d" stroke-width="31" stroke-linecap="round"><path d="M245 486c17-87 57-155 119-204M555 486c-17-87-57-155-119-204M310 506c8-68 38-122 90-163 52 41 82 95 90 163"/></g><ellipse cx="400" cy="510" rx="181" ry="35" fill="#754f30"/>
+  <g fill="#d0ad68" opacity=".35"><circle cx="346" cy="230" r="23"/><circle cx="452" cy="198" r="16"/><circle cx="447" cy="327" r="31"/><circle cx="329" cy="353" r="13"/></g>
+</svg>

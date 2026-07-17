@@ -1,6 +1,6 @@
 # Formivo 3D
 
-Formivo 3D is a planned full-stack marketplace for ready-made and custom 3D-printed products. This repository currently contains Prompt 4: authentication, sessions, role management, protected routes, and the existing architecture, design-system, and database/domain-model foundation.
+Formivo 3D is a full-stack marketplace foundation for ready-made and custom 3D-printed products. The current implementation includes Prompt 5: a responsive buyer storefront, category discovery, product listing, URL-based filtering and sorting, pagination, product details, and reusable catalogue components on top of the existing authentication, design-system, and database foundation.
 
 ## Product identity
 
@@ -71,16 +71,18 @@ sequenceDiagram
 
 ```text
 src/
-  app/
-  config/
-  lib/
-  styles/
+  app/                         Public and role-based App Router routes
+  components/                  Shared UI and public layout components
+  config/                      Central product identity
+  features/catalogue/          Catalogue models, data, services, components, tests
+  lib/                         Authentication, Prisma, and shared utilities
+  styles/                      Tokens, base styling, and global Tailwind bindings
 docs/
 tests/
 .github/workflows/
 ```
 
-Prompt 4 adds credential sign-up, sign-in, sign-out, HTTP-only session handling, buyer/seller/admin route protection, server-side role authorisation helpers, unauthorised states, and authentication unit tests. Later prompts will add concrete catalogue, dashboard, integration, and end-to-end workflows.
+Server Components compose public catalogue pages from typed catalogue service results. Filters, sort order, and page selection remain in URL search parameters. Focused Client Components handle navigation drawers, the product gallery, product options, and wishlist feedback. Catalogue money is represented in paise and formatted centrally as INR.
 
 ## Local setup
 
@@ -92,7 +94,7 @@ pnpm dev
 
 ## Quality commands
 
-These commands are configured for later phases, but the CI gate is intentionally a placeholder during the foundation-only prompt because the runnable marketplace is not complete yet. Linting uses the ESLint CLI rather than `next lint`, which is not available in Next.js 16.
+Linting uses the ESLint CLI rather than `next lint`, which is not available in Next.js 16.
 
 ```bash
 pnpm lint
@@ -133,9 +135,14 @@ The visual foundation follows the approved green reference: fern primary actions
 
 ## Known limitations
 
-- Prompt 4 implements local credential authentication and role-protected route foundations, while payments, storage, concrete catalogue repository implementations, and checkout workflows remain deferred.
-- Payment and shipping integrations are intentionally deferred.
+- Prompt 5 uses a typed deterministic catalogue source shaped for a repository adapter; expanding the Prisma seed and switching the public service to Prisma remains part of the later database integration pass.
+- Search autocomplete, persisted wishlist/cart state, checkout, payments, shipping, seller dashboards, and admin moderation are intentionally assigned to later prompts.
+- Local credential authentication is available from Prompt 4; optional Google OAuth and Razorpay adapters remain deferred.
 
-## CI notes
+## Catalogue routes
 
-The initial workflow is intentionally limited to a foundation placeholder. Full linting, type checking, tests, build validation, migrations, seed verification, and visual review will be restored during the later hardening phase once the application implementation is complete.
+- `/` — marketplace homepage and featured discovery
+- `/products` — complete catalogue with filtering, sorting, and pagination
+- `/categories` — browse all active product categories
+- `/categories/[slug]` — category-specific catalogue results
+- `/products/[slug]` — product media, options, seller trust details, and related products

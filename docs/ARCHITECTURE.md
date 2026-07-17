@@ -98,3 +98,14 @@ tests/
 - Reusable UI primitives expose public APIs through local barrels and keep accessibility states in native HTML where possible.
 - Strict TypeScript, ESLint, Prettier, Jest, React Testing Library, and CI are established before feature work.
 - Prompt 4 defines credential authentication, HTTP-only session cookies, server-side role guards, middleware redirects for missing sessions, and role-specific dashboard entry points. Feature-specific persistence implementations remain deferred to later prompts.
+
+## Prompt 5 catalogue decisions
+
+- Public catalogue pages are Server Components and receive typed, normalised query parameters through the catalogue service.
+- Sorting, filtering, and pagination are encoded in the URL so result views are shareable and work without client-side state hydration.
+- A deterministic typed catalogue source powers Prompt 5 and mirrors the Prisma catalogue shape. A Prisma repository adapter can replace it without changing pages or presentation components when the expanded database seed is introduced.
+- Product money values use integer paise inside the catalogue domain and are formatted centrally as INR at the presentation boundary.
+- Reusable catalogue modules own product cards, grids, pricing, ratings, filters, pagination, galleries, and category navigation. Routes compose those modules rather than duplicating catalogue markup.
+- Client Component boundaries are limited to the mobile navigation, mobile filter drawer, product gallery, wishlist feedback, and product option selection.
+- Local SVG product artwork is stored under `public/catalogue` so marketplace pages remain visually stable and do not depend on third-party image hosts.
+- Public marketplace routes provide loading, empty, error, and not-found recovery states without exposing technical error details.

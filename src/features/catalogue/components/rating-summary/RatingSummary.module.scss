@@ -1,0 +1,11 @@
+.root {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--warning);
+  font-size: var(--font-size-xs);
+}
+
+.root > span {
+  color: var(--muted-foreground);
+}

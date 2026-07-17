@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" role="img" aria-label="Cream ripple jewellery organiser with earring arch">
+  <rect width="800" height="640" fill="#e7e2da"/><ellipse cx="400" cy="510" rx="272" ry="52" fill="#aaa39a" opacity=".4"/>
+  <path d="M139 397c104-80 418-80 522 0v112c-123 76-399 76-522 0z" fill="#f2e3cc" stroke="#d5c2a8" stroke-width="5"/><g fill="none" stroke="#d7c1a3" stroke-width="12"><path d="M194 422c93-55 319-55 412 0M184 461c109-52 323-52 432 0M200 498c111-41 289-41 400 0"/></g>
+  <path d="M274 399V213c0-124 252-124 252 0v186" fill="none" stroke="#e7d2b5" stroke-width="32" stroke-linecap="round"/><g fill="#c58a2d"><circle cx="297" cy="258" r="8"/><circle cx="297" cy="301" r="8"/><circle cx="503" cy="258" r="8"/><circle cx="503" cy="301" r="8"/></g>
+</svg>

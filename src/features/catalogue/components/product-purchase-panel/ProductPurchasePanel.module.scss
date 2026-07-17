@@ -1,0 +1,204 @@
+.root {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
+.options legend {
+  grid-column: 1 / -1;
+  margin-bottom: var(--space-2);
+  color: var(--ink);
+  font-size: var(--font-size-sm);
+  font-weight: 800;
+}
+
+.options label {
+  min-width: 0;
+}
+
+.options input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.options label > span {
+  position: relative;
+  display: grid;
+  min-height: 6.2rem;
+  justify-items: center;
+  gap: var(--space-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+  text-align: center;
+  cursor: pointer;
+}
+
+.options input:checked + span {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgb(23 74 58 / 0.12);
+}
+
+.options input:focus-visible + span {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+.options i {
+  width: 1.7rem;
+  height: 1.7rem;
+  border: 2px solid var(--surface);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+.options b {
+  overflow: hidden;
+  max-width: 100%;
+  font-size: var(--font-size-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.options small {
+  color: var(--muted-foreground);
+  font-size: 0.7rem;
+}
+
+.options svg {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  color: var(--success);
+}
+
+.customisation {
+  display: grid;
+  gap: var(--space-2);
+  border: 1px solid rgb(216 111 69 / 0.28);
+  border-radius: var(--radius-sm);
+  background: rgb(216 111 69 / 0.05);
+  padding: var(--space-4);
+}
+
+.customisation label {
+  color: var(--ink);
+  font-size: var(--font-size-sm);
+  font-weight: 800;
+}
+
+.customisation textarea {
+  width: 100%;
+  resize: vertical;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: 0;
+  background: var(--surface);
+  padding: var(--space-3);
+}
+
+.customisation textarea:focus {
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 3px rgb(137 199 167 / 0.24);
+}
+
+.customisation p {
+  color: var(--muted-foreground);
+  font-size: var(--font-size-xs);
+}
+
+.quantityRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  color: var(--ink);
+  font-size: var(--font-size-sm);
+  font-weight: 800;
+}
+
+.quantityRow > div {
+  display: grid;
+  grid-template-columns: 2.4rem 2.6rem 2.4rem;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.quantityRow button,
+.quantityRow output {
+  display: grid;
+  min-height: 2.4rem;
+  place-items: center;
+  border: 0;
+  background: var(--surface);
+}
+
+.quantityRow output {
+  border-inline: 1px solid var(--border);
+}
+
+.stock {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--success);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+}
+
+.stock span {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: var(--radius-pill);
+  background: currentColor;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 3rem;
+  gap: var(--space-2);
+}
+
+.save {
+  display: grid;
+  min-height: 2.75rem;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--primary);
+}
+
+.buyNow {
+  display: grid;
+  min-height: 2.75rem;
+  place-items: center;
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-sm);
+  color: var(--primary);
+  font-size: var(--font-size-sm);
+  font-weight: 800;
+}
+
+.status {
+  min-height: 1.3rem;
+  color: var(--success);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+}
+
+@media (max-width: 28rem) {
+  .options {
+    grid-template-columns: 1fr 1fr;
+  }
+}

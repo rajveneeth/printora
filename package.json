@@ -14,7 +14,7 @@
     "test:e2e": "playwright test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "ci": "echo \"Quality checks are deferred until the hardening phase\"",
+    "ci": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test -- --runInBand",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
@@ -22,7 +22,7 @@
     "prepare": "husky",
     "commitlint": "commitlint --edit",
     "precommit": "lint-staged",
-    "prepush": "pnpm ci"
+    "prepush": "pnpm run ci"
   },
   "dependencies": {
     "@next/env": "latest",
@@ -33,12 +33,13 @@
     "react": "latest",
     "react-dom": "latest",
     "zod": "latest",
-    "@prisma/client": "latest"
+    "@prisma/client": "6.19.0"
   },
   "devDependencies": {
     "@commitlint/cli": "latest",
     "@commitlint/config-conventional": "latest",
     "@eslint/eslintrc": "latest",
+    "@next/eslint-plugin-next": "latest",
     "@testing-library/jest-dom": "latest",
     "@testing-library/react": "latest",
     "@testing-library/user-event": "latest",
@@ -46,7 +47,7 @@
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
-    "eslint": "latest",
+    "eslint": "^9.39.2",
     "eslint-config-next": "latest",
     "husky": "latest",
     "jest": "latest",
@@ -58,8 +59,9 @@
     "tailwindcss": "latest",
     "ts-jest": "latest",
     "typescript": "^5.9.3",
-    "prisma": "latest",
-    "tsx": "latest"
+    "prisma": "6.19.0",
+    "tsx": "latest",
+    "typescript-eslint": "latest"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,mjs,cjs,json,md,scss,css,yml,yaml}": [

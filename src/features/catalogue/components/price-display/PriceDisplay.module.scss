@@ -1,0 +1,46 @@
+.root {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.prices {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.current {
+  color: var(--ink);
+  font-family: var(--font-mono), monospace;
+  font-weight: 800;
+}
+
+.compare {
+  color: var(--muted-foreground);
+  font-size: var(--font-size-xs);
+  text-decoration: line-through;
+}
+
+.discount {
+  color: var(--success);
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+}
+
+.root[data-size='small'] .current {
+  font-size: var(--font-size-base);
+}
+
+.root[data-size='medium'] .current {
+  font-size: var(--font-size-xl);
+}
+
+.root[data-size='large'] .current {
+  font-size: var(--font-size-3xl);
+}
+
+.root > p {
+  color: var(--muted-foreground);
+  font-size: var(--font-size-xs);
+}

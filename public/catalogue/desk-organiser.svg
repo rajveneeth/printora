@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" role="img" aria-label="Fern green modular desk organiser">
+  <rect width="800" height="640" fill="#e7e3dc"/><path d="M0 478h800v162H0z" fill="#d3cdc4"/><ellipse cx="409" cy="525" rx="284" ry="41" fill="#aaa49b" opacity=".45"/>
+  <g fill="#315f4c" stroke="#174a3a" stroke-width="5"><path d="M134 339h263v177H134z"/><path d="M421 279h205v237H421z"/><path d="M328 369h153v147H328z"/><path d="M170 242h90v146h-90z"/></g><g fill="#7ba184"><path d="M156 363h219v128H156z"/><path d="M445 303h157v188H445z"/><path d="M349 393h108v98H349z"/></g>
+  <g stroke="#d9b071" stroke-width="11" stroke-linecap="round"><path d="M192 240l-8-109M219 240l21-137M244 240l56-95"/></g><path d="M467 278l28-139 25 139M543 278l50-122" stroke="#d3d8d4" stroke-width="12" stroke-linecap="round"/>
+</svg>

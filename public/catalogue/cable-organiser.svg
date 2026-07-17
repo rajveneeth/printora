@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" role="img" aria-label="Charcoal modular cable organiser">
+  <rect width="800" height="640" fill="#e8e5df"/><ellipse cx="405" cy="495" rx="280" ry="49" fill="#b8b2aa" opacity=".5"/>
+  <g transform="translate(100 145)" fill="#222a27" stroke="#4f5b55" stroke-width="5"><path d="M60 160h470l54 194H0z"/><path d="M122 112h92v174h-92z"/><path d="M254 82h92v204h-92z"/><path d="M386 126h92v160h-92z"/><path d="M139 108q29-76 58 0M271 79q29-76 58 0M403 122q29-76 58 0" fill="none" stroke="#222a27" stroke-width="30" stroke-linecap="round"/></g>
+  <path d="M0 310c150-83 237-72 300 33 76 126 166 133 268 21 74-81 151-77 232 10" fill="none" stroke="#5d8b74" stroke-width="13" opacity=".75"/>
+</svg>
