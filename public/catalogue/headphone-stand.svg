@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" role="img" aria-label="Dark green contour headphone stand">
+  <rect width="800" height="640" fill="#ebe7e0"/><ellipse cx="400" cy="528" rx="220" ry="38" fill="#b9b2aa" opacity=".5"/>
+  <path d="M294 484h212l47 62H247zM345 164h110l49 329H296zM310 152q90-72 180 0l-24 52H333z" fill="#214b3d"/>
+  <g fill="none" stroke="#262d2b" stroke-width="30"><path d="M276 324v-85c0-166 248-166 248 0v85"/><path d="M270 306h43v126h-43zM487 306h43v126h-43z"/></g><path d="M286 308v121M514 308v121" stroke="#5b6662" stroke-width="16"/>
+</svg>

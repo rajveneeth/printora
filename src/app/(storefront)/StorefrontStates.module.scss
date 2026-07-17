@@ -1,0 +1,80 @@
+.main,
+.errorMain {
+  width: min(100%, var(--container-max));
+  min-height: 56vh;
+  margin-inline: auto;
+  padding: var(--space-10) var(--gutter);
+}
+
+.main {
+  display: grid;
+  align-content: start;
+  gap: var(--space-6);
+}
+
+.hero {
+  height: 13rem;
+  border-radius: var(--radius-xl);
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: 8rem 8rem 12rem;
+  gap: var(--space-3);
+}
+
+.toolbar > div {
+  height: 2.5rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+.card {
+  display: grid;
+  gap: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  padding: var(--space-3);
+}
+
+.image {
+  aspect-ratio: 1 / 0.84;
+}
+
+.errorMain {
+  display: grid;
+  place-items: center;
+}
+
+.errorMain > section {
+  width: min(100%, 42rem);
+}
+
+.action {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  border-radius: var(--radius-sm);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding-inline: var(--space-5);
+  font-weight: 800;
+}
+
+@media (max-width: 58rem) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 42rem) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+}

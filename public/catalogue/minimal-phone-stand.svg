@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" role="img" aria-label="Black minimal 3D printed phone stand">
+  <defs><linearGradient id="b" x2="1" y2="1"><stop stop-color="#eeeae4"/><stop offset="1" stop-color="#d7d2cb"/></linearGradient><filter id="s"><feDropShadow dy="18" stdDeviation="16" flood-opacity=".2"/></filter></defs>
+  <rect width="800" height="640" fill="url(#b)"/><path d="M0 473h800v167H0z" fill="#c9c0b6"/>
+  <g filter="url(#s)"><path d="M255 191h221l104 337H190z" fill="#151918"/><path d="M302 229h126l70 228H238z" fill="#252a28"/><rect x="291" y="91" width="201" height="378" rx="34" fill="#080a09" transform="rotate(4 391 280)"/><rect x="307" y="111" width="169" height="334" rx="25" fill="#1b211f" transform="rotate(4 391 280)"/><rect x="344" y="123" width="92" height="9" rx="5" fill="#3d4541"/><path d="M175 489h421v64H175z" fill="#101412"/></g>
+</svg>

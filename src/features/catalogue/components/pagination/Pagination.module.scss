@@ -1,0 +1,75 @@
+.root,
+.root > a,
+.root > span,
+.root > div,
+.pageSlot {
+  display: flex;
+  align-items: center;
+}
+
+.root {
+  justify-content: center;
+  gap: var(--space-5);
+  margin-top: var(--space-10);
+}
+
+.root > a,
+.root > span {
+  min-height: 2.75rem;
+  gap: var(--space-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  padding-inline: var(--space-4);
+  color: var(--primary);
+  font-size: var(--font-size-sm);
+  font-weight: 800;
+}
+
+.root > div {
+  gap: var(--space-1);
+}
+
+.pageSlot {
+  gap: var(--space-1);
+}
+
+.pageSlot a {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  border-radius: var(--radius-sm);
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.pageSlot a[aria-current='page'] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.pageSlot i {
+  color: var(--muted-foreground);
+  font-style: normal;
+}
+
+.disabled {
+  opacity: 0.45;
+}
+
+@media (max-width: 36rem) {
+  .root {
+    gap: var(--space-2);
+  }
+
+  .root > a,
+  .root > span {
+    padding-inline: var(--space-2);
+    font-size: var(--font-size-xs);
+  }
+
+  .pageSlot a {
+    width: 2.25rem;
+  }
+}

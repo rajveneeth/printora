@@ -1,24 +1,16 @@
 # Implementation Plan
 
-## Prompt 4 completion checklist
+## Prompt 5 delivery checklist
 
-- Architecture proposal documented.
-- Mermaid diagrams added to architecture documentation and README.
-- Next.js TypeScript foundation created.
-- Strict TypeScript configuration enabled.
-- ESLint, Prettier, Jest, and React Testing Library configured.
-- Environment validation created.
-- Path alias `@/*` configured.
-- Base README and CI workflow created.
-- Central green colour, spacing, typography, radius, shadow, and breakpoint tokens created.
-- Tailwind theme bindings and SCSS base architecture created.
-- Reusable Button, Input, Select, Card, Badge, Modal, Skeleton, EmptyState, and ErrorState components created with barrel exports and tests.
-- Prisma schema created for authentication, buyer, seller, catalogue, cart, order, review, favourite, inventory, and address entities.
-- Credential sign-up, sign-in, sign-out, HTTP-only sessions, protected routes, role dashboards, unauthorised state, and authentication tests added.
-- Docker Compose PostgreSQL service added.
-- Idempotent Prisma seed data added.
-- Domain model contracts and repository contracts added.
-- Database documentation added.
+- Preserve the Prompt 1–4 foundation, authentication, domain models, and design system.
+- Replace the foundation landing screen with the responsive Formivo storefront homepage.
+- Add the public `/products`, `/categories`, `/categories/[slug]`, and `/products/[slug]` routes.
+- Add typed catalogue models, fixtures, query parsing, sorting, filtering, and pagination services.
+- Add reusable site header, mobile navigation, footer, category navigation, product card, product grid, price, rating, filter, pagination, gallery, and purchase-panel components.
+- Use local reliable product artwork and `next/image` with stable aspect ratios.
+- Add route-level loading, empty, error, and missing-product states.
+- Add meaningful Jest and React Testing Library coverage for catalogue utilities and user-facing component behaviour.
+- Run type checking, linting, formatting checks, tests, and a production build.
 
 ## Requirement mapping
 

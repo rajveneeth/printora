@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" role="img" aria-label="Sage geometric succulent planter">
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#f3efe8"/><stop offset="1" stop-color="#ded9cf"/></linearGradient><linearGradient id="pot" x2="1" y2="1"><stop stop-color="#90a98d"/><stop offset="1" stop-color="#526f58"/></linearGradient></defs>
+  <rect width="800" height="640" fill="url(#bg)"/><ellipse cx="400" cy="525" rx="207" ry="35" fill="#a9a399" opacity=".45"/>
+  <g><path d="M270 287l77-42 102 7 84 61-27 208H301z" fill="url(#pot)"/><path d="M270 287l131 61-100 173M533 313l-132 35 105 173M347 245l54 103 48-96" fill="none" stroke="#b5c4ad" stroke-opacity=".55" stroke-width="5"/><ellipse cx="401" cy="290" rx="130" ry="52" fill="#405842"/>
+  <path d="M400 282c-53-42-70-92-51-148 46 43 63 92 51 148z" fill="#4e7c51"/><path d="M409 283c9-71 41-117 96-139-5 66-37 112-96 139z" fill="#6b9c62"/><path d="M391 285c-70-2-120-26-151-71 67-7 117 17 151 71z" fill="#79a86d"/><path d="M421 290c55-34 107-41 155-19-46 42-98 48-155 19z" fill="#527e4f"/></g>
+</svg>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" role="img" aria-label="White 3D printed architectural presentation model">
+  <rect width="800" height="640" fill="#e8e6e0"/><path d="M84 493l336-215 304 168-342 170z" fill="#c3c5be"/><path d="M104 468l315-190 280 155-319 158z" fill="#f7f5ef"/>
+  <g fill="#e0e2dc" stroke="#9ba69d" stroke-width="4"><path d="M250 397l121-71 102 57-122 69z"/><path d="M371 326v-154l103 60-1 151z"/><path d="M474 232l75-46 103 62-76 44z"/><path d="M474 232v151l102 58V292z"/><path d="M205 424V311l89-52 77 46v113z"/></g>
+  <g fill="#5f8c70"><circle cx="183" cy="451" r="25"/><circle cx="589" cy="418" r="28"/><circle cx="528" cy="486" r="23"/><path d="M162 474h43l-7 46h-29zM568 444h43l-7 43h-29zM508 507h40l-6 35h-29z"/></g>
+</svg>
