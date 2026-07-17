@@ -12,7 +12,8 @@ export const roleLabels = {
   ADMIN: 'Admin',
 } as const satisfies Record<UserRole, string>;
 
-export const canAccessRole = (userRole: UserRole, requiredRole: UserRole): boolean => roleHierarchy[userRole] >= roleHierarchy[requiredRole];
+export const canAccessRole = (userRole: UserRole, requiredRole: UserRole): boolean =>
+  roleHierarchy[userRole] >= roleHierarchy[requiredRole];
 
 export const normaliseRequestedRole = (role: string | null): UserRole => {
   if (role === 'SELLER') {

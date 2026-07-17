@@ -1,6 +1,28 @@
-.root { display: inline-flex; align-items: center; border-radius: var(--radius-pill); padding: var(--space-1) var(--space-3); font-size: var(--font-size-xs); font-weight: 800; }
-.success { background: rgb(46 125 91 / 0.12); color: var(--success); }
-.warning { background: rgb(197 138 45 / 0.14); color: var(--warning); }
-.error { background: rgb(200 75 75 / 0.12); color: var(--error); }
-.info { background: rgb(60 114 135 / 0.12); color: var(--info); }
-.neutral { background: var(--surface-subtle); color: var(--muted-foreground); }
+.root {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-pill);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+}
+.success {
+  background: rgb(46 125 91 / 0.12);
+  color: var(--success);
+}
+.warning {
+  background: rgb(197 138 45 / 0.14);
+  color: var(--warning);
+}
+.error {
+  background: rgb(200 75 75 / 0.12);
+  color: var(--error);
+}
+.info {
+  background: rgb(60 114 135 / 0.12);
+  color: var(--info);
+}
+.neutral {
+  background: var(--surface-subtle);
+  color: var(--muted-foreground);
+}

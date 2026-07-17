@@ -4,5 +4,9 @@ import type { CardProps } from './Card.model';
 
 export function Card({ as = 'article', children, className, ...props }: CardProps) {
   const Component = as;
-  return <Component className={cn(styles.root, styles.padded, className)} {...props}>{children}</Component>;
+  return (
+    <Component className={cn(styles.root, styles.padded, className)} {...props}>
+      {children}
+    </Component>
+  );
 }

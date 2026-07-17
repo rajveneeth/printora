@@ -27,14 +27,14 @@ The name is a working name and must be easy to replace later.
 Suggested configuration:
 
 export const siteConfig = {
-  name: 'Formivo 3D',
-  shortName: 'Formivo',
-  tagline: 'Imagine it. Find it. Print it.',
-  description:
-    'A marketplace for ready-made and custom 3D-printed products.',
-  currency: 'INR',
-  currencySymbol: '₹',
-  defaultCommissionPercentage: 10,
+name: 'Formivo 3D',
+shortName: 'Formivo',
+tagline: 'Imagine it. Find it. Print it.',
+description:
+'A marketplace for ready-made and custom 3D-printed products.',
+currency: 'INR',
+currencySymbol: '₹',
+defaultCommissionPercentage: 10,
 }
 
 ⸻
@@ -102,19 +102,19 @@ The image is a visual direction, not an exact specification.
 
 Use it to understand:
 
-* Overall green theme
-* Spacious layout
-* Card proportions
-* Header structure
-* Product card structure
-* Product detail structure
-* Seller dashboard direction
-* Admin dashboard direction
-* Fresh and clean visual character
-* Use of large product imagery
-* Minimal shadows
-* Rounded corners
-* Soft neutral backgrounds
+- Overall green theme
+- Spacious layout
+- Card proportions
+- Header structure
+- Product card structure
+- Product detail structure
+- Seller dashboard direction
+- Admin dashboard direction
+- Fresh and clean visual character
+- Use of large product imagery
+- Minimal shadows
+- Rounded corners
+- Soft neutral backgrounds
 
 Do not copy incorrect or inconsistent text from the image.
 
@@ -124,28 +124,28 @@ Do not attempt to reproduce the entire reference image as one page. Convert it i
 
 The result should feel:
 
-* Fresh
-* Natural
-* Premium but approachable
-* Creative
-* Calm
-* Trustworthy
-* Modern
-* Simple
-* Product-focused
+- Fresh
+- Natural
+- Premium but approachable
+- Creative
+- Calm
+- Trustworthy
+- Modern
+- Simple
+- Product-focused
 
 Avoid:
 
-* Neon cyberpunk styling
-* Excessive gradients
-* Glassmorphism
-* Overly dark customer pages
-* Large animated backgrounds
-* Heavy shadows
-* Oversized rounded cards everywhere
-* Tiny low-contrast text
-* Generic SaaS dashboard styling on the customer storefront
-* Cultural clichés or literal New Zealand tourism imagery
+- Neon cyberpunk styling
+- Excessive gradients
+- Glassmorphism
+- Overly dark customer pages
+- Large animated backgrounds
+- Heavy shadows
+- Oversized rounded cards everywhere
+- Tiny low-contrast text
+- Generic SaaS dashboard styling on the customer storefront
+- Cultural clichés or literal New Zealand tourism imagery
 
 ⸻
 
@@ -179,19 +179,19 @@ Primary palette:
 
 Use fern green for:
 
-* Main buttons
-* Navigation emphasis
-* Active states
-* Links
-* Seller and admin sidebar branding
-* Positive marketplace signals
+- Main buttons
+- Navigation emphasis
+- Active states
+- Links
+- Seller and admin sidebar branding
+- Positive marketplace signals
 
 Use clay orange carefully for:
 
-* Post your idea
-* Request customisation
-* Important custom-order actions
-* Limited promotional highlights
+- Post your idea
+- Request customisation
+- Important custom-order actions
+- Limited promotional highlights
 
 Do not use clay orange for normal destructive actions.
 
@@ -201,45 +201,45 @@ Use next/font.
 
 Preferred font combination:
 
-* Headings: Manrope
-* Body and interface: Geist
-* Numeric dashboard values: Geist Mono, used sparingly
+- Headings: Manrope
+- Body and interface: Geist
+- Numeric dashboard values: Geist Mono, used sparingly
 
 Typography should remain readable and restrained.
 
 Use approximately:
 
-* Hero heading: 48 to 64 pixels on desktop
-* Page heading: 32 to 40 pixels
-* Section heading: 24 to 32 pixels
-* Card title: 16 to 18 pixels
-* Body: 15 to 16 pixels
-* Supporting text: 13 to 14 pixels
+- Hero heading: 48 to 64 pixels on desktop
+- Page heading: 32 to 40 pixels
+- Section heading: 24 to 32 pixels
+- Card title: 16 to 18 pixels
+- Body: 15 to 16 pixels
+- Supporting text: 13 to 14 pixels
 
 Shape and spacing
 
-* Maximum public-page content width: approximately 1440 pixels
-* Desktop page gutters: 32 to 48 pixels
-* Tablet gutters: 24 pixels
-* Mobile gutters: 16 pixels
-* Card radius: 14 to 18 pixels
-* Button radius: 10 to 12 pixels
-* Input radius: 10 to 12 pixels
-* Use thin neutral borders
-* Use subtle shadows only where necessary
-* Maintain generous white space
-* Avoid making every section visually boxed
+- Maximum public-page content width: approximately 1440 pixels
+- Desktop page gutters: 32 to 48 pixels
+- Tablet gutters: 24 pixels
+- Mobile gutters: 16 pixels
+- Card radius: 14 to 18 pixels
+- Button radius: 10 to 12 pixels
+- Input radius: 10 to 12 pixels
+- Use thin neutral borders
+- Use subtle shadows only where necessary
+- Maintain generous white space
+- Avoid making every section visually boxed
 
 Motion
 
 Use subtle motion only:
 
-* Button hover
-* Card hover
-* Dropdown entrance
-* Drawer entrance
-* Step transitions
-* Skeleton loading
+- Button hover
+- Card hover
+- Dropdown entrance
+- Drawer entrance
+- Step transitions
+- Skeleton loading
 
 Respect prefers-reduced-motion.
 
@@ -253,42 +253,42 @@ Use the current stable compatible versions available at implementation time.
 
 Core
 
-* Next.js with App Router
-* React
-* TypeScript with strict mode
-* pnpm
-* Node.js LTS
+- Next.js with App Router
+- React
+- TypeScript with strict mode
+- pnpm
+- Node.js LTS
 
 Styling and components
 
-* Tailwind CSS
-* shadcn/ui
-* Radix UI primitives where needed
-* Lucide React icons
-* CSS variables for design tokens
-* next/font
-* next/image
+- Tailwind CSS
+- shadcn/ui
+- Radix UI primitives where needed
+- Lucide React icons
+- CSS variables for design tokens
+- next/font
+- next/image
 
 Use shadcn/ui as editable component source. Do not install a large restrictive UI framework on top of it.
 
 Forms and validation
 
-* React Hook Form
-* Zod
-* Shared Zod schemas between client and server where appropriate
+- React Hook Form
+- Zod
+- Shared Zod schemas between client and server where appropriate
 
 State management
 
 Use Zustand only for genuine client interface state:
 
-* Shopping cart
-* Search overlay state
-* Active product filters
-* Product comparison state, if included
-* Wishlist optimistic interface state
-* Multi-step custom-request draft
-* Temporary checkout state
-* Mobile navigation state
+- Shopping cart
+- Search overlay state
+- Active product filters
+- Product comparison state, if included
+- Wishlist optimistic interface state
+- Multi-step custom-request draft
+- Temporary checkout state
+- Mobile navigation state
 
 Do not place the entire database or all server-fetched products inside Zustand.
 
@@ -304,23 +304,23 @@ Use Better Auth.
 
 Implement:
 
-* Google authentication
-* Email and password authentication
-* Session management
-* Secure server-side session retrieval
-* Role-based access
-* Sign out
-* Account linking where safely supported
-* Protected customer, seller, and admin routes
+- Google authentication
+- Email and password authentication
+- Session management
+- Secure server-side session retrieval
+- Role-based access
+- Sign out
+- Account linking where safely supported
+- Protected customer, seller, and admin routes
 
 Use the Better Auth Prisma adapter.
 
 User roles:
 
 enum UserRole {
-  CUSTOMER
-  SELLER
-  ADMIN
+CUSTOMER
+SELLER
+ADMIN
 }
 
 A normal customer may apply to become a seller.
@@ -329,21 +329,21 @@ Do not rely only on client-side route protection. Authorisation must be enforced
 
 Database
 
-* PostgreSQL
-* Prisma ORM
-* Prisma migrations
-* Idempotent seed script
+- PostgreSQL
+- Prisma ORM
+- Prisma migrations
+- Idempotent seed script
 
 Use a local Docker Compose PostgreSQL service for development.
 
 The project must include:
 
-* docker-compose.yml
-* .env.example
-* Prisma schema
-* Migration files
-* Seed data
-* Database reset instructions
+- docker-compose.yml
+- .env.example
+- Prisma schema
+- Migration files
+- Seed data
+- Database reset instructions
 
 Payments
 
@@ -358,12 +358,12 @@ The complete local demo must work using the mock provider.
 
 For Razorpay mode:
 
-* Create payment orders server-side.
-* Verify payment signatures server-side.
-* Never trust a payment status sent directly by the browser.
-* Add a webhook route.
-* Store provider transaction identifiers.
-* Handle duplicate webhook events safely.
+- Create payment orders server-side.
+- Verify payment signatures server-side.
+- Never trust a payment status sent directly by the browser.
+- Add a webhook route.
+- Store provider transaction identifiers.
+- Handle duplicate webhook events safely.
 
 Do not include secret values in source control.
 
@@ -380,29 +380,29 @@ The local application and seed data must work without external storage credentia
 
 Validate:
 
-* File type
-* File size
-* Image count
-* Filename
-* User permission
+- File type
+- File size
+- Image count
+- Filename
+- User permission
 
 Use Next.js image optimisation for displayed images.
 
 Testing
 
-* Vitest
-* React Testing Library
-* Playwright
-* Accessibility checks where practical
+- Vitest
+- React Testing Library
+- Playwright
+- Accessibility checks where practical
 
 Code quality
 
-* ESLint
-* Prettier
-* Strict TypeScript
-* No unexplained any
-* No ignored TypeScript errors
-* No disabled lint rules without justification
+- ESLint
+- Prettier
+- Strict TypeScript
+- No unexplained any
+- No ignored TypeScript errors
+- No disabled lint rules without justification
 
 ⸻
 
@@ -413,47 +413,47 @@ Use a clear feature-oriented structure.
 A suggested structure is:
 
 src/
-  app/
-    (storefront)/
-    (auth)/
-    account/
-    seller/
-    admin/
-    api/
-  components/
-    ui/
-    common/
-    storefront/
-    product/
-    custom-request/
-    checkout/
-    seller/
-    admin/
-  features/
-    auth/
-    products/
-    categories/
-    cart/
-    checkout/
-    orders/
-    sellers/
-    custom-requests/
-    quotations/
-    reviews/
-    content/
-    search/
-  lib/
-    auth/
-    db/
-    payments/
-    storage/
-    permissions/
-    validation/
-    utils/
-  stores/
-  hooks/
-  types/
-  config/
+app/
+(storefront)/
+(auth)/
+account/
+seller/
+admin/
+api/
+components/
+ui/
+common/
+storefront/
+product/
+custom-request/
+checkout/
+seller/
+admin/
+features/
+auth/
+products/
+categories/
+cart/
+checkout/
+orders/
+sellers/
+custom-requests/
+quotations/
+reviews/
+content/
+search/
+lib/
+auth/
+db/
+payments/
+storage/
+permissions/
+validation/
+utils/
+stores/
+hooks/
+types/
+config/
 prisma/
 public/
 docs/
@@ -463,10 +463,10 @@ Use repository patterns or service functions only where they make the code clear
 
 Prefer:
 
-* Server Components for initial data loading
-* Server Actions for authenticated form mutations
-* Route handlers where a public API, webhook, upload, autocomplete request, or external provider requires one
-* Client Components only for interactivity
+- Server Components for initial data loading
+- Server Actions for authenticated form mutations
+- Route handlers where a public API, webhook, upload, autocomplete request, or external provider requires one
+- Client Components only for interactivity
 
 ⸻
 
@@ -478,272 +478,272 @@ At minimum, model the following entities:
 
 Authentication
 
-* User
-* Session
-* Account
-* Verification
+- User
+- Session
+- Account
+- Verification
 
 Use the schema required by Better Auth.
 
 User profile
 
-* UserProfile
-* Address
-* Wishlist
+- UserProfile
+- Address
+- Wishlist
 
 User profile fields should support:
 
-* Display name
-* Phone
-* Profile image
-* Default delivery address
-* Role
-* Account status
-* Created date
-* Last active date
+- Display name
+- Phone
+- Profile image
+- Default delivery address
+- Role
+- Account status
+- Created date
+- Last active date
 
 Seller
 
-* SellerProfile
-* SellerApplication
-* SellerCapability
-* SellerPayoutAccount
-* SellerPayout
-* SellerReviewSummary
+- SellerProfile
+- SellerApplication
+- SellerCapability
+- SellerPayoutAccount
+- SellerPayout
+- SellerReviewSummary
 
 Seller profile fields:
 
-* Store name
-* Store slug
-* Description
-* Logo
-* Banner
-* Contact details
-* Shipping origin city
-* Shipping origin state
-* Shipping origin postal code
-* Years of experience
-* Supported materials
-* Supported print technologies
-* Maximum printable dimensions
-* Custom-order availability
-* Average processing time
-* Verification status
-* Average seller rating
-* Completed order count
-* Cancellation rate
-* Created date
+- Store name
+- Store slug
+- Description
+- Logo
+- Banner
+- Contact details
+- Shipping origin city
+- Shipping origin state
+- Shipping origin postal code
+- Years of experience
+- Supported materials
+- Supported print technologies
+- Maximum printable dimensions
+- Custom-order availability
+- Average processing time
+- Verification status
+- Average seller rating
+- Completed order count
+- Cancellation rate
+- Created date
 
 Seller verification statuses:
 
 enum SellerVerificationStatus {
-  NOT_APPLIED
-  PENDING
-  CHANGES_REQUESTED
-  APPROVED
-  REJECTED
-  SUSPENDED
+NOT_APPLIED
+PENDING
+CHANGES_REQUESTED
+APPROVED
+REJECTED
+SUSPENDED
 }
 
 Product catalogue
 
-* Category
-* Product
-* ProductImage
-* ProductVariant
-* ProductOption
-* ProductOptionValue
-* ProductMaterial
-* ProductTag
-* ProductCustomisationOption
-* InventoryRecord
-* ProductApprovalEvent
+- Category
+- Product
+- ProductImage
+- ProductVariant
+- ProductOption
+- ProductOptionValue
+- ProductMaterial
+- ProductTag
+- ProductCustomisationOption
+- InventoryRecord
+- ProductApprovalEvent
 
 Product fields:
 
-* Name
-* Slug
-* Short description
-* Full description
-* Category
-* Seller
-* Base price
-* Compare-at price
-* Currency
-* SKU
-* Stock
-* Minimum order quantity
-* Maximum order quantity
-* Dimensions
-* Weight
-* Material
-* Finish
-* Colour
-* Processing time
-* Shipping origin
-* Customisation available
-* Safety notes
-* Intended use
-* Age restrictions where appropriate
-* Intellectual-property declaration
-* Search keywords
-* SEO title
-* SEO description
-* Status
-* Published date
-* Created date
-* Updated date
+- Name
+- Slug
+- Short description
+- Full description
+- Category
+- Seller
+- Base price
+- Compare-at price
+- Currency
+- SKU
+- Stock
+- Minimum order quantity
+- Maximum order quantity
+- Dimensions
+- Weight
+- Material
+- Finish
+- Colour
+- Processing time
+- Shipping origin
+- Customisation available
+- Safety notes
+- Intended use
+- Age restrictions where appropriate
+- Intellectual-property declaration
+- Search keywords
+- SEO title
+- SEO description
+- Status
+- Published date
+- Created date
+- Updated date
 
 Product statuses:
 
 enum ProductStatus {
-  DRAFT
-  PENDING_REVIEW
-  CHANGES_REQUESTED
-  APPROVED
-  REJECTED
-  PUBLISHED
-  PAUSED
-  ARCHIVED
+DRAFT
+PENDING_REVIEW
+CHANGES_REQUESTED
+APPROVED
+REJECTED
+PUBLISHED
+PAUSED
+ARCHIVED
 }
 
 A product cannot appear publicly before admin approval and publication.
 
 Cart and checkout
 
-* Cart
-* CartItem
-* CheckoutSession
-* Payment
-* PaymentEvent
+- Cart
+- CartItem
+- CheckoutSession
+- Payment
+- PaymentEvent
 
 Orders
 
-* Order
-* OrderItem
-* OrderAddress
-* OrderStatusEvent
-* Shipment
-* Refund
-* Dispute
+- Order
+- OrderItem
+- OrderAddress
+- OrderStatusEvent
+- Shipment
+- Refund
+- Dispute
 
 Regular order statuses:
 
 enum OrderStatus {
-  PENDING_PAYMENT
-  PAID
-  CONFIRMED
-  IN_PRODUCTION
-  READY_TO_SHIP
-  SHIPPED
-  OUT_FOR_DELIVERY
-  DELIVERED
-  CANCELLED
-  REFUND_REQUESTED
-  REFUNDED
+PENDING_PAYMENT
+PAID
+CONFIRMED
+IN_PRODUCTION
+READY_TO_SHIP
+SHIPPED
+OUT_FOR_DELIVERY
+DELIVERED
+CANCELLED
+REFUND_REQUESTED
+REFUNDED
 }
 
 Each order item must retain a snapshot of:
 
-* Product name
-* Seller
-* Price
-* Chosen variant
-* Customisation request
-* Product image
-* Quantity
-* Tax
-* Shipping fee
+- Product name
+- Seller
+- Price
+- Chosen variant
+- Customisation request
+- Product image
+- Quantity
+- Tax
+- Shipping fee
 
 Do not depend entirely on the current product record for historical order display.
 
 Custom request marketplace
 
-* CustomRequest
-* CustomRequestAttachment
-* CustomRequestCategory
-* CustomRequestStatusEvent
-* Quotation
-* QuotationMessage
-* CustomProject
-* CustomProjectMilestone
-* DesignApproval
+- CustomRequest
+- CustomRequestAttachment
+- CustomRequestCategory
+- CustomRequestStatusEvent
+- Quotation
+- QuotationMessage
+- CustomProject
+- CustomProjectMilestone
+- DesignApproval
 
 Custom request fields:
 
-* Customer
-* Title
-* Description
-* Category
-* Reference attachments
-* Approximate dimensions
-* Intended use
-* Preferred material
-* Preferred colours
-* Quantity
-* Budget minimum
-* Budget maximum
-* Delivery destination
-* Required delivery date
-* Visibility
-* Status
-* Quote deadline
-* Created date
+- Customer
+- Title
+- Description
+- Category
+- Reference attachments
+- Approximate dimensions
+- Intended use
+- Preferred material
+- Preferred colours
+- Quantity
+- Budget minimum
+- Budget maximum
+- Delivery destination
+- Required delivery date
+- Visibility
+- Status
+- Quote deadline
+- Created date
 
 Custom request statuses:
 
 enum CustomRequestStatus {
-  DRAFT
-  PENDING_MODERATION
-  OPEN_FOR_QUOTES
-  QUOTE_SELECTED
-  PAYMENT_PENDING
-  DESIGN_DISCUSSION
-  DESIGN_APPROVAL_PENDING
-  IN_PRODUCTION
-  READY_TO_SHIP
-  SHIPPED
-  DELIVERED
-  CANCELLED
-  EXPIRED
+DRAFT
+PENDING_MODERATION
+OPEN_FOR_QUOTES
+QUOTE_SELECTED
+PAYMENT_PENDING
+DESIGN_DISCUSSION
+DESIGN_APPROVAL_PENDING
+IN_PRODUCTION
+READY_TO_SHIP
+SHIPPED
+DELIVERED
+CANCELLED
+EXPIRED
 }
 
 Quotation fields:
 
-* Custom request
-* Seller
-* Price
-* Shipping fee
-* Tax estimate
-* Material
-* Production method
-* Production duration
-* Delivery estimate
-* Proposal message
-* Revision count
-* Valid until
-* Status
+- Custom request
+- Seller
+- Price
+- Shipping fee
+- Tax estimate
+- Material
+- Production method
+- Production duration
+- Delivery estimate
+- Proposal message
+- Revision count
+- Valid until
+- Status
 
 Quotation statuses:
 
 enum QuotationStatus {
-  SUBMITTED
-  REVISED
-  ACCEPTED
-  REJECTED
-  WITHDRAWN
-  EXPIRED
+SUBMITTED
+REVISED
+ACCEPTED
+REJECTED
+WITHDRAWN
+EXPIRED
 }
 
 A seller must not be able to view another seller’s private quotation amount before the buyer chooses a quotation.
 
 Ratings and reviews
 
-* ProductReview
-* SellerReview
-* ReviewMedia
-* ReviewModerationEvent
-* ReviewHelpfulVote
+- ProductReview
+- SellerReview
+- ReviewMedia
+- ReviewModerationEvent
+- ReviewHelpfulVote
 
 A customer can review only after a corresponding order has been delivered.
 
@@ -751,57 +751,57 @@ Store separate ratings for:
 
 Product:
 
-* Quality
-* Finish
-* Accuracy
-* Value
+- Quality
+- Finish
+- Accuracy
+- Value
 
 Seller:
 
-* Communication
-* Dispatch speed
-* Customisation experience
+- Communication
+- Dispatch speed
+- Customisation experience
 
 Do not allow sellers to delete reviews.
 
 Admins may moderate abusive or fraudulent reviews, but must record:
 
-* Previous visibility
-* New visibility
-* Moderator
-* Reason
-* Timestamp
+- Previous visibility
+- New visibility
+- Moderator
+- Reason
+- Timestamp
 
 Content authoring
 
-* ContentPage
-* ContentSection
-* HomepageBanner
-* FeaturedCollection
-* NavigationItem
-* FAQ
-* SiteSetting
+- ContentPage
+- ContentSection
+- HomepageBanner
+- FeaturedCollection
+- NavigationItem
+- FAQ
+- SiteSetting
 
 Administration
 
-* AuditLog
-* AdminNote
-* ModerationReason
-* PlatformSetting
+- AuditLog
+- AdminNote
+- ModerationReason
+- PlatformSetting
 
 Audit important actions:
 
-* Role change
-* Seller approval
-* Seller suspension
-* Product approval
-* Product rejection
-* Product content modification by admin
-* Review moderation
-* Refund action
-* Order status override
-* Category deletion
-* Platform setting change
+- Role change
+- Seller approval
+- Seller suspension
+- Product approval
+- Product rejection
+- Product content modification by admin
+- Review moderation
+- Refund action
+- Order status override
+- Category deletion
+- Platform setting change
 
 ⸻
 
@@ -812,20 +812,20 @@ Create the following routes.
 Public storefront
 
 /
- /search
- /categories
- /categories/[slug]
- /products/[slug]
- /sellers/[slug]
- /custom
- /custom/new
- /custom/[id]
- /how-it-works
- /become-a-seller
- /about
- /help
- /terms
- /privacy
+/search
+/categories
+/categories/[slug]
+/products/[slug]
+/sellers/[slug]
+/custom
+/custom/new
+/custom/[id]
+/how-it-works
+/become-a-seller
+/about
+/help
+/terms
+/privacy
 
 Authentication
 
@@ -866,22 +866,22 @@ Header
 
 Desktop header:
 
-* Formivo logo
-* Large central search field
-* Categories menu
-* Post your idea
-* Become a seller
-* Wishlist
-* Orders
-* Account menu
-* Cart with item count
+- Formivo logo
+- Large central search field
+- Categories menu
+- Post your idea
+- Become a seller
+- Wishlist
+- Orders
+- Account menu
+- Cart with item count
 
 Mobile header:
 
-* Menu button
-* Logo
-* Search button
-* Cart button
+- Menu button
+- Logo
+- Search button
+- Cart button
 
 The search input should be prominent.
 
@@ -913,34 +913,34 @@ Trust strip
 
 Display four items:
 
-* Independent makers
-* Custom requests
-* Secure payments
-* Tracked delivery
+- Independent makers
+- Custom requests
+- Secure payments
+- Tracked delivery
 
 Popular categories
 
 Show:
 
-* Home and décor
-* Desk and workspace
-* Phone and electronics accessories
-* Personalised gifts
-* Toys and collectibles
-* Miniatures and figurines
-* Utility and replacement parts
-* Fashion and accessories
-* Education and models
-* Business and bulk orders
+- Home and décor
+- Desk and workspace
+- Phone and electronics accessories
+- Personalised gifts
+- Toys and collectibles
+- Miniatures and figurines
+- Utility and replacement parts
+- Fashion and accessories
+- Education and models
+- Business and bulk orders
 
 Product sections
 
 Include:
 
-* Trending creations
-* Best sellers
-* Recently added
-* Customisable products
+- Trending creations
+- Best sellers
+- Recently added
+- Customisable products
 
 Custom request section
 
@@ -972,27 +972,27 @@ Seller section
 
 Show featured verified makers with:
 
-* Logo
-* Store name
-* City
-* Rating
-* Completed orders
-* Supported materials
-* View store button
+- Logo
+- Store name
+- City
+- Rating
+- Completed orders
+- Supported materials
+- View store button
 
 Footer
 
 Include:
 
-* Categories
-* Customer help
-* Seller resources
-* Company
-* Legal pages
-* Social links as placeholders
-* Newsletter field
-* Copyright
-* Payment and security indicators
+- Categories
+- Customer help
+- Seller resources
+- Company
+- Legal pages
+- Social links as placeholders
+- Newsletter field
+- Copyright
+- Payment and security indicators
 
 ⸻
 
@@ -1004,16 +1004,16 @@ Search suggestions
 
 When the user types two or more characters:
 
-* Debounce requests
-* Return no more than five primary suggestions
-* Include products, categories, sellers, and popular searches
-* Highlight matching text accessibly
-* Support keyboard navigation
-* Support Arrow Up
-* Support Arrow Down
-* Support Enter
-* Support Escape
-* Announce result count to screen readers
+- Debounce requests
+- Return no more than five primary suggestions
+- Include products, categories, sellers, and popular searches
+- Highlight matching text accessibly
+- Support keyboard navigation
+- Support Arrow Up
+- Support Arrow Down
+- Support Enter
+- Support Escape
+- Announce result count to screen readers
 
 Suggested endpoint:
 
@@ -1035,55 +1035,55 @@ Example:
 
 Filters:
 
-* Category
-* Price range
-* Material
-* Colour
-* Rating
-* Customisation available
-* Seller location
-* Processing time
-* In-stock
-* Delivery estimate
+- Category
+- Price range
+- Material
+- Colour
+- Rating
+- Customisation available
+- Seller location
+- Processing time
+- In-stock
+- Delivery estimate
 
 Sort options:
 
-* Relevance
-* Popular
-* Highest rated
-* Price low to high
-* Price high to low
-* Newest
-* Fastest dispatch
+- Relevance
+- Popular
+- Highest rated
+- Price low to high
+- Price high to low
+- Newest
+- Fastest dispatch
 
 Desktop:
 
-* Left filter sidebar
-* Results grid
+- Left filter sidebar
+- Results grid
 
 Mobile:
 
-* Filter drawer
-* Sort sheet
+- Filter drawer
+- Sort sheet
 
 Include:
 
-* Result count
-* Active filter chips
-* Clear all
-* Empty state
-* Pagination or load more
-* Skeleton state
+- Result count
+- Active filter chips
+- Clear all
+- Empty state
+- Pagination or load more
+- Skeleton state
 
 For the MVP, implement search using PostgreSQL-compatible queries across:
 
-* Product name
-* Short description
-* Full description
-* Category name
-* Seller store name
-* Tags
-* Search keywords
+- Product name
+- Short description
+- Full description
+- Category name
+- Seller store name
+- Tags
+- Search keywords
 
 Keep the search service isolated so it can later be replaced with Typesense, Meilisearch, Algolia, or Elasticsearch.
 
@@ -1093,28 +1093,28 @@ Keep the search service isolated so it can later be replaced with Typesense, Mei
 
 Each product card must show:
 
-* Product image
-* Wishlist control
-* Product name
-* Seller name
-* Price
-* Compare-at price where available
-* Discount percentage where valid
-* Average rating
-* Review count
-* Customisable badge
-* Processing-time indicator where useful
+- Product image
+- Wishlist control
+- Product name
+- Seller name
+- Price
+- Compare-at price where available
+- Discount percentage where valid
+- Average rating
+- Review count
+- Customisable badge
+- Processing-time indicator where useful
 
 Do not show fake countdown timers or misleading urgency.
 
 Card interactions:
 
-* Entire title and image area navigate to product
-* Wishlist control remains independently accessible
-* Visible keyboard focus
-* Stable image aspect ratio
-* Subtle hover elevation
-* No layout shift
+- Entire title and image area navigate to product
+- Wishlist control remains independently accessible
+- Visible keyboard focus
+- Stable image aspect ratio
+- Subtle hover elevation
+- No layout shift
 
 ⸻
 
@@ -1124,53 +1124,53 @@ Create a complete product detail page.
 
 Media gallery
 
-* Main image
-* Thumbnail list
-* Previous and next controls
-* Full-screen viewer
-* Keyboard support
-* Mobile swipe-friendly layout
-* Optional video or 360-degree placeholder support in the data model
+- Main image
+- Thumbnail list
+- Previous and next controls
+- Full-screen viewer
+- Keyboard support
+- Mobile swipe-friendly layout
+- Optional video or 360-degree placeholder support in the data model
 
 Product details
 
 Display:
 
-* Breadcrumbs
-* Product name
-* Seller
-* Rating
-* Review count
-* Price
-* Compare-at price
-* Tax note
-* Available variants
-* Material
-* Colour
-* Finish
-* Dimensions
-* Weight
-* Quantity
-* Stock
-* Processing time
-* Shipping origin
-* Estimated delivery
-* Add to cart
-* Buy now
-* Wishlist
+- Breadcrumbs
+- Product name
+- Seller
+- Rating
+- Review count
+- Price
+- Compare-at price
+- Tax note
+- Available variants
+- Material
+- Colour
+- Finish
+- Dimensions
+- Weight
+- Quantity
+- Stock
+- Processing time
+- Shipping origin
+- Estimated delivery
+- Add to cart
+- Buy now
+- Wishlist
 
 Customisation
 
 If the product supports customisation, show:
 
-* Request customisation
-* Text engraving
-* Name or message
-* Colour request
-* Size change request
-* Notes
-* Reference-image attachment
-* Additional-price warning
+- Request customisation
+- Text engraving
+- Name or message
+- Colour request
+- Size change request
+- Notes
+- Reference-image attachment
+- Additional-price warning
 
 Separate minor product customisation from a fully custom project.
 
@@ -1180,35 +1180,35 @@ Seller card
 
 Display:
 
-* Seller logo
-* Store name
-* Verified badge
-* Location
-* Seller rating
-* Completed orders
-* Average dispatch performance
-* View store
-* Contact or message placeholder
+- Seller logo
+- Store name
+- Verified badge
+- Location
+- Seller rating
+- Completed orders
+- Average dispatch performance
+- View store
+- Contact or message placeholder
 
 Reviews
 
 Show:
 
-* Product rating breakdown
-* Seller rating summary
-* Review list
-* Verified purchase label
-* Review images
-* Sort and filter
-* Helpful button
-* Report button
+- Product rating breakdown
+- Seller rating summary
+- Review list
+- Verified purchase label
+- Review images
+- Sort and filter
+- Helpful button
+- Report button
 
 Related content
 
-* Similar products
-* More from this seller
-* Recently viewed using client state
-* Related categories
+- Similar products
+- More from this seller
+- Recently viewed using client state
+- Related categories
 
 Add Product and Breadcrumb structured data.
 
@@ -1222,27 +1222,27 @@ Implement a persistent Zustand cart.
 
 Cart item fields:
 
-* Product ID
-* Variant ID
-* Quantity
-* Selected options
-* Customisation notes
-* Price snapshot for display
+- Product ID
+- Variant ID
+- Quantity
+- Selected options
+- Customisation notes
+- Price snapshot for display
 
 Always revalidate price, availability, and seller status on the server before checkout.
 
 Cart requirements:
 
-* Increase quantity
-* Decrease quantity
-* Remove item
-* Move to wishlist
-* Seller grouping
-* Subtotal
-* Shipping estimate
-* Tax estimate
-* Total
-* Empty state
+- Increase quantity
+- Decrease quantity
+- Remove item
+- Move to wishlist
+- Seller grouping
+- Subtotal
+- Shipping estimate
+- Tax estimate
+- Total
+- Empty state
 
 Checkout
 
@@ -1261,11 +1261,11 @@ For the MVP, preserve seller association at order-item level.
 
 The mock payment flow must:
 
-* Create a pending payment
-* Simulate success or failure
-* Update the order transactionally
-* Prevent duplicate fulfilment
-* Redirect to success or failure routes
+- Create a pending payment
+- Simulate success or failure
+- Update the order transactionally
+- Prevent duplicate fulfilment
+- Redirect to success or failure routes
 
 ⸻
 
@@ -1277,53 +1277,53 @@ Use React Hook Form, Zod, and Zustand draft persistence.
 
 Step 1: Idea
 
-* Request title
-* Detailed description
-* Intended use
-* Category
+- Request title
+- Detailed description
+- Intended use
+- Category
 
 Step 2: References
 
-* Upload images
-* Add reference links
-* Add sketch or document placeholder
-* Explain allowed file types
+- Upload images
+- Add reference links
+- Add sketch or document placeholder
+- Explain allowed file types
 
 Step 3: Specifications
 
-* Approximate width
-* Approximate height
-* Approximate depth
-* Measurement unit
-* Quantity
-* Preferred material
-* Preferred colour
-* Indoor or outdoor use
-* Strength requirement
-* Finish preference
+- Approximate width
+- Approximate height
+- Approximate depth
+- Measurement unit
+- Quantity
+- Preferred material
+- Preferred colour
+- Indoor or outdoor use
+- Strength requirement
+- Finish preference
 
 Step 4: Budget and delivery
 
-* Minimum budget
-* Maximum budget
-* Delivery postal code
-* Required date
-* Quote deadline
+- Minimum budget
+- Maximum budget
+- Delivery postal code
+- Required date
+- Quote deadline
 
 Step 5: Review
 
-* Show all entered details
-* Allow editing
-* Submit for moderation
+- Show all entered details
+- Allow editing
+- Submit for moderation
 
 Save draft progress locally and, when signed in, optionally save it to the database.
 
 After submission:
 
-* Create a custom request
-* Mark it pending moderation
-* Show a confirmation page
-* Add it to the customer’s dashboard
+- Create a custom request
+- Mark it pending moderation
+- Show a confirmation page
+- Add it to the customer’s dashboard
 
 Admin approval moves it to open for quotations.
 
@@ -1335,27 +1335,27 @@ The customer quote page must display quotations in a comparable format.
 
 For each quotation, show:
 
-* Seller
-* Seller rating
-* Verification
-* Price
-* Shipping fee
-* Total
-* Material
-* Proposed production method
-* Production duration
-* Estimated delivery
-* Proposal
-* Revision allowance
-* Valid-until date
+- Seller
+- Seller rating
+- Verification
+- Price
+- Shipping fee
+- Total
+- Material
+- Proposed production method
+- Production duration
+- Estimated delivery
+- Proposal
+- Revision allowance
+- Valid-until date
 
 Allow:
 
-* View seller
-* Ask a question
-* Shortlist
-* Select quotation
-* Reject quotation
+- View seller
+- Ask a question
+- Shortlist
+- Select quotation
+- Reject quotation
 
 Selecting a quote must:
 
@@ -1376,45 +1376,45 @@ The customer should see regular and custom orders together.
 
 Provide tabs:
 
-* All
-* Regular products
-* Custom projects
-* Active
-* Delivered
-* Cancelled
+- All
+- Regular products
+- Custom projects
+- Active
+- Delivered
+- Cancelled
 
 Each order card should show:
 
-* Order number
-* Type
-* Seller
-* Date
-* Total
-* Current status
-* Product image
-* Next expected action
-* Track order
-* View details
+- Order number
+- Type
+- Seller
+- Date
+- Total
+- Current status
+- Product image
+- Next expected action
+- Track order
+- View details
 
 Order detail timeline:
 
-* Order placed
-* Payment confirmed
-* Seller confirmed
-* Design approval, when relevant
-* In production
-* Ready to ship
-* Shipped
-* Out for delivery
-* Delivered
+- Order placed
+- Payment confirmed
+- Seller confirmed
+- Design approval, when relevant
+- In production
+- Ready to ship
+- Shipped
+- Out for delivery
+- Delivered
 
 Custom project details should also show:
 
-* Selected quotation
-* Approved specifications
-* Milestones
-* Design approval state
-* Messages or project notes placeholder
+- Selected quotation
+- Approved specifications
+- Milestones
+- Design approval state
+- Messages or project notes placeholder
 
 ⸻
 
@@ -1424,16 +1424,16 @@ Use a dedicated seller layout.
 
 Desktop:
 
-* Dark fern sidebar
-* White or warm-neutral content area
-* Compact top bar
-* Responsive cards and tables
+- Dark fern sidebar
+- White or warm-neutral content area
+- Compact top bar
+- Responsive cards and tables
 
 Mobile:
 
-* Drawer navigation
-* Compact metric cards
-* Card-based data instead of wide tables where necessary
+- Drawer navigation
+- Compact metric cards
+- Card-based data instead of wide tables where necessary
 
 Seller navigation:
 
@@ -1450,23 +1450,23 @@ Seller overview
 
 Show:
 
-* Total revenue
-* Revenue this month
-* New orders
-* In production
-* Awaiting action
-* Completed orders
-* Pending payout
-* Average seller rating
+- Total revenue
+- Revenue this month
+- New orders
+- In production
+- Awaiting action
+- Completed orders
+- Pending payout
+- Average seller rating
 
 Include:
 
-* Revenue chart
-* Order-status chart
-* Recent orders
-* Recent custom requests
-* Top products
-* Recent reviews
+- Revenue chart
+- Order-status chart
+- Recent orders
+- Recent custom requests
+- Top products
+- Recent reviews
 
 Use real seeded database data, not hardcoded dashboard numbers.
 
@@ -1474,26 +1474,26 @@ Seller products
 
 Table or responsive card list:
 
-* Image
-* Product name
-* Category
-* Price
-* Stock
-* Approval status
-* Published state
-* Views
-* Orders
-* Updated date
-* Actions
+- Image
+- Product name
+- Category
+- Price
+- Stock
+- Approval status
+- Published state
+- Views
+- Orders
+- Updated date
+- Actions
 
 Actions:
 
-* View
-* Edit
-* Duplicate
-* Submit for review
-* Pause
-* Archive
+- View
+- Edit
+- Duplicate
+- Submit for review
+- Pause
+- Archive
 
 Product creation
 
@@ -1522,13 +1522,13 @@ Seller orders
 
 Tabs:
 
-* New
-* Confirmed
-* In production
-* Ready to ship
-* Shipped
-* Completed
-* Cancelled
+- New
+- Confirmed
+- In production
+- Ready to ship
+- Shipped
+- Completed
+- Cancelled
 
 Allow appropriate status transitions only.
 
@@ -1540,55 +1540,55 @@ Seller custom request board
 
 Show only requests that:
 
-* Are approved
-* Are open for quotations
-* Match seller capabilities reasonably
-* Have not expired
-* Are not created by the same user in an invalid scenario
+- Are approved
+- Are open for quotations
+- Match seller capabilities reasonably
+- Have not expired
+- Are not created by the same user in an invalid scenario
 
 Request cards must show:
 
-* Title
-* Category
-* Budget range
-* Quantity
-* Delivery city
-* Required date
-* Quote deadline
-* Attachment count
-* Number of quotations, without exposing confidential amounts
-* Match indicators
+- Title
+- Category
+- Budget range
+- Quantity
+- Delivery city
+- Required date
+- Quote deadline
+- Attachment count
+- Number of quotations, without exposing confidential amounts
+- Match indicators
 
 Seller can:
 
-* Open request
-* Submit quote
-* Save request
-* Ignore request
-* Withdraw own quote before acceptance
+- Open request
+- Submit quote
+- Save request
+- Ignore request
+- Withdraw own quote before acceptance
 
 Seller quotations
 
 Show:
 
-* Submitted
-* Revised
-* Accepted
-* Rejected
-* Expired
-* Withdrawn
+- Submitted
+- Revised
+- Accepted
+- Rejected
+- Expired
+- Withdrawn
 
 Seller payouts
 
 For the MVP:
 
-* Revenue summary
-* Platform commission
-* Net seller amount
-* Pending
-* Eligible
-* Paid
-* Payout history
+- Revenue summary
+- Platform commission
+- Net seller amount
+- Pending
+- Eligible
+- Paid
+- Payout history
 
 Use mock payout records.
 
@@ -1600,13 +1600,13 @@ Create a separate protected admin layout.
 
 Use:
 
-* Dark fern sidebar
-* Clear data tables
-* Status badges
-* Confirmation dialogs
-* Filters
-* Search
-* Audit history
+- Dark fern sidebar
+- Clear data tables
+- Status badges
+- Confirmation dialogs
+- Filters
+- Search
+- Audit history
 
 Admin navigation:
 
@@ -1627,51 +1627,51 @@ Admin overview
 
 Show:
 
-* Gross merchandise value
-* Platform revenue
-* Active sellers
-* Pending seller applications
-* Pending product approvals
-* Open custom requests
-* Active orders
-* Disputes
-* Review moderation queue
+- Gross merchandise value
+- Platform revenue
+- Active sellers
+- Pending seller applications
+- Pending product approvals
+- Open custom requests
+- Active orders
+- Disputes
+- Review moderation queue
 
 Product approval queue
 
 Tabs:
 
-* Pending
-* Changes requested
-* Approved
-* Rejected
+- Pending
+- Changes requested
+- Approved
+- Rejected
 
 Approval-detail page must show in one review surface:
 
-* Product images
-* Product title
-* Description
-* Seller
-* Seller history
-* Category
-* Variants
-* Material
-* Dimensions
-* Pricing
-* Stock
-* Safety notes
-* Intellectual-property declaration
-* Customisation options
-* SEO information
-* Previous admin notes
+- Product images
+- Product title
+- Description
+- Seller
+- Seller history
+- Category
+- Variants
+- Material
+- Dimensions
+- Pricing
+- Stock
+- Safety notes
+- Intellectual-property declaration
+- Customisation options
+- SEO information
+- Previous admin notes
 
 Actions:
 
-* Approve and publish
-* Approve without immediate publication
-* Request changes
-* Reject
-* Add internal note
+- Approve and publish
+- Approve without immediate publication
+- Request changes
+- Reject
+- Add internal note
 
 Require a reason for rejection or requested changes.
 
@@ -1681,51 +1681,51 @@ Seller verification
 
 Review:
 
-* Seller information
-* Store information
-* Location
-* Capabilities
-* Submitted documents as safe placeholders
-* Previous moderation history
+- Seller information
+- Store information
+- Location
+- Capabilities
+- Submitted documents as safe placeholders
+- Previous moderation history
 
 Actions:
 
-* Approve
-* Request changes
-* Reject
-* Suspend
+- Approve
+- Request changes
+- Reject
+- Suspend
 
 Custom request moderation
 
 Check for:
 
-* Clear description
-* Prohibited content
-* Intellectual-property concerns
-* Unsafe items
-* Missing specifications
-* Fraud or spam
+- Clear description
+- Prohibited content
+- Intellectual-property concerns
+- Unsafe items
+- Missing specifications
+- Fraud or spam
 
 Actions:
 
-* Approve and open for quotations
-* Request changes
-* Reject
+- Approve and open for quotations
+- Request changes
+- Reject
 
 Category management
 
 Support:
 
-* Parent and child categories
-* Slug
-* Description
-* Image
-* Icon
-* Display order
-* Active state
-* Product count
-* Category-specific fields
-* SEO information
+- Parent and child categories
+- Slug
+- Description
+- Image
+- Icon
+- Display order
+- Active state
+- Product count
+- Category-specific fields
+- SEO information
 
 Prevent unsafe deletion of a category containing products. Provide reassignment or archival.
 
@@ -1733,30 +1733,30 @@ Review moderation
 
 Support:
 
-* Search
-* Report reason
-* Product
-* Seller
-* Customer
-* Order verification
-* Visibility
-* Moderator decision
-* Audit history
+- Search
+- Report reason
+- Product
+- Seller
+- Customer
+- Order verification
+- Visibility
+- Moderator decision
+- Audit history
 
 Content authoring
 
 Allow administrators to manage:
 
-* Homepage hero
-* Promotional banners
-* Featured categories
-* Featured products
-* Featured sellers
-* How-it-works content
-* FAQs
-* Static pages
-* Footer links
-* SEO metadata
+- Homepage hero
+- Promotional banners
+- Featured categories
+- Featured products
+- Featured sellers
+- How-it-works content
+- FAQs
+- Static pages
+- Footer links
+- SEO metadata
 
 Render homepage content from the database with sensible seeded defaults.
 
@@ -1781,13 +1781,13 @@ Never scatter arbitrary string role checks throughout components.
 
 Server-side rules:
 
-* Customer can access only their orders, addresses, requests, and quotations.
-* Seller can manage only their seller profile, products, quotations, payouts, and relevant order items.
-* Seller cannot approve their own products.
-* Seller cannot access another seller’s private quotation.
-* Admin can access moderation and platform management.
-* Suspended sellers cannot publish, quote, or update fulfilment.
-* Public users can view only published products from approved active sellers.
+- Customer can access only their orders, addresses, requests, and quotations.
+- Seller can manage only their seller profile, products, quotations, payouts, and relevant order items.
+- Seller cannot approve their own products.
+- Seller cannot access another seller’s private quotation.
+- Admin can access moderation and platform management.
+- Suspended sellers cannot publish, quote, or update fulfilment.
+- Public users can view only published products from approved active sellers.
 
 Include tests for permission boundaries.
 
@@ -1801,21 +1801,21 @@ Only verified delivered orders can create reviews.
 
 Prevent:
 
-* Duplicate reviews for the same eligible order item
-* Seller review deletion
-* Reviewing one’s own product
-* Client-side manipulation of order eligibility
-* Review submission before delivery
+- Duplicate reviews for the same eligible order item
+- Seller review deletion
+- Reviewing one’s own product
+- Client-side manipulation of order eligibility
+- Review submission before delivery
 
 Display:
 
-* Average
-* Rating distribution
-* Review count
-* Verified purchase
-* Date
-* Review media
-* Helpful votes
+- Average
+- Rating distribution
+- Review count
+- Verified purchase
+- Date
+- Review media
+- Helpful votes
 
 Keep review moderation transparent through an audit trail.
 
@@ -1829,24 +1829,24 @@ Add a basic prohibited-product policy.
 
 Prevent or flag listings and requests involving:
 
-* Weapons
-* Firearm components
-* Illegal items
-* Dangerous devices
-* Counterfeit branded products
-* Explicit copyrighted-character copying without declaration
-* Medical devices making unverified claims
-* Products likely to be unsafe without proper review
+- Weapons
+- Firearm components
+- Illegal items
+- Dangerous devices
+- Counterfeit branded products
+- Explicit copyrighted-character copying without declaration
+- Medical devices making unverified claims
+- Products likely to be unsafe without proper review
 
 This does not need advanced AI moderation in the MVP.
 
 Implement:
 
-* Required declaration checkbox
-* Admin review fields
-* Moderation reason
-* Report listing action
-* Prohibited-content policy page
+- Required declaration checkbox
+- Admin review fields
+- Moderation reason
+- Report listing action
+- Prohibited-content policy page
 
 Do not implement automated legal decisions.
 
@@ -1858,26 +1858,26 @@ Target WCAG 2.2 AA.
 
 Required:
 
-* Semantic HTML
-* Correct heading hierarchy
-* Keyboard-accessible navigation
-* Visible focus states
-* Skip-to-content link
-* Proper input labels
-* Descriptive validation errors
-* Accessible dialogs
-* Accessible drawers
-* Accessible dropdowns
-* Accessible autocomplete
-* aria-live for async search result counts and cart updates
-* Alt text for meaningful images
-* Empty alt text for decorative images
-* No colour-only status communication
-* Sufficient colour contrast
-* Minimum practical touch target size
-* Reduced-motion support
-* Focus restoration after dialogs
-* Error summary for long forms
+- Semantic HTML
+- Correct heading hierarchy
+- Keyboard-accessible navigation
+- Visible focus states
+- Skip-to-content link
+- Proper input labels
+- Descriptive validation errors
+- Accessible dialogs
+- Accessible drawers
+- Accessible dropdowns
+- Accessible autocomplete
+- aria-live for async search result counts and cart updates
+- Alt text for meaningful images
+- Empty alt text for decorative images
+- No colour-only status communication
+- Sufficient colour contrast
+- Minimum practical touch target size
+- Reduced-motion support
+- Focus restoration after dialogs
+- Error summary for long forms
 
 Do not add ARIA where native HTML already provides the correct semantics.
 
@@ -1887,24 +1887,24 @@ Do not add ARIA where native HTML already provides the correct semantics.
 
 Support:
 
-* 360-pixel mobile width
-* Modern mobile devices
-* Tablets
-* Small laptops
-* Large desktop screens
+- 360-pixel mobile width
+- Modern mobile devices
+- Tablets
+- Small laptops
+- Large desktop screens
 
 Required responsive patterns:
 
-* Mobile navigation drawer
-* Search overlay on mobile
-* Filter drawer on mobile
-* Responsive product grid
-* Sticky mobile product purchase bar
-* Seller and admin sidebar collapses into a drawer
-* Tables become card lists or horizontally controlled views
-* Forms use one column on mobile
-* Dashboard cards reflow cleanly
-* No horizontal page overflow
+- Mobile navigation drawer
+- Search overlay on mobile
+- Filter drawer on mobile
+- Responsive product grid
+- Sticky mobile product purchase bar
+- Seller and admin sidebar collapses into a drawer
+- Tables become card lists or horizontally controlled views
+- Forms use one column on mobile
+- Dashboard cards reflow cleanly
+- No horizontal page overflow
 
 ⸻
 
@@ -1914,47 +1914,47 @@ Optimise for strong Core Web Vitals.
 
 Use:
 
-* Server Components by default
-* Minimal client component boundaries
-* next/image
-* Correct image sizes
-* Lazy loading
-* Route-level loading UI
-* Suspense where useful
-* Dynamic imports for heavy client-only features
-* Database indexes
-* Pagination
-* Debounced search
-* Request deduplication
-* Cached public catalogue queries where safe
-* Revalidation after mutations
-* Avoid large client-side datasets
-* Avoid unnecessary global state
-* Avoid large animation libraries unless genuinely needed
+- Server Components by default
+- Minimal client component boundaries
+- next/image
+- Correct image sizes
+- Lazy loading
+- Route-level loading UI
+- Suspense where useful
+- Dynamic imports for heavy client-only features
+- Database indexes
+- Pagination
+- Debounced search
+- Request deduplication
+- Cached public catalogue queries where safe
+- Revalidation after mutations
+- Avoid large client-side datasets
+- Avoid unnecessary global state
+- Avoid large animation libraries unless genuinely needed
 
 Add database indexes for:
 
-* Product slug
-* Product status
-* Product seller ID
-* Product category ID
-* Product created date
-* Product price
-* Seller slug
-* Seller verification status
-* Order customer ID
-* Order status
-* Order created date
-* Custom request status
-* Quote seller ID
-* Searchable product fields where supported
+- Product slug
+- Product status
+- Product seller ID
+- Product category ID
+- Product created date
+- Product price
+- Seller slug
+- Seller verification status
+- Order customer ID
+- Order status
+- Order created date
+- Custom request status
+- Quote seller ID
+- Searchable product fields where supported
 
 Aim for:
 
-* Lighthouse performance above 90 on key public pages in a production build
-* Accessibility above 95
-* No obvious layout shift
-* No large blocking JavaScript bundle caused by avoidable client components
+- Lighthouse performance above 90 on key public pages in a production build
+- Accessibility above 95
+- No obvious layout shift
+- No large blocking JavaScript bundle caused by avoidable client components
 
 Document any limitation preventing a score.
 
@@ -1966,27 +1966,27 @@ Implement practical marketplace security.
 
 Required:
 
-* Server-side authorisation
-* Zod validation
-* Parameter validation
-* Ownership checks
-* Safe error responses
-* Secure session cookies through authentication configuration
-* Environment-variable validation
-* Rate-limiting abstraction
-* Safe file validation
-* Payment signature verification
-* Idempotent payment and webhook handling
-* No secrets in browser code
-* No secrets in the repository
-* No raw database errors shown to users
-* Audit logging
-* Transactional order and quote selection
-* Protection against mass assignment
-* Safe redirects
-* Prevent open redirects
-* Validate uploaded content metadata
-* Sanitize or safely render seller-entered rich content
+- Server-side authorisation
+- Zod validation
+- Parameter validation
+- Ownership checks
+- Safe error responses
+- Secure session cookies through authentication configuration
+- Environment-variable validation
+- Rate-limiting abstraction
+- Safe file validation
+- Payment signature verification
+- Idempotent payment and webhook handling
+- No secrets in browser code
+- No secrets in the repository
+- No raw database errors shown to users
+- Audit logging
+- Transactional order and quote selection
+- Protection against mass assignment
+- Safe redirects
+- Prevent open redirects
+- Validate uploaded content metadata
+- Sanitize or safely render seller-entered rich content
 
 Do not render arbitrary seller HTML.
 
@@ -1998,29 +1998,29 @@ Use structured text or a safely restricted content format.
 
 Implement:
 
-* Page metadata
-* Dynamic product metadata
-* Dynamic category metadata
-* Canonical URLs
-* Open Graph metadata
-* Twitter card metadata
-* Sitemap
-* Robots file
-* Product structured data
-* Breadcrumb structured data
-* Organisation structured data
-* Descriptive slugs
-* Server-rendered public content
+- Page metadata
+- Dynamic product metadata
+- Dynamic category metadata
+- Canonical URLs
+- Open Graph metadata
+- Twitter card metadata
+- Sitemap
+- Robots file
+- Product structured data
+- Breadcrumb structured data
+- Organisation structured data
+- Descriptive slugs
+- Server-rendered public content
 
 Do not index:
 
-* Account pages
-* Seller dashboards
-* Admin pages
-* Cart
-* Checkout
-* Private custom requests
-* Private quotation pages
+- Account pages
+- Seller dashboards
+- Admin pages
+- Cart
+- Checkout
+- Private custom requests
+- Private quotation pages
 
 ⸻
 
@@ -2030,46 +2030,46 @@ Create polished seed data that makes the application visually useful.
 
 Seed at minimum:
 
-* 1 admin
-* 5 approved sellers
-* 1 pending seller
-* 20 to 30 products
-* 10 categories
-* Product variants
-* Product images using reliable local placeholder assets
-* 8 regular orders in different statuses
-* 5 customer custom requests
-* 8 quotations
-* 3 custom projects
-* 10 product reviews
-* 8 seller reviews
-* Homepage content
-* FAQs
-* Audit events
-* Payout records
+- 1 admin
+- 5 approved sellers
+- 1 pending seller
+- 20 to 30 products
+- 10 categories
+- Product variants
+- Product images using reliable local placeholder assets
+- 8 regular orders in different statuses
+- 5 customer custom requests
+- 8 quotations
+- 3 custom projects
+- 10 product reviews
+- 8 seller reviews
+- Homepage content
+- FAQs
+- Audit events
+- Payout records
 
 Suggested products:
 
-* Minimal phone stand
-* Adjustable phone stand
-* Foldable phone stand
-* Cable organiser
-* Geometric planter
-* Succulent planter
-* Moon lamp holder
-* Articulated dragon
-* Desk pen organiser
-* Headphone stand
-* Controller stand
-* Personalised name plate
-* Wall-mounted key holder
-* Miniature architectural model
-* Custom cookie cutter
-* Replacement appliance knob
-* Educational molecule model
-* Jewellery organiser
-* Book stand
-* Laptop riser
+- Minimal phone stand
+- Adjustable phone stand
+- Foldable phone stand
+- Cable organiser
+- Geometric planter
+- Succulent planter
+- Moon lamp holder
+- Articulated dragon
+- Desk pen organiser
+- Headphone stand
+- Controller stand
+- Personalised name plate
+- Wall-mounted key holder
+- Miniature architectural model
+- Custom cookie cutter
+- Replacement appliance knob
+- Educational molecule model
+- Jewellery organiser
+- Book stand
+- Laptop riser
 
 Use realistic Indian pricing.
 
@@ -2091,25 +2091,25 @@ The seed script must be idempotent.
 
 Create thoughtful states for:
 
-* No search results
-* Empty cart
-* Empty wishlist
-* No orders
-* No custom requests
-* No quotes received
-* No seller products
-* No seller orders
-* No eligible custom requests
-* No pending admin approvals
-* Authentication required
-* Permission denied
-* Suspended seller
-* Expired quote
-* Payment failed
-* Upload failed
-* Network error
-* Missing product
-* Archived product
+- No search results
+- Empty cart
+- Empty wishlist
+- No orders
+- No custom requests
+- No quotes received
+- No seller products
+- No seller orders
+- No eligible custom requests
+- No pending admin approvals
+- Authentication required
+- Permission denied
+- Suspended seller
+- Expired quote
+- Payment failed
+- Upload failed
+- Network error
+- Missing product
+- Archived product
 
 Do not leave empty tables without explanation or action.
 
@@ -2119,12 +2119,12 @@ Do not leave empty tables without explanation or action.
 
 Implement:
 
-* Toast notifications
-* Inline form feedback
-* Confirmation dialogs
-* Success pages
-* Status badges
-* Dashboard alerts
+- Toast notifications
+- Inline form feedback
+- Confirmation dialogs
+- Success pages
+- Status badges
+- Dashboard alerts
 
 Do not show a success message until the server mutation actually succeeds.
 
@@ -2140,36 +2140,36 @@ Unit and component tests
 
 Test:
 
-* Currency formatting
-* Price calculations
-* Search parameter parsing
-* Permission helpers
-* Status transition validation
-* Rating calculations
-* Zod schemas
-* Cart store
-* Custom request draft store
-* Search autocomplete keyboard interaction
-* Product variant selection
-* Quote comparison
-* Admin approval form
+- Currency formatting
+- Price calculations
+- Search parameter parsing
+- Permission helpers
+- Status transition validation
+- Rating calculations
+- Zod schemas
+- Cart store
+- Custom request draft store
+- Search autocomplete keyboard interaction
+- Product variant selection
+- Quote comparison
+- Admin approval form
 
 Integration tests
 
 Test:
 
-* Product submission creates pending-review status
-* Admin approval publishes product
-* Unapproved product stays unavailable publicly
-* Customer can create a custom request
-* Admin can approve the request
-* Seller can submit a quote
-* Seller cannot see another private quote
-* Customer can select only one quote
-* Payment success creates the custom project
-* Delivered order enables review
-* Undelivered order rejects review
-* Suspended seller cannot submit products or quotes
+- Product submission creates pending-review status
+- Admin approval publishes product
+- Unapproved product stays unavailable publicly
+- Customer can create a custom request
+- Admin can approve the request
+- Seller can submit a quote
+- Seller cannot see another private quote
+- Customer can select only one quote
+- Payment success creates the custom project
+- Delivered order enables review
+- Undelivered order rejects review
+- Suspended seller cannot submit products or quotes
 
 Playwright flows
 
@@ -2192,37 +2192,37 @@ Run accessibility checks on important pages where practical.
 Provide scripts:
 
 {
-  "dev": "...",
-  "build": "...",
-  "start": "...",
-  "lint": "...",
-  "typecheck": "...",
-  "test": "...",
-  "test:watch": "...",
-  "test:e2e": "...",
-  "db:generate": "...",
-  "db:migrate": "...",
-  "db:seed": "...",
-  "db:reset": "..."
+"dev": "...",
+"build": "...",
+"start": "...",
+"lint": "...",
+"typecheck": "...",
+"test": "...",
+"test:watch": "...",
+"test:e2e": "...",
+"db:generate": "...",
+"db:migrate": "...",
+"db:seed": "...",
+"db:reset": "..."
 }
 
 Provide:
 
-* .env.example
-* README.md
-* Setup instructions
-* Docker instructions
-* Database migration instructions
-* Seed instructions
-* Google OAuth setup instructions
-* Razorpay sandbox setup instructions
-* Mock-payment instructions
-* Production deployment notes
-* Demo account details
-* Architecture overview
-* Role and permission overview
-* Known limitations
-* Future roadmap
+- .env.example
+- README.md
+- Setup instructions
+- Docker instructions
+- Database migration instructions
+- Seed instructions
+- Google OAuth setup instructions
+- Razorpay sandbox setup instructions
+- Mock-payment instructions
+- Production deployment notes
+- Demo account details
+- Architecture overview
+- Role and permission overview
+- Known limitations
+- Future roadmap
 
 Validate environment variables using Zod.
 
@@ -2245,9 +2245,9 @@ External OAuth and Razorpay credentials must be optional for the local demo.
 
 When Google OAuth credentials are absent:
 
-* Email and password demo authentication must still work.
-* The Google button may be disabled with a clear development message or hidden based on configuration.
-* The application must not crash.
+- Email and password demo authentication must still work.
+- The Google button may be disabled with a clear development message or hidden based on configuration.
+- The application must not crash.
 
 ⸻
 
@@ -2270,72 +2270,72 @@ Stage 2: Foundation
 
 Implement:
 
-* Project setup
-* Design tokens
-* Global styles
-* Base layouts
-* Database
-* Authentication
-* Roles
-* Permissions
-* Seed data
-* Shared UI components
+- Project setup
+- Design tokens
+- Global styles
+- Base layouts
+- Database
+- Authentication
+- Roles
+- Permissions
+- Seed data
+- Shared UI components
 
 Stage 3: Customer marketplace
 
 Implement:
 
-* Homepage
-* Search
-* Categories
-* Product cards
-* Product details
-* Wishlist
-* Cart
-* Checkout
-* Account orders
+- Homepage
+- Search
+- Categories
+- Product cards
+- Product details
+- Wishlist
+- Cart
+- Checkout
+- Account orders
 
 Stage 4: Custom request marketplace
 
 Implement:
 
-* Request form
-* Request moderation state
-* Seller request board
-* Quotation submission
-* Quote comparison
-* Quote selection
-* Custom project creation
-* Unified order dashboard
+- Request form
+- Request moderation state
+- Seller request board
+- Quotation submission
+- Quote comparison
+- Quote selection
+- Custom project creation
+- Unified order dashboard
 
 Stage 5: Seller dashboard
 
 Implement:
 
-* Overview
-* Products
-* Product form
-* Orders
-* Custom requests
-* Quotations
-* Reviews
-* Payouts
-* Store settings
+- Overview
+- Products
+- Product form
+- Orders
+- Custom requests
+- Quotations
+- Reviews
+- Payouts
+- Store settings
 
 Stage 6: Admin dashboard
 
 Implement:
 
-* Overview
-* Product approval
-* Seller verification
-* Categories
-* Custom request moderation
-* Reviews
-* Content authoring
-* Users
-* Settings
-* Audit logs
+- Overview
+- Product approval
+- Seller verification
+- Categories
+- Custom request moderation
+- Reviews
+- Content authoring
+- Users
+- Settings
+- Audit logs
 
 Stage 7: Quality
 
@@ -2357,22 +2357,22 @@ Run the application.
 
 Compare key pages with the attached green reference:
 
-* Homepage
-* Product results
-* Product page
-* Seller dashboard
-* Admin approval page
+- Homepage
+- Product results
+- Product page
+- Seller dashboard
+- Admin approval page
 
 Check:
 
-* Colour accuracy
-* Spacing
-* Typography
-* Visual hierarchy
-* Responsive behaviour
-* Image proportions
-* Button consistency
-* Card density
+- Colour accuracy
+- Spacing
+- Typography
+- Visual hierarchy
+- Responsive behaviour
+- Image proportions
+- Button consistency
+- Card density
 
 Improve obvious visual mismatches while preserving usability.
 
@@ -2382,37 +2382,37 @@ Improve obvious visual mismatches while preserving usability.
 
 Create reusable components where appropriate:
 
-* SiteHeader
-* MobileNavigation
-* SiteFooter
-* SearchAutocomplete
-* CategoryMenu
-* ProductCard
-* ProductGrid
-* ProductGallery
-* PriceDisplay
-* RatingSummary
-* ReviewCard
-* SellerCard
-* StatusBadge
-* OrderTimeline
-* EmptyState
-* ErrorState
-* LoadingSkeleton
-* FilterSidebar
-* MobileFilterDrawer
-* Pagination
-* ImageUploader
-* AddressForm
-* CustomRequestStepper
-* QuoteCard
-* QuoteComparison
-* MetricCard
-* DashboardSidebar
-* DataTable
-* ConfirmationDialog
-* ModerationPanel
-* AuditLogTimeline
+- SiteHeader
+- MobileNavigation
+- SiteFooter
+- SearchAutocomplete
+- CategoryMenu
+- ProductCard
+- ProductGrid
+- ProductGallery
+- PriceDisplay
+- RatingSummary
+- ReviewCard
+- SellerCard
+- StatusBadge
+- OrderTimeline
+- EmptyState
+- ErrorState
+- LoadingSkeleton
+- FilterSidebar
+- MobileFilterDrawer
+- Pagination
+- ImageUploader
+- AddressForm
+- CustomRequestStepper
+- QuoteCard
+- QuoteComparison
+- MetricCard
+- DashboardSidebar
+- DataTable
+- ConfirmationDialog
+- ModerationPanel
+- AuditLogTimeline
 
 Do not force unrelated screens into one excessively configurable component.
 
@@ -2424,59 +2424,59 @@ The task is complete only when all of the following are true:
 
 Application
 
-* The project installs successfully.
-* The development server starts.
-* The production build succeeds.
-* Database migration succeeds.
-* Seed script succeeds.
-* Demo authentication works.
-* No page is only an unexplained placeholder.
-* Major flows persist data.
+- The project installs successfully.
+- The development server starts.
+- The production build succeeds.
+- Database migration succeeds.
+- Seed script succeeds.
+- Demo authentication works.
+- No page is only an unexplained placeholder.
+- Major flows persist data.
 
 Customer
 
-* Customer can browse approved products.
-* Search suggestions work.
-* Enter opens a dedicated search route.
-* Filters are represented in the URL.
-* Customer can open a product.
-* Customer can add a product to cart.
-* Customer can complete mock checkout.
-* Customer can view the created order.
-* Customer can post a custom request.
-* Customer can compare and accept quotations.
-* Customer can see custom projects in orders.
-* Customer can review a delivered purchase.
+- Customer can browse approved products.
+- Search suggestions work.
+- Enter opens a dedicated search route.
+- Filters are represented in the URL.
+- Customer can open a product.
+- Customer can add a product to cart.
+- Customer can complete mock checkout.
+- Customer can view the created order.
+- Customer can post a custom request.
+- Customer can compare and accept quotations.
+- Customer can see custom projects in orders.
+- Customer can review a delivered purchase.
 
 Seller
 
-* Seller can view database-backed dashboard metrics.
-* Seller can create a product.
-* Seller can submit it for review.
-* Seller cannot publish it directly.
-* Seller can manage relevant orders.
-* Seller can browse eligible custom requests.
-* Seller can submit and manage quotations.
+- Seller can view database-backed dashboard metrics.
+- Seller can create a product.
+- Seller can submit it for review.
+- Seller cannot publish it directly.
+- Seller can manage relevant orders.
+- Seller can browse eligible custom requests.
+- Seller can submit and manage quotations.
 
 Admin
 
-* Admin can approve or reject a seller.
-* Admin can approve, reject, or request changes to a product.
-* Approved product becomes public.
-* Admin can moderate custom requests.
-* Admin can manage categories.
-* Admin can manage homepage content.
-* Admin actions generate audit entries.
+- Admin can approve or reject a seller.
+- Admin can approve, reject, or request changes to a product.
+- Approved product becomes public.
+- Admin can moderate custom requests.
+- Admin can manage categories.
+- Admin can manage homepage content.
+- Admin actions generate audit entries.
 
 Quality
 
-* Role boundaries are enforced server-side.
-* Important flows have tests.
-* The application is responsive.
-* Core pages are keyboard accessible.
-* No critical console errors occur.
-* There are no known implementation-caused build failures.
-* README contains complete setup instructions.
+- Role boundaries are enforced server-side.
+- Important flows have tests.
+- The application is responsive.
+- Core pages are keyboard accessible.
+- No critical console errors occur.
+- There are no known implementation-caused build failures.
+- README contains complete setup instructions.
 
 ⸻
 

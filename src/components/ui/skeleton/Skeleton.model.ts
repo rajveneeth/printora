@@ -1,3 +1,5 @@
 import type { HTMLAttributes } from 'react';
 
-export interface SkeletonProps extends HTMLAttributes<HTMLDivElement> { readonly label?: string; }
+export interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
+  readonly label?: string;
+}

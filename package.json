@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "node scripts/run-jest.cjs",
+    "test": "node scripts/run-jest.mjs",
     "test:watch": "jest --watch",
     "test:e2e": "playwright test",
     "format": "prettier --write .",

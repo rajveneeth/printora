@@ -1,10 +1,5 @@
 export type SellerVerificationStatus =
-  | 'NOT_APPLIED'
-  | 'PENDING'
-  | 'CHANGES_REQUESTED'
-  | 'APPROVED'
-  | 'REJECTED'
-  | 'SUSPENDED';
+  'NOT_APPLIED' | 'PENDING' | 'CHANGES_REQUESTED' | 'APPROVED' | 'REJECTED' | 'SUSPENDED';
 
 export interface SellerProfileModel {
   id: string;
