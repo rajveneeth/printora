@@ -15,10 +15,10 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "ci": "echo \"Quality checks are deferred until the hardening phase\"",
-    "db:generate": "echo \"Prisma is introduced in phase 3\"",
-    "db:migrate": "echo \"Prisma migrations are introduced in phase 3\"",
-    "db:seed": "echo \"Seed data is introduced in phase 3\"",
-    "db:reset": "echo \"Database reset is introduced in phase 3\"",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:seed": "prisma db seed",
+    "db:reset": "prisma migrate reset",
     "prepare": "husky",
     "commitlint": "commitlint --edit",
     "precommit": "lint-staged",
@@ -32,7 +32,8 @@
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "zod": "latest"
+    "zod": "latest",
+    "@prisma/client": "latest"
   },
   "devDependencies": {
     "@commitlint/cli": "latest",
@@ -56,11 +57,16 @@
     "sass": "latest",
     "tailwindcss": "latest",
     "ts-jest": "latest",
-    "typescript": "latest"
+    "typescript": "latest",
+    "prisma": "latest",
+    "tsx": "latest"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,mjs,cjs,json,md,scss,css,yml,yaml}": [
       "prettier --check"
     ]
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   }
 }

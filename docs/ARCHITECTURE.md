@@ -97,4 +97,4 @@ tests/
 - Tailwind v4 theme tokens are mapped to CSS custom properties in `src/styles/globals.scss`.
 - Reusable UI primitives expose public APIs through local barrels and keep accessibility states in native HTML where possible.
 - Strict TypeScript, ESLint, Prettier, Jest, React Testing Library, and CI are established before feature work.
-- Database, authentication, and marketplace features are intentionally deferred to later prompts to keep this phase controlled.
+- Prompt 3 defines the Prisma schema, seed data, domain model contracts, and repository interfaces while deferring concrete persistence implementations to later feature prompts.

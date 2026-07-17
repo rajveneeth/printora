@@ -1,6 +1,6 @@
 # Formivo 3D
 
-Formivo 3D is a planned full-stack marketplace for ready-made and custom 3D-printed products. This repository currently contains Prompt 2: the architecture foundation plus the green design-system and reusable UI foundation.
+Formivo 3D is a planned full-stack marketplace for ready-made and custom 3D-printed products. This repository currently contains Prompt 3: the architecture foundation, green design-system, and database/domain-model foundation.
 
 ## Product identity
 
@@ -80,7 +80,7 @@ tests/
 .github/workflows/
 ```
 
-Prompt 2 adds reusable UI primitives under `src/components/ui`, SCSS token files under `src/styles/tokens`, base responsive rules, and Tailwind theme bindings. Later prompts will add domain feature modules, repositories, services, Prisma, authentication, storefront, dashboards, and end-to-end tests.
+Prompt 3 adds Prisma schema files under `prisma/`, repository contracts under `src/repositories`, domain model contracts under `src/models`, Docker Compose PostgreSQL setup, idempotent seed data, and database documentation. Later prompts will add concrete repository implementations, authentication, storefront, dashboards, integrations, and end-to-end tests.
 
 ## Local setup
 
@@ -103,22 +103,22 @@ pnpm build
 
 ## Environment variables
 
-| Variable | Required now | Purpose |
-| --- | --- | --- |
-| `NEXT_PUBLIC_APP_URL` | Yes | Canonical local application URL. |
-| `DATABASE_URL` | No | Added for future Prisma phases. |
-| `BETTER_AUTH_SECRET` | No | Added for future authentication phases. |
-| `BETTER_AUTH_URL` | No | Added for future authentication phases. |
-| `GOOGLE_CLIENT_ID` | No | Optional future Google OAuth. |
-| `GOOGLE_CLIENT_SECRET` | No | Optional future Google OAuth. |
-| `RAZORPAY_KEY_ID` | No | Optional future Razorpay sandbox. |
-| `RAZORPAY_KEY_SECRET` | No | Optional future Razorpay sandbox. |
+| Variable               | Required now          | Purpose                                      |
+| ---------------------- | --------------------- | -------------------------------------------- |
+| `NEXT_PUBLIC_APP_URL`  | Yes                   | Canonical local application URL.             |
+| `DATABASE_URL`         | Yes for database work | PostgreSQL connection string used by Prisma. |
+| `BETTER_AUTH_SECRET`   | No                    | Added for future authentication phases.      |
+| `BETTER_AUTH_URL`      | No                    | Added for future authentication phases.      |
+| `GOOGLE_CLIENT_ID`     | No                    | Optional future Google OAuth.                |
+| `GOOGLE_CLIENT_SECRET` | No                    | Optional future Google OAuth.                |
+| `RAZORPAY_KEY_ID`      | No                    | Optional future Razorpay sandbox.            |
+| `RAZORPAY_KEY_SECRET`  | No                    | Optional future Razorpay sandbox.            |
 
 ## Implementation phases
 
 1. Architecture and project foundation.
 2. Design system and reusable UI foundation.
-3. Database schema, migrations, repositories, and seed data.
+3. Database schema, repository contracts, model contracts, Docker PostgreSQL setup, and seed data.
 4. Authentication, sessions, roles, and permissions.
 5. Customer storefront, categories, products, and discovery.
 6. Search suggestions, filters, sorting, and accessible keyboard flows.
@@ -133,9 +133,8 @@ The visual foundation follows the approved green reference: fern primary actions
 
 ## Known limitations
 
-- Prompt 2 intentionally does not implement feature pages, database models, authentication, payments, storage, or seed data.
-- Database scripts are placeholders until the Prisma phase.
-
+- Prompt 3 intentionally does not implement feature pages, authentication, payments, storage, concrete repository implementations, or checkout workflows.
+- Payment and shipping integrations are intentionally deferred.
 
 ## CI notes
 
