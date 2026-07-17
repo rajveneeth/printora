@@ -1,6 +1,6 @@
 # Implementation Plan
 
-## Prompt 3 completion checklist
+## Prompt 4 completion checklist
 
 - Architecture proposal documented.
 - Mermaid diagrams added to architecture documentation and README.
@@ -14,6 +14,7 @@
 - Tailwind theme bindings and SCSS base architecture created.
 - Reusable Button, Input, Select, Card, Badge, Modal, Skeleton, EmptyState, and ErrorState components created with barrel exports and tests.
 - Prisma schema created for authentication, buyer, seller, catalogue, cart, order, review, favourite, inventory, and address entities.
+- Credential sign-up, sign-in, sign-out, HTTP-only sessions, protected routes, role dashboards, unauthorised state, and authentication tests added.
 - Docker Compose PostgreSQL service added.
 - Idempotent Prisma seed data added.
 - Domain model contracts and repository contracts added.
