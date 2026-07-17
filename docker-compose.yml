@@ -1,0 +1,13 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: formivo
+      POSTGRES_USER: formivo
+      POSTGRES_PASSWORD: formivo
+    volumes:
+      - formivo-postgres:/var/lib/postgresql/data
+volumes:
+  formivo-postgres:
