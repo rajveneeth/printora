@@ -7,6 +7,6 @@ export interface SelectOption {
 export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   readonly label: string;
   readonly options: ReadonlyArray<SelectOption>;
-  readonly error?: string;
-  readonly placeholder?: string;
+  readonly error?: string | undefined;
+  readonly placeholder?: string | undefined;
 }

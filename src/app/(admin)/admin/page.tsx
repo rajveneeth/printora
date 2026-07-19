@@ -1,7 +1,10 @@
 import { Card } from '@/components/ui';
 import { requireRole } from '@/lib/auth/session';
+import { adminEnvironment } from '@/lib/validation/environment';
+import { redirect } from 'next/navigation';
 
 export default async function AdminPage() {
+  if (!adminEnvironment.ADMIN_DASHBOARD_ENABLED) redirect('/unauthorised');
   const session = await requireRole('ADMIN');
   return (
     <main className="mx-auto grid min-h-screen w-full max-w-[var(--container-max)] gap-6 px-[var(--gutter)] py-12">

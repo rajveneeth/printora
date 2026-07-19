@@ -5,7 +5,7 @@
   "packageManager": "pnpm@10.28.1",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
@@ -25,15 +25,17 @@
     "prepush": "pnpm run ci"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.4.0",
     "@next/env": "latest",
+    "@prisma/client": "6.19.0",
     "@tailwindcss/postcss": "latest",
     "clsx": "latest",
     "lucide-react": "latest",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "zod": "latest",
-    "@prisma/client": "6.19.0"
+    "react-hook-form": "^7.82.0",
+    "zod": "latest"
   },
   "devDependencies": {
     "@commitlint/cli": "latest",
@@ -55,12 +57,12 @@
     "lint-staged": "latest",
     "postcss": "latest",
     "prettier": "latest",
+    "prisma": "6.19.0",
     "sass": "latest",
     "tailwindcss": "latest",
     "ts-jest": "latest",
-    "typescript": "^5.9.3",
-    "prisma": "6.19.0",
     "tsx": "latest",
+    "typescript": "^5.9.3",
     "typescript-eslint": "latest"
   },
   "lint-staged": {

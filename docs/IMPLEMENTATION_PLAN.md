@@ -1,6 +1,20 @@
 # Implementation Plan
 
-## Prompt 6 delivery checklist
+## Prompt 7 delivery checklist
+
+- Preserve the Prompt 1–6 authentication, catalogue, search, reusable component, and design-system foundation.
+- Add seller onboarding with a persisted application snapshot and verification status.
+- Add an approved-seller profile editor and a database-backed dashboard with revenue, order, product, inventory, and review metrics.
+- Add seller-owned product listing, creation, editing, duplication, draft, review submission, approved publication, pause, and archival workflows.
+- Add explicit product lifecycle rules so a seller cannot publish an unapproved listing.
+- Add product image metadata management behind a typed local URL storage provider that can later be replaced by object storage.
+- Add product-level and variant-level inventory management with reserved-stock protection and low-stock thresholds.
+- Add shared Zod validation, central seller permission helpers, ownership checks, suspended-seller restrictions, and mutation audit events.
+- Separate shared, customer, seller, and admin environment configuration by prefixed schemas and documented groups.
+- Add meaningful Jest coverage for permission boundaries, lifecycle transitions, product validation, image validation, and inventory rules.
+- Run Prisma generation, type checking, linting, formatting checks, tests, and a production build.
+
+## Prompt 6 delivery record
 
 - Preserve the Prompt 1–5 authentication, catalogue, reusable component, and design-system foundation.
 - Add the public `/search` route and typed `/api/search/suggestions` endpoint.
@@ -13,6 +27,13 @@
 - Seed a minimal, adjustable, and foldable phone-stand workflow.
 - Add meaningful Jest and React Testing Library coverage for parsing, URL persistence, database query construction, recent searches, suggestions, and keyboard interactions.
 - Run type checking, linting, formatting checks, tests, and a production build.
+
+## Prompt 7 validation record
+
+- Prisma client generation and schema validation pass with Prisma 6.19.
+- Strict TypeScript, ESLint, Prettier, Jest, React Testing Library, and the Next.js webpack production build pass.
+- The complete Jest suite contains 26 suites and 59 tests after the seller delivery.
+- Applying the committed migration and running the idempotent seed require a running PostgreSQL service. The local Docker daemon was unavailable during implementation, so those two database-runtime commands remain to be run after Docker starts.
 
 ## Requirement mapping
 
