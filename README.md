@@ -1,6 +1,8 @@
 # Formivo 3D
 
-Formivo 3D is a full-stack marketplace foundation for ready-made and custom 3D-printed products. The current implementation includes Prompt 6: deterministic database search, category-guided discovery, accessible suggestions, recent searches, persistent URL filters, responsive result states, and the existing buyer storefront and catalogue foundation.
+Formivo 3D is a full-stack marketplace foundation for ready-made and custom 3D-printed products. It currently includes credential authentication, a PostgreSQL/Prisma domain model, database-backed deterministic search, category-guided discovery, accessible suggestions, recent searches, persistent URL filters, and the buyer storefront foundation.
+
+> **Architecture status:** `/search` and search suggestions use PostgreSQL. The homepage, general catalogue, category pages, and product detail pages still read a deterministic TypeScript fixture. Google OAuth, Better Auth, Razorpay, and GraphQL are planned integrations, not enabled features. See [Backend and data evolution](docs/BACKEND_EVOLUTION.md) for the audited migration plan.
 
 ## Product identity
 
@@ -17,6 +19,7 @@ Formivo 3D is a full-stack marketplace foundation for ready-made and custom 3D-p
 - Tailwind CSS v4 entrypoint mapped to shared CSS variables
 - SCSS token, base, and component-module styling architecture
 - Zod environment validation
+- PostgreSQL 16 and Prisma
 - Jest and React Testing Library
 - ESLint and Prettier
 - pnpm 10
@@ -26,14 +29,15 @@ Formivo 3D is a full-stack marketplace foundation for ready-made and custom 3D-p
 ```mermaid
 flowchart LR
     User[Customer Seller Admin] --> Web[Next.js App Router]
-    Web --> Auth[Better Auth]
-    Web --> Actions[Server Actions and Route Handlers]
+    Web --> Auth[Custom credential sessions]
+    Web --> Actions[Server Components and Route Handlers]
     Actions --> Services[Domain Services]
     Services --> Repositories[Repository Layer]
     Repositories --> Database[(PostgreSQL via Prisma)]
     Services --> Storage[Storage Provider]
     Services --> Search[Database Search]
-    Services --> Payment[Payment Provider]
+    Services -. future .-> GraphQL[GraphQL API adapter]
+    Services -. future .-> Payment[Payment Provider]
 ```
 
 ```mermaid
@@ -78,6 +82,8 @@ src/
   lib/                         Authentication, Prisma, and shared utilities
   styles/                      Tokens, base styling, and global Tailwind bindings
 docs/
+  ENVIRONMENT.md               Local, OAuth, secret, and production runbook
+  BACKEND_EVOLUTION.md         Database and GraphQL delivery plan
 tests/
 .github/workflows/
 ```
@@ -85,6 +91,8 @@ tests/
 Server Components compose public catalogue pages from typed catalogue and search services. The `/search` route queries published products from approved active sellers through a Prisma repository and deterministically ranks the returned catalogue records. Filters, sort order, and page selection remain in URL search parameters. Focused Client Components handle autocomplete, recent-search storage, navigation drawers, the product gallery, product options, and wishlist feedback. Catalogue money is represented in paise and formatted centrally as INR.
 
 ## Local setup
+
+Prerequisites are Node.js, pnpm 10, Docker, and Docker Compose. No Google, payment, or GraphQL credentials are required for the features implemented today.
 
 ```bash
 pnpm install
@@ -95,6 +103,8 @@ pnpm db:migrate
 pnpm db:seed
 pnpm dev
 ```
+
+The complete key-acquisition, local configuration, production secret-management, migration, and troubleshooting procedure is in [Environment and deployment configuration](docs/ENVIRONMENT.md).
 
 ## Quality commands
 
@@ -109,16 +119,26 @@ pnpm build
 
 ## Environment variables
 
-| Variable               | Required now          | Purpose                                                  |
-| ---------------------- | --------------------- | -------------------------------------------------------- |
-| `NEXT_PUBLIC_APP_URL`  | Yes                   | Canonical local application URL.                         |
-| `DATABASE_URL`         | Yes for database work | PostgreSQL connection string used by Prisma.             |
-| `BETTER_AUTH_SECRET`   | No                    | Reserved for future Auth.js or Better Auth adapter work. |
-| `BETTER_AUTH_URL`      | No                    | Reserved for future Auth.js or Better Auth adapter work. |
-| `GOOGLE_CLIENT_ID`     | No                    | Optional future Google OAuth.                            |
-| `GOOGLE_CLIENT_SECRET` | No                    | Optional future Google OAuth.                            |
-| `RAZORPAY_KEY_ID`      | No                    | Optional future Razorpay sandbox.                        |
-| `RAZORPAY_KEY_SECRET`  | No                    | Optional future Razorpay sandbox.                        |
+| Variable               | Required now                                        | Purpose                                                     |
+| ---------------------- | --------------------------------------------------- | ----------------------------------------------------------- |
+| `NEXT_PUBLIC_APP_URL`  | Yes                                                 | Canonical application origin. This is intentionally public. |
+| `DATABASE_URL`         | Yes for database-backed runtime and Prisma commands | Server-only PostgreSQL connection string.                   |
+| `BETTER_AUTH_SECRET`   | No                                                  | Reserved; not consumed by current custom sessions.          |
+| `BETTER_AUTH_URL`      | No                                                  | Reserved; not consumed until Better Auth is adopted.        |
+| `GOOGLE_CLIENT_ID`     | No                                                  | Reserved until Google OAuth routes and UI are implemented.  |
+| `GOOGLE_CLIENT_SECRET` | No                                                  | Reserved server-only OAuth credential.                      |
+| `RAZORPAY_KEY_ID`      | No                                                  | Reserved until payment integration.                         |
+| `RAZORPAY_KEY_SECRET`  | No                                                  | Reserved server-only payment credential.                    |
+
+Do not assume a feature is active because its variable appears in `.env.example`. Runtime integration status and exact setup steps are maintained in [`docs/ENVIRONMENT.md`](docs/ENVIRONMENT.md).
+
+## Backend and GraphQL direction
+
+The recommended product-stage architecture is a **single-repository modular monolith**. Next.js owns rendering and HTTP adapters; domain services own business rules; repository interfaces isolate Prisma and PostgreSQL. This avoids premature distributed-system overhead while leaving explicit seams for future extraction.
+
+The next data milestone is to replace fixture-backed catalogue reads with a Prisma catalogue repository. GraphQL should follow as an optional typed transport over the same services, rather than bypassing repositories or duplicating business logic. Server Components should continue to load SEO-critical pages directly on the server; focused Client Components can use generated GraphQL operations for interactive dashboards and mutations.
+
+See [`docs/BACKEND_EVOLUTION.md`](docs/BACKEND_EVOLUTION.md) for current-state findings, target and sequence diagrams, phased delivery, security controls, extraction criteria, and definition of done. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the repository-wide architecture record.
 
 ## Implementation phases
 
