@@ -10,5 +10,7 @@ describe('environment validation', () => {
     expect(environment.SELLER_DASHBOARD_ENABLED).toBe(true);
     expect(environment.ADMIN_DASHBOARD_ENABLED).toBe(true);
     expect(environment.SELLER_IMAGE_MAX_COUNT).toBe(8);
+    expect(environment.PAYMENT_PROVIDER).toBe('mock');
+    expect(environment.ALLOW_MOCK_PAYMENTS_IN_PRODUCTION).toBe(false);
   });
 });

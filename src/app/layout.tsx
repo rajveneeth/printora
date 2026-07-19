@@ -4,6 +4,7 @@ import { Geist, Geist_Mono, Manrope } from 'next/font/google';
 import '@/styles/tailwind.css';
 import '@/styles/globals.scss';
 import { siteConfig } from '@/config/site';
+import { CartHydrator } from '@/features/cart';
 import { environment } from '@/lib/validation/env';
 
 const manrope = Manrope({ subsets: ['latin'], variable: '--font-heading' });
@@ -22,7 +23,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en" className={`${manrope.variable} ${geist.variable} ${geistMono.variable}`}>
-      <body>{children}</body>
+      <body>
+        <CartHydrator />
+        {children}
+      </body>
     </html>
   );
 }

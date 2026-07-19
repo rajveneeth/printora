@@ -1,7 +1,8 @@
 import Link from 'next/link';
-import { Heart, Menu, Package, ShoppingBag, UserRound } from 'lucide-react';
+import { Heart, Menu, Package, UserRound } from 'lucide-react';
 import { categories } from '@/features/catalogue';
 import { SearchAutocomplete } from '@/features/search';
+import { CartIndicator } from '@/features/cart';
 import { siteConfig } from '@/config/site';
 import { MobileNavigation } from './MobileNavigation';
 import styles from './SiteHeader.module.scss';
@@ -45,16 +46,9 @@ export function SiteHeader() {
               <UserRound size={19} />
               <span>Account</span>
             </Link>
-            <Link className={styles.cart} href="/products" aria-label="Shopping bag, empty">
-              <ShoppingBag size={19} />
-              <span>Bag</span>
-              <b>0</b>
-            </Link>
+            <CartIndicator className={styles.cart} />
           </nav>
-          <Link className={styles.mobileCart} href="/products" aria-label="Shopping bag, empty">
-            <ShoppingBag size={21} />
-            <span>0</span>
-          </Link>
+          <CartIndicator className={styles.mobileCart} compact />
         </div>
       </div>
       <div className={styles.navigationBar}>

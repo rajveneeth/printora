@@ -23,7 +23,7 @@ export function PriceDisplay({
         ) : null}
         {discount ? <span className={styles.discount}>{discount}% off</span> : null}
       </div>
-      {taxNote ? <p>Inclusive of applicable taxes</p> : null}
+      {taxNote ? <p>Applicable tax is calculated at checkout</p> : null}
     </div>
   );
 }

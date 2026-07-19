@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { sessionCookieName } from '@/lib/auth/constants';
 
-const protectedPrefixes = ['/account', '/seller', '/admin'];
+const protectedPrefixes = ['/account', '/seller', '/admin', '/checkout'];
 
 export function middleware(request: NextRequest) {
   const needsSession = protectedPrefixes.some((prefix) =>

@@ -1,0 +1,42 @@
+.main {
+  width: min(100%, var(--container-max));
+  min-height: 70vh;
+  margin: 0 auto;
+  padding: var(--space-6) var(--gutter) var(--space-16);
+}
+
+.main > nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--muted-foreground);
+  font-size: var(--font-size-xs);
+}
+
+.main > nav a:hover {
+  color: var(--primary);
+}
+
+.main > header {
+  max-width: 45rem;
+  padding: var(--space-8) 0;
+}
+
+.main > header p {
+  color: var(--primary);
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+  letter-spacing: var(--letter-spacing-label);
+  text-transform: uppercase;
+}
+
+.main h1 {
+  margin-top: var(--space-2);
+  font-size: var(--font-size-3xl);
+}
+
+.main > header span {
+  display: block;
+  margin-top: var(--space-2);
+  color: var(--muted-foreground);
+}

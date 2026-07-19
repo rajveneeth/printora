@@ -1,10 +1,17 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { products } from '@/features/catalogue/data';
+import { useCartStore } from '@/features/cart';
 import { ProductPurchasePanel } from './ProductPurchasePanel';
+
+jest.mock('next/navigation', () => ({ useRouter: () => ({ push: jest.fn() }) }));
 
 describe('ProductPurchasePanel', () => {
   const product = products[0];
+
+  beforeEach(() => {
+    useCartStore.setState({ items: [], isHydrated: true });
+  });
 
   it('supports variant selection and quantity changes', async () => {
     if (!product) throw new Error('Product fixture is required');
@@ -24,6 +31,7 @@ describe('ProductPurchasePanel', () => {
     expect(
       screen.getByText(new RegExp(`2 × ${product.name}, ${secondVariant.name}`, 'i')),
     ).toBeInTheDocument();
+    expect(useCartStore.getState().items[0]?.quantity).toBe(2);
   });
 
   it('prevents quantity from decreasing below one', async () => {

@@ -4,16 +4,17 @@ This document is the configuration runbook for Formivo 3D. Values in `.env.examp
 
 ## Current integration status
 
-| Capability                               | Status                       | Variables used at runtime    |
-| ---------------------------------------- | ---------------------------- | ---------------------------- |
-| PostgreSQL and Prisma                    | Implemented                  | `DATABASE_URL`               |
-| Credential sign-in and database sessions | Implemented                  | `DATABASE_URL`               |
-| Application URL                          | Implemented                  | `NEXT_PUBLIC_APP_URL`        |
-| Google sign-in                           | Not implemented              | None yet; names are reserved |
-| Better Auth                              | Not installed or initialised | None; names are reserved     |
-| Razorpay                                 | Not implemented              | None; names are reserved     |
-| GraphQL                                  | Not installed or exposed     | None                         |
-| Seller workspace                         | Implemented                  | `SELLER_*` variables         |
+| Capability                               | Status                            | Variables used at runtime        |
+| ---------------------------------------- | --------------------------------- | -------------------------------- |
+| PostgreSQL and Prisma                    | Implemented                       | `DATABASE_URL`                   |
+| Credential sign-in and database sessions | Implemented                       | `DATABASE_URL`                   |
+| Application URL                          | Implemented                       | `NEXT_PUBLIC_APP_URL`            |
+| Google sign-in                           | Not implemented                   | None yet; names are reserved     |
+| Better Auth                              | Not installed or initialised      | None; names are reserved         |
+| Local mock payment provider              | Implemented                       | `PAYMENT_PROVIDER=mock`          |
+| Razorpay checkout and webhook adapter    | Implemented; credentials optional | `PAYMENT_PROVIDER`, `RAZORPAY_*` |
+| GraphQL                                  | Not installed or exposed          | None                             |
+| Seller workspace                         | Implemented                       | `SELLER_*` variables             |
 
 The current authentication code creates random session tokens and persists them in PostgreSQL. `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `GOOGLE_CLIENT_ID`, and `GOOGLE_CLIENT_SECRET` do not enable Google authentication by themselves. An authentication adapter and callback route must be implemented before those values are operational.
 
@@ -88,21 +89,48 @@ Complete these steps when the Google provider is implemented, not merely to popu
 
 Redirect URIs are exact-match values: scheme, host, port, path, and trailing slash must agree with the application callback. Never prefix the client secret with `NEXT_PUBLIC_`; variables with that prefix are included in browser bundles.
 
+## Payment provider configuration
+
+The local demo uses a labelled server-side mock by default:
+
+```dotenv
+PAYMENT_PROVIDER="mock"
+ALLOW_MOCK_PAYMENTS_IN_PRODUCTION="false"
+```
+
+The checkout creates a pending payment and asks the mock adapter for an explicit simulated success or failure response. No money is charged, and mock orders remain distinguishable through the stored `MOCK` provider value. Production runtime actions reject the mock unless `ALLOW_MOCK_PAYMENTS_IN_PRODUCTION=true` is deliberately configured for a non-commerce demo.
+
+To enable Razorpay, create Test Mode API keys and a separate webhook secret in the Razorpay dashboard, then configure:
+
+```dotenv
+PAYMENT_PROVIDER="razorpay"
+RAZORPAY_KEY_ID="rzp_test_..."
+RAZORPAY_KEY_SECRET="..."
+RAZORPAY_WEBHOOK_SECRET="..."
+```
+
+Configure the dashboard webhook URL as `https://your-host.example/api/payments/razorpay/webhook` and subscribe to `payment.captured` and `payment.failed`. Use HTTPS and configure the same endpoint separately in Test and Live modes. Enable automatic payment capture in the Razorpay dashboard; Formivo marks an order paid only after the server verifies the checkout signature or signed raw webhook and a provider API fetch reports the exact payment as `captured` for the stored order and amount.
+
+The key ID is returned to the browser only when Razorpay Checkout is opened. The key secret and webhook secret stay server-only. Changing the webhook secret requires retaining the previous secret while older provider deliveries may still retry.
+
 ## Production configuration
 
 Use the hosting platform's encrypted environment/secret manager. Do not upload `.env` or paste secrets into build logs.
 
-| Variable               | Production requirement                                                       | Source                                      |
-| ---------------------- | ---------------------------------------------------------------------------- | ------------------------------------------- |
-| `NODE_ENV`             | `production`                                                                 | Hosting platform/runtime                    |
-| `NEXT_PUBLIC_APP_URL`  | Required, public HTTPS origin with no trailing path                          | Production domain                           |
-| `DATABASE_URL`         | Required, TLS-enabled pooled PostgreSQL URL where supported                  | Managed PostgreSQL provider                 |
-| `BETTER_AUTH_URL`      | Required only after Better Auth is adopted; normally the public HTTPS origin | Production domain                           |
-| `BETTER_AUTH_SECRET`   | Required only after Better Auth is adopted; unique high-entropy value        | `openssl rand -base64 32` or secret manager |
-| `GOOGLE_CLIENT_ID`     | Required only after Google sign-in is implemented                            | Google Cloud OAuth client                   |
-| `GOOGLE_CLIENT_SECRET` | Required only after Google sign-in is implemented                            | Google Cloud OAuth client                   |
-| `RAZORPAY_KEY_ID`      | Required only after payment integration; use live key in production          | Razorpay dashboard                          |
-| `RAZORPAY_KEY_SECRET`  | Required only after payment integration                                      | Razorpay dashboard                          |
+| Variable                            | Production requirement                                                       | Source                                      |
+| ----------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------- |
+| `NODE_ENV`                          | `production`                                                                 | Hosting platform/runtime                    |
+| `NEXT_PUBLIC_APP_URL`               | Required, public HTTPS origin with no trailing path                          | Production domain                           |
+| `DATABASE_URL`                      | Required, TLS-enabled pooled PostgreSQL URL where supported                  | Managed PostgreSQL provider                 |
+| `BETTER_AUTH_URL`                   | Required only after Better Auth is adopted; normally the public HTTPS origin | Production domain                           |
+| `BETTER_AUTH_SECRET`                | Required only after Better Auth is adopted; unique high-entropy value        | `openssl rand -base64 32` or secret manager |
+| `GOOGLE_CLIENT_ID`                  | Required only after Google sign-in is implemented                            | Google Cloud OAuth client                   |
+| `GOOGLE_CLIENT_SECRET`              | Required only after Google sign-in is implemented                            | Google Cloud OAuth client                   |
+| `PAYMENT_PROVIDER`                  | Required explicitly; use `razorpay` for real production checkout             | Deployment configuration                    |
+| `ALLOW_MOCK_PAYMENTS_IN_PRODUCTION` | Keep `false` for commerce; enable only for an explicit demo                  | Deployment configuration                    |
+| `RAZORPAY_KEY_ID`                   | Required when `PAYMENT_PROVIDER=razorpay`; use the environment's key ID      | Razorpay dashboard                          |
+| `RAZORPAY_KEY_SECRET`               | Required when `PAYMENT_PROVIDER=razorpay`                                    | Razorpay dashboard                          |
+| `RAZORPAY_WEBHOOK_SECRET`           | Required when `PAYMENT_PROVIDER=razorpay`                                    | Razorpay webhook configuration              |
 
 ### Dashboard-specific configuration
 

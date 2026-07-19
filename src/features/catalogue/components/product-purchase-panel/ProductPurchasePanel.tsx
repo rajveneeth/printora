@@ -1,10 +1,12 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import type { Route } from 'next';
 import { Check, Heart, Minus, Plus, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { PriceDisplay } from '@/features/catalogue/components/price-display';
+import { useCartStore } from '@/features/cart';
 import styles from './ProductPurchasePanel.module.scss';
 import type { ProductPurchasePanelProps } from './ProductPurchasePanel.model';
 
@@ -13,15 +15,47 @@ export function ProductPurchasePanel({ product }: ProductPurchasePanelProps) {
   const [quantity, setQuantity] = useState(1);
   const [isSaved, setIsSaved] = useState(false);
   const [status, setStatus] = useState('');
+  const [customisation, setCustomisation] = useState('');
+  const addItem = useCartStore((state) => state.addItem);
+  const router = useRouter();
   const selectedVariant = useMemo(
     () => product.variants.find((variant) => variant.id === selectedVariantId),
     [product.variants, selectedVariantId],
   );
   const price = product.priceInPaise + (selectedVariant?.priceDeltaInPaise ?? 0);
 
-  const addSelection = () => {
+  const addSelection = (): void => {
     const variantName = selectedVariant?.name ?? 'standard option';
+    addItem({
+      productId: product.id,
+      productSlug: product.slug,
+      productName: product.name,
+      sellerId: product.seller.id,
+      sellerName: product.seller.name,
+      ...(selectedVariant
+        ? { variantId: selectedVariant.id, variantName: selectedVariant.name }
+        : {}),
+      selectedOptions: selectedVariant
+        ? [
+            { label: 'Material', value: selectedVariant.material },
+            { label: 'Colour', value: selectedVariant.colour },
+            { label: 'Finish', value: selectedVariant.finish },
+          ]
+        : [],
+      ...(customisation.trim() ? { customisation: customisation.trim() } : {}),
+      quantity,
+      minimumQuantity: 1,
+      maximumQuantity: product.stock,
+      availableStock: product.stock,
+      unitPriceInPaise: price,
+      imageUrl: product.imageUrl,
+    });
     setStatus(`${quantity} × ${product.name}, ${variantName}, added for this shopping session.`);
+  };
+
+  const buyNow = (): void => {
+    addSelection();
+    router.push('/checkout' as Route);
   };
 
   return (
@@ -67,6 +101,8 @@ export function ProductPurchasePanel({ product }: ProductPurchasePanelProps) {
             id="customisation-note"
             rows={3}
             placeholder="Tell the maker what you would like changed"
+            value={customisation}
+            onChange={(event) => setCustomisation(event.currentTarget.value)}
           />
           <p>Complex changes may need a separate quotation before production.</p>
         </div>
@@ -111,9 +147,9 @@ export function ProductPurchasePanel({ product }: ProductPurchasePanelProps) {
           <Heart size={19} fill={isSaved ? 'currentColor' : 'none'} />
         </button>
       </div>
-      <Link className={styles.buyNow} href="/sign-in">
+      <button className={styles.buyNow} type="button" onClick={buyNow}>
         Buy now
-      </Link>
+      </button>
       <p className={styles.status} aria-live="polite">
         {status}
       </p>

@@ -1,5 +1,18 @@
 # Implementation Plan
 
+## Prompt 8 delivery checklist
+
+- Preserve the Prompt 1–7 authentication, catalogue, search, seller workspace, reusable component, and green design-system foundation.
+- Add a hydration-safe persistent Zustand shopping bag with add, quantity, removal, grouped summary, header count, and meaningful empty state.
+- Add authenticated delivery-address create, edit, default, and delete workflows with shared Zod validation and ownership enforcement.
+- Add a server-authoritative checkout review that rejects unpublished products, inactive sellers or variants, invalid quantities, stale prices, missing inventory, and insufficient unreserved stock.
+- Add immutable order address and item snapshots, checkout sessions, payments, payment events, order status events, provider identifiers, and idempotency constraints.
+- Add serializable order/reservation creation plus idempotent payment success, payment failure, reservation release, and duplicate-event handling.
+- Add a typed payment-provider interface, a credential-free labelled local mock, and a Razorpay adapter with server-side order creation, checkout verification, payment-state retrieval, and signed webhook handling.
+- Add responsive cart, checkout, payment failure, order confirmation, and account-address routes following the warm-neutral and fern visual reference.
+- Add meaningful Jest and React Testing Library coverage for cart behaviour, money and shipping calculations, checkout validation, address schemas, provider verification, and payment transaction orchestration.
+- Run Prisma generation and validation, strict TypeScript, ESLint, Prettier, Jest, and the Next.js production build.
+
 ## Prompt 7 delivery checklist
 
 - Preserve the Prompt 1–6 authentication, catalogue, search, reusable component, and design-system foundation.
@@ -34,6 +47,13 @@
 - Strict TypeScript, ESLint, Prettier, Jest, React Testing Library, and the Next.js webpack production build pass.
 - The complete Jest suite contains 26 suites and 59 tests after the seller delivery.
 - Applying the committed migration and running the idempotent seed require a running PostgreSQL service. The local Docker daemon was unavailable during implementation, so those two database-runtime commands remain to be run after Docker starts.
+
+## Prompt 8 validation record
+
+- Prisma client generation and schema validation pass with Prisma 6.19 for the checkout migration.
+- Strict TypeScript, ESLint, Prettier, Jest, React Testing Library, and the Next.js webpack production build pass.
+- The complete Jest suite contains 31 suites and 71 tests after the cart and checkout delivery.
+- The committed migration and expanded idempotent seed could not be executed against PostgreSQL because the workspace Docker daemon remains unavailable. Run `pnpm db:migrate && pnpm db:seed` after Docker starts.
 
 ## Requirement mapping
 
