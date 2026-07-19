@@ -144,6 +144,39 @@ tests/
 - Dashboard metrics are calculated from persisted products, order items, orders, inventory, and reviews. Currency is converted from Prisma decimal rupees to integer paise at the presentation boundary.
 - Environment validation is composed from shared, customer, seller, and admin schemas. Variables remain in one Next.js runtime file but use domain prefixes and separate documentation sections to prevent dashboard-specific configuration from leaking across modules.
 
+## Prompt 8 cart, checkout, and payment decisions
+
+- The shopping bag is browser-owned interface state persisted with Zustand. It contains only display snapshots and stable product references; prices, seller eligibility, variants, purchase limits, and stock are reloaded from PostgreSQL before an order is created.
+- Checkout creates one marketplace order and retains seller ownership on every immutable order-item snapshot. Tax is calculated per line, and shipping is calculated once per seller group before being allocated to the seller's first order item.
+- Checkout preparation uses a serializable PostgreSQL transaction. It validates the delivery-address owner, creates the order and address snapshot, reserves inventory with optimistic predicates, records the initial status event, and creates the checkout and payment records under a unique idempotency key.
+- External provider calls are kept outside database transactions. If provider-order creation fails, a compensating transaction marks the payment and checkout as failed, cancels the order, and releases every inventory reservation exactly once.
+- Inventory remains reserved while payment is pending. A verified provider success atomically consumes stock, releases the reservation, marks the payment successful and order paid, and appends payment and order events. A verified failure releases reservations and cancels the unpaid order. Replayed confirmations and webhook events return the already-recorded result without repeating fulfilment mutations.
+- Payment behaviour is behind a server-only adapter. The local mock returns an explicit simulated provider response and is labelled throughout the interface. Razorpay mode creates orders and fetches final payment state over the provider API, verifies checkout and webhook signatures with timing-safe comparisons, stores provider identifiers, and deduplicates webhook event IDs.
+- Delivery addresses are database-owned and protected by authenticated ownership checks. Create, update, default-selection, and deletion mutations share Zod validation; deleting the only/default address safely promotes another owned address when available.
+- The checkout UI never accepts a payment status from the browser. Browser callbacks provide provider identifiers and signatures only; the server adapter independently verifies them before any paid state is committed.
+
+```mermaid
+sequenceDiagram
+    actor Customer
+    participant Cart as Zustand cart
+    participant Checkout as Checkout service
+    participant DB as PostgreSQL transaction
+    participant Provider as Payment provider
+
+    Customer->>Cart: Review persisted selections
+    Cart->>Checkout: Submit product references and address
+    Checkout->>DB: Revalidate catalogue and reserve stock
+    DB-->>Checkout: Pending order and payment
+    Checkout->>Provider: Create provider order
+    Provider-->>Checkout: Provider order response
+    Checkout->>DB: Store provider identifiers
+    Customer->>Provider: Complete or simulate payment
+    Provider-->>Checkout: Signed identifiers or webhook
+    Checkout->>Provider: Verify signature and provider state
+    Checkout->>DB: Idempotently consume or release reservation
+    DB-->>Customer: Paid confirmation or failure recovery
+```
+
 ## Operational topology
 
 ```mermaid

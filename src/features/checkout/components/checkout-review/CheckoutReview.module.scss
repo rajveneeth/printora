@@ -1,0 +1,139 @@
+.layout {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.steps {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.section {
+  display: grid;
+  gap: var(--space-5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  padding: var(--space-5);
+}
+
+.sectionHeading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.sectionHeading > span {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: none;
+  place-items: center;
+  border-radius: var(--radius-md);
+  background: var(--surface-subtle);
+  color: var(--primary);
+}
+
+.sectionHeading small {
+  color: var(--muted-foreground);
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+  letter-spacing: var(--letter-spacing-label);
+  text-transform: uppercase;
+}
+
+.sectionHeading h2 {
+  font-size: var(--font-size-xl);
+}
+
+.reviewGroups {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.reviewGroups > div {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.reviewGroups h3 {
+  color: var(--primary);
+  font-size: var(--font-size-sm);
+}
+
+.reviewGroups article {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.reviewGroups img {
+  border-radius: var(--radius-sm);
+  background: var(--surface-subtle);
+}
+
+.reviewGroups article div {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.reviewGroups article small {
+  color: var(--muted-foreground);
+}
+
+.paymentNote,
+.mockPanel {
+  border-radius: var(--radius-md);
+  background: var(--surface-subtle);
+  padding: var(--space-4);
+}
+
+.paymentNote {
+  display: flex;
+  gap: var(--space-3);
+  color: var(--muted-foreground);
+  font-size: var(--font-size-sm);
+}
+
+.paymentNote svg {
+  flex: none;
+  color: var(--success);
+}
+
+.mockPanel {
+  display: grid;
+  gap: var(--space-3);
+  border: 1px dashed var(--warning);
+}
+
+.mockPanel p,
+.status {
+  color: var(--muted-foreground);
+  font-size: var(--font-size-sm);
+}
+
+.mockPanel > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.status {
+  min-height: 1.5rem;
+}
+
+.loading {
+  min-height: 20rem;
+  color: var(--muted-foreground);
+}
+
+@media (min-width: 64rem) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) 22rem;
+  }
+
+  .section {
+    padding: var(--space-6);
+  }
+}

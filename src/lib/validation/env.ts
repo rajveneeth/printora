@@ -2,6 +2,7 @@ import { z } from 'zod';
 import {
   adminEnvironmentSchema,
   customerEnvironmentSchema,
+  paymentEnvironmentSchema,
   sellerEnvironmentSchema,
   sharedEnvironmentSchema,
 } from './environment';
@@ -9,7 +10,8 @@ import {
 const environmentSchema = sharedEnvironmentSchema
   .merge(customerEnvironmentSchema)
   .merge(sellerEnvironmentSchema)
-  .merge(adminEnvironmentSchema);
+  .merge(adminEnvironmentSchema)
+  .merge(paymentEnvironmentSchema);
 
 export type Environment = z.infer<typeof environmentSchema>;
 

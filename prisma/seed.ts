@@ -305,6 +305,7 @@ async function main() {
 
   const searchProductSeeds = [
     {
+      catalogueId: 'product-phone-minimal',
       name: 'Minimal Phone Stand',
       sellerSlug: 'pixel-crafts',
       slug: 'minimal-phone-stand',
@@ -324,8 +325,10 @@ async function main() {
       imageUrl: '/catalogue/minimal-phone-stand.svg',
       altText: 'Minimal charcoal 3D-printed phone stand',
       quantity: 18,
+      variantColours: ['Charcoal', 'Fern green', 'Warm cream'],
     },
     {
+      catalogueId: 'product-phone-adjustable',
       name: 'Adjustable Phone Stand',
       sellerSlug: 'makeform-works',
       slug: 'adjustable-phone-stand',
@@ -345,8 +348,10 @@ async function main() {
       imageUrl: '/catalogue/minimal-phone-stand.svg',
       altText: 'Adjustable forest green 3D-printed phone stand',
       quantity: 16,
+      variantColours: ['Charcoal', 'Forest green', 'Stone'],
     },
     {
+      catalogueId: 'product-phone-foldable',
       name: 'Foldable Travel Phone Stand',
       sellerSlug: 'pixel-crafts',
       slug: 'foldable-travel-phone-stand',
@@ -366,8 +371,10 @@ async function main() {
       imageUrl: '/catalogue/minimal-phone-stand.svg',
       altText: 'Foldable fern green 3D-printed travel phone stand',
       quantity: 31,
+      variantColours: ['Fern green', 'Clay', 'Warm cream'],
     },
     {
+      catalogueId: 'product-planter',
       name: 'Geometric Succulent Planter',
       sellerSlug: 'fern-fabrication',
       slug: 'geometric-succulent-planter',
@@ -387,6 +394,7 @@ async function main() {
       imageUrl: '/catalogue/geometric-planter.svg',
       altText: 'Sage geometric 3D-printed succulent planter',
       quantity: 15,
+      variantColours: ['Sage', 'Stone', 'Terracotta'],
     },
   ] as const;
 
@@ -461,6 +469,36 @@ async function main() {
       update: { quantity: searchProductSeed.quantity },
       create: { productId: searchableProduct.id, quantity: searchProductSeed.quantity },
     });
+
+    for (const [variantIndex, colour] of searchProductSeed.variantColours.entries()) {
+      const variantNumber = variantIndex + 1;
+      const variant = await prisma.productVariant.upsert({
+        where: { sku: `${searchProductSeed.sku}-V${variantNumber}` },
+        update: {
+          name: `${colour} ${searchProductSeed.finish}`,
+          material: searchProductSeed.material,
+          colour,
+          finish: searchProductSeed.finish,
+          priceDelta: variantIndex === 2 ? '50.00' : '0.00',
+          isActive: true,
+        },
+        create: {
+          id: `${searchProductSeed.catalogueId}-variant-${variantNumber}`,
+          productId: searchableProduct.id,
+          name: `${colour} ${searchProductSeed.finish}`,
+          sku: `${searchProductSeed.sku}-V${variantNumber}`,
+          material: searchProductSeed.material,
+          colour,
+          finish: searchProductSeed.finish,
+          priceDelta: variantIndex === 2 ? '50.00' : '0.00',
+        },
+      });
+      await prisma.inventory.upsert({
+        where: { variantId: variant.id },
+        update: { quantity: searchProductSeed.quantity },
+        create: { variantId: variant.id, quantity: searchProductSeed.quantity },
+      });
+    }
   }
 
   await prisma.favourite.upsert({
