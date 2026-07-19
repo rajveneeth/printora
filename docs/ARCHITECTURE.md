@@ -2,7 +2,9 @@
 
 ## Proposal
 
-Formivo 3D is implemented as a domain-oriented Next.js App Router application. Server-owned data will be loaded through Server Components, Server Actions, route handlers, repositories, and Prisma-backed services. Client Components will be reserved for focused browser interactions such as autocomplete, cart state, filters, dialogs, and multi-step drafts.
+Formivo 3D is implemented as a domain-oriented Next.js App Router modular monolith. Server-owned data is loaded through Server Components, route handlers, repositories, and Prisma-backed services. Client Components are reserved for focused browser interactions such as autocomplete, cart state, filters, dialogs, and multi-step drafts.
+
+The modular monolith is the formal near-term deployment decision. It provides transactional consistency and a low-operational-overhead release unit while enforcing service and repository seams that support later backend extraction. A second backend repository is not justified until independent scale, clients, ownership, release cadence, or isolation becomes a measured requirement. The detailed decision and migration gates are recorded in [`BACKEND_EVOLUTION.md`](BACKEND_EVOLUTION.md).
 
 ## Ten implementation prompts
 
@@ -22,14 +24,15 @@ Formivo 3D is implemented as a domain-oriented Next.js App Router application. S
 ```mermaid
 flowchart LR
     User[Customer Seller Admin] --> Web[Next.js App Router]
-    Web --> Auth[Better Auth]
-    Web --> Actions[Server Actions and Route Handlers]
+    Web --> Auth[Custom credential and database sessions]
+    Web --> Actions[Server Components Actions and Route Handlers]
     Actions --> Services[Domain Services]
     Services --> Repositories[Repository Layer]
     Repositories --> Database[(PostgreSQL via Prisma)]
     Services --> Storage[Storage Provider]
     Services --> Payment[Payment Provider]
     Services --> Search[Database Search]
+    Services -. planned adapter .-> GraphQL[GraphQL]
 ```
 
 ## Frontend composition
@@ -97,13 +100,22 @@ tests/
 - Tailwind v4 theme tokens are mapped to CSS custom properties in `src/styles/globals.scss`.
 - Reusable UI primitives expose public APIs through local barrels and keep accessibility states in native HTML where possible.
 - Strict TypeScript, ESLint, Prettier, Jest, React Testing Library, and CI are established before feature work.
-- Prompt 4 defines credential authentication, HTTP-only session cookies, server-side role guards, middleware redirects for missing sessions, and role-specific dashboard entry points. Feature-specific persistence implementations remain deferred to later prompts.
+- Prompt 4 defines credential authentication, HTTP-only opaque session cookies, server-side role guards, middleware redirects for missing sessions, and role-specific dashboard entry points. The session token and account data are stored in PostgreSQL. Better Auth and Google OAuth are not currently initialised.
+
+## Data ownership and API boundaries
+
+- PostgreSQL is the intended system of record for marketplace and identity data. Prisma is a server-only persistence adapter.
+- Static assets under `public/` are appropriate for shipped demo media. TypeScript fixture records are appropriate for tests and seeds, not as the production catalogue source of truth.
+- Domain services own validation, visibility, authorisation, and transaction orchestration. Pages, route handlers, and future GraphQL resolvers are transport adapters and must not reproduce those rules.
+- Repository contracts isolate persistence so test fixtures, Prisma, and a later dedicated search provider can be substituted deliberately.
+- GraphQL is planned but absent. When introduced, it will share domain services, build authentication context from the HTTP-only session, use generated operation types and request-scoped loaders, and enforce complexity and rate limits.
+- SEO-critical reads may remain direct Server Component-to-service calls. Browser GraphQL is most valuable for interactive account, seller, admin, and mutation workflows.
 
 ## Prompt 5 catalogue decisions
 
 - Public catalogue pages are Server Components and receive typed, normalised query parameters through the catalogue service.
 - Sorting, filtering, and pagination are encoded in the URL so result views are shareable and work without client-side state hydration.
-- A deterministic typed catalogue source powers Prompt 5 and mirrors the Prisma catalogue shape. A Prisma repository adapter can replace it without changing pages or presentation components when the expanded database seed is introduced.
+- A deterministic typed catalogue source powers Prompt 5 and mirrors the Prisma catalogue shape. This is a transitional limitation: the homepage, catalogue, category, and product detail reads must move behind a Prisma catalogue repository before production launch.
 - Product money values use integer paise inside the catalogue domain and are formatted centrally as INR at the presentation boundary.
 - Reusable catalogue modules own product cards, grids, pricing, ratings, filters, pagination, galleries, and category navigation. Routes compose those modules rather than duplicating catalogue markup.
 - Client Component boundaries are limited to the mobile navigation, mobile filter drawer, product gallery, wishlist feedback, and product option selection.
@@ -120,3 +132,18 @@ tests/
 - Recent searches are a bounded browser-only preference. Server-owned catalogue results are not duplicated into client state.
 - Search includes initial guidance, loading skeletons, normal results, empty recovery, suggestion failure, and database-unavailable states.
 - The implementation is deterministic database search. No AI or semantic-search integration is configured.
+
+## Operational topology
+
+```mermaid
+flowchart TB
+    CDN[CDN and edge protection] --> App[Next.js replicas]
+    App --> Pool[Managed connection pool]
+    Pool --> Primary[(PostgreSQL primary)]
+    App --> Media[(Object storage and CDN)]
+    App -. asynchronous work .-> Queue[Queue and workers]
+    Deploy[Deployment migration job] -->|prisma migrate deploy once| Primary
+    Secrets[Environment secret manager] --> App
+```
+
+Application replicas must not each race to apply migrations. A release job applies committed migrations once before traffic is promoted. Production uses an encrypted secret manager, TLS database connections, automated backups, connection monitoring, structured logs, and environment-specific credentials. Full procedures are maintained in [`ENVIRONMENT.md`](ENVIRONMENT.md).

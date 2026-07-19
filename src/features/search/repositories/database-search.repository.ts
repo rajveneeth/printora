@@ -6,7 +6,6 @@ import type {
   ProductVariantSummary,
 } from '@/features/catalogue';
 import type { ProductSearchRepository, SearchSuggestion } from '@/features/search/models';
-import { prisma } from '@/lib/prisma';
 
 const SEARCH_RESULT_INCLUDE = {
   category: true,
@@ -328,7 +327,3 @@ export const createDatabaseSearchRepository = (
     );
   },
 });
-
-const searchDatabase: SearchDatabaseClient = prisma;
-
-export const databaseSearchRepository = createDatabaseSearchRepository(searchDatabase);
