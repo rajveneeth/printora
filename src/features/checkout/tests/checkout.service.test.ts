@@ -67,11 +67,13 @@ describe('CheckoutService', () => {
     const provider = createProvider();
     const result = await new CheckoutService(repository, provider).createCheckout(
       'buyer-1',
+      'session-1',
       checkoutInput,
     );
 
     expect(repository.createPendingCheckout).toHaveBeenCalledWith({
       userId: 'buyer-1',
+      sessionId: 'session-1',
       provider: 'MOCK',
       checkout: checkoutInput,
     });
@@ -90,7 +92,11 @@ describe('CheckoutService', () => {
     jest.mocked(provider.createOrder).mockRejectedValueOnce(new Error('provider unavailable'));
 
     await expect(
-      new CheckoutService(repository, provider).createCheckout('buyer-1', checkoutInput),
+      new CheckoutService(repository, provider).createCheckout(
+        'buyer-1',
+        'session-1',
+        checkoutInput,
+      ),
     ).rejects.toThrow('reserved stock has been released');
     expect(repository.failProviderOrder).toHaveBeenCalledWith(
       'payment-1',

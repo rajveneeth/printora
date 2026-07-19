@@ -20,6 +20,7 @@ const webhookSchema = z.object({
 });
 
 const repository = new PrismaCheckoutRepository(prisma);
+const maximumWebhookBytes = 1_000_000;
 
 export async function POST(request: Request) {
   if (
@@ -30,7 +31,14 @@ export async function POST(request: Request) {
   ) {
     return NextResponse.json({ error: 'Razorpay is not configured.' }, { status: 503 });
   }
+  const contentLength = Number(request.headers.get('content-length') ?? 0);
+  if (Number.isFinite(contentLength) && contentLength > maximumWebhookBytes) {
+    return NextResponse.json({ error: 'Webhook payload is too large.' }, { status: 413 });
+  }
   const rawBody = await request.text();
+  if (new TextEncoder().encode(rawBody).byteLength > maximumWebhookBytes) {
+    return NextResponse.json({ error: 'Webhook payload is too large.' }, { status: 413 });
+  }
   const signature = request.headers.get('x-razorpay-signature');
   const providerEventId = request.headers.get('x-razorpay-event-id');
   if (!signature || !providerEventId) {

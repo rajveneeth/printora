@@ -12,6 +12,9 @@ export const getSellerRouteContext = async () => {
     redirect('/unauthorised');
   }
   const session = await requireSession();
+  if (!canViewSellerDashboard(session.user)) {
+    redirect('/unauthorised');
+  }
   const workspace = await sellerRepository.findSellerWorkspaceByUserId(session.user.id);
   return { session, workspace };
 };

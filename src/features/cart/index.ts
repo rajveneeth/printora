@@ -10,6 +10,8 @@ export type {
   CartItemOption,
   CartSellerGroup,
   CartState,
+  CartSyncLineInput,
+  CartSyncResult,
   CartTotals,
 } from './models';
 export {
@@ -23,4 +25,11 @@ export {
   MARKETPLACE_TAX_PERCENTAGE,
   SELLER_SHIPPING_IN_PAISE,
 } from './services';
-export { createCartLineId, useCartStore } from './store';
+export { createCartLineId, toCartSyncLines } from './services';
+export {
+  CART_RETENTION_IN_MILLISECONDS,
+  CART_STORAGE_KEY,
+  createGuestCartId,
+  isCartPersistenceFresh,
+  useCartStore,
+} from './store';

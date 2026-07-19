@@ -8,16 +8,18 @@ import styles from './AuthForm.module.scss';
 interface AuthFormProps {
   mode: 'sign-in' | 'sign-up';
   action: (state: AuthActionState, formData: FormData) => Promise<AuthActionState>;
+  returnTo?: string | undefined;
 }
 
 const initialState: AuthActionState = { message: '' };
 
-export function AuthForm({ mode, action }: AuthFormProps) {
+export function AuthForm({ mode, action, returnTo = '' }: AuthFormProps) {
   const [state, formAction, isPending] = useActionState(action, initialState);
   const isSignUp = mode === 'sign-up';
   return (
     <Card className={styles.panel}>
       <form action={formAction} className={styles.form}>
+        <input type="hidden" name="returnTo" value={returnTo} />
         <div className={styles.heading}>
           <p className={styles.kicker}>
             {isSignUp ? 'Create your marketplace account' : 'Welcome back'}
@@ -30,7 +32,7 @@ export function AuthForm({ mode, action }: AuthFormProps) {
           </p>
         </div>
         {isSignUp ? <Input label="Full name" name="name" autoComplete="name" required /> : null}
-        <Input label="Email" name="email" type="email" autoComplete="email" required />
+        <Input label="Email" name="email" type="email" autoComplete="username" required />
         <Input
           label="Password"
           name="password"

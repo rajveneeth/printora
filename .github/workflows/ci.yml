@@ -5,9 +5,50 @@ on:
   push:
     branches: [main]
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  foundation:
+  quality:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: formivo
+          POSTGRES_USER: formivo
+          POSTGRES_PASSWORD: formivo
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U formivo -d formivo"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://formivo:formivo@localhost:5432/formivo
+      NEXT_PUBLIC_APP_URL: http://127.0.0.1:3000
+      RATE_LIMIT_SECRET: ci-only-rate-limit-secret-at-least-32-characters
+      PAYMENT_PROVIDER: mock
+      ALLOW_MOCK_PAYMENTS_IN_PRODUCTION: 'true'
     steps:
       - uses: actions/checkout@v4
-      - run: echo "Foundation-only CI placeholder. Full quality checks return in the hardening phase."
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm db:generate
+      - run: pnpm db:validate
+      - run: pnpm db:deploy
+      - run: pnpm db:seed
+      - run: pnpm format:check
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm test -- --runInBand --coverage
+      - run: pnpm build

@@ -25,19 +25,20 @@ pnpm db:seed
 pnpm db:reset
 ```
 
-`pnpm db:seed` runs `prisma/seed.ts`. The seed is idempotent and creates a buyer, an administrator, approved and pending sellers, ten categories, public and pending-review products, local product images, inventory, addresses, orders in multiple states, seller fulfilments, separate verified ratings, and an initial audit event.
+`pnpm db:seed` runs `prisma/seed.ts`. The seed is idempotent and creates demo accounts, approved and pending sellers, all storefront catalogue products/variants, categories, images, inventory, addresses, orders in multiple states, seller fulfilments, verified ratings, and audit history.
 
 ## Core entities
 
-- `User`, `Session`, `Account`, and `Verification` provide the Better Auth-compatible authentication foundation.
+- `User`, `Session`, `Account`, and `Verification` provide credential identity and database sessions. `Session.token` contains a SHA-256 digest, `Session.id` is the non-secret trace identifier, and `revokedAt` invalidates a session without destroying its audit linkage.
 - `BuyerProfile`, `SellerProfile`, and `Address` separate buyer and seller domain data from the base account.
 - `SellerApplication` stores the submitted seller-verification snapshot, declaration, review status, and requested-change note separately from the mutable seller profile.
 - `Category`, `Product`, `ProductImage`, `ProductVariant`, and `Inventory` model the catalogue and product approval state.
 - `ProductApprovalEvent` records seller and future administrator lifecycle changes without overwriting status history.
-- `Favourite`, `Cart`, and `CartItem` support buyer discovery and checkout preparation.
+- `Favourite`, `Cart`, `CartItem`, and `CartMerge` support buyer discovery, account-cart persistence, session tracing, and idempotent anonymous-cart adoption.
+- `RateLimitBucket` stores atomic fixed-window counters under peppered hash keys without raw IP/email identifiers.
 - `Order` and `OrderItem` store immutable order snapshots for product, seller, variant, customisation, price, tax, shipping fee, quantity, and image history.
 - `OrderAddress` preserves the selected delivery address even if the customer later edits or deletes the account address.
-- `CheckoutSession` owns the checkout idempotency key, selected provider, expiry, and completion state.
+- `CheckoutSession` owns the checkout idempotency key, selected provider, expiry, completion state, and the authenticated database-session reference used to start it.
 - `Payment` stores the expected amount, provider, provider order and payment identifiers, verification time, and final result without accepting a browser-owned status.
 - `PaymentEvent` deduplicates provider callbacks and Razorpay webhook deliveries by external event ID.
 - `OrderStatusEvent` records the initial reservation, verified payment, and payment-failure transitions without overwriting history.
@@ -51,7 +52,7 @@ pnpm db:reset
 - Public catalogue queries must only expose products with `PUBLISHED` status and a `publishedAt` value.
 - `OrderItem` keeps historical snapshots and does not depend only on mutable product records.
 - Favourites are unique per user and product.
-- Cart items are unique per cart, product, and variant.
+- Cart items are unique per cart and hashed selection/customisation line key. Guest merges are unique per cart and guest-cart UUID.
 - Seller stores and product slugs are unique for stable public URLs.
 - Seller product and inventory writes require an active owned seller profile; quantity cannot be reduced below reserved stock.
 - Product variants retain inactive historical records so existing cart and order references are not deleted during seller edits.
@@ -71,4 +72,4 @@ Payment provider network calls intentionally run outside database transactions. 
 
 ## Migration files
 
-The initial Prisma migration is under `prisma/migrations/20260717074700_init`. Prompt 6 adds `prisma/migrations/20260719120000_search_discovery` for tags and search indexes. Prompt 7 adds `prisma/migrations/20260719180000_seller_dashboard` for applications, product audit events, view counters, and active variants. Prompt 8 adds `prisma/migrations/20260719210000_checkout_foundation` for checkout sessions, immutable addresses, payments, provider events, and order status events. Prompt 9 adds `prisma/migrations/20260719233000_orders_reviews_administration` for seller fulfilments, review integrity, moderation history, category metadata, and audit logs. Apply all committed migrations with `pnpm db:migrate` after dependencies are installed and PostgreSQL is running.
+The migrations are ordered under `prisma/migrations`. Prompt 10 migrations `20260720030000_hardening_sessions_cart` and `20260720040000_checkout_session_trace` add account-cart/session linkage, line keys, merge audit records, rate-limit buckets, retained revocation state, and checkout-to-session tracing. Use `pnpm db:migrate` locally and `pnpm db:deploy` in a release job.

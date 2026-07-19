@@ -113,15 +113,22 @@ model User {
 }
 
 model Session {
-  id        String   @id @default(cuid())
-  token     String   @unique
-  userId    String
-  expiresAt DateTime
-  ipAddress String?
-  userAgent String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id               String            @id @default(cuid())
+  token            String            @unique
+  userId           String
+  expiresAt        DateTime
+  revokedAt        DateTime?
+  ipAddress        String?
+  userAgent        String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  carts            Cart[]
+  cartMerges       CartMerge[]
+  checkoutSessions CheckoutSession[]
+
+  @@index([userId, createdAt])
+  @@index([expiresAt, revokedAt])
 }
 
 model Account {
@@ -364,18 +371,25 @@ model Favourite {
 
 model Cart {
   id        String     @id @default(cuid())
-  userId    String?
+  userId    String?    @unique
   sessionId String?
   currency  String     @default("INR")
+  expiresAt DateTime?
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   user      User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  session   Session?   @relation(fields: [sessionId], references: [id], onDelete: SetNull)
   items     CartItem[]
+  merges    CartMerge[]
+
+  @@index([sessionId])
+  @@index([expiresAt])
 }
 
 model CartItem {
   id            String          @id @default(cuid())
   cartId        String
+  lineKey       String
   productId     String
   variantId     String?
   quantity      Int
@@ -387,7 +401,30 @@ model CartItem {
   product       Product         @relation(fields: [productId], references: [id])
   variant       ProductVariant? @relation(fields: [variantId], references: [id])
 
-  @@unique([cartId, productId, variantId])
+  @@unique([cartId, lineKey])
+}
+
+model CartMerge {
+  id          String   @id @default(cuid())
+  cartId      String
+  sessionId   String?
+  guestCartId String
+  mergedAt    DateTime @default(now())
+  cart        Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  session     Session? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+
+  @@unique([cartId, guestCartId])
+  @@index([sessionId, mergedAt])
+}
+
+model RateLimitBucket {
+  key         String   @id
+  count       Int      @default(1)
+  windowStart DateTime
+  expiresAt   DateTime
+  updatedAt   DateTime @updatedAt
+
+  @@index([expiresAt])
 }
 
 model Address {
@@ -505,6 +542,7 @@ model SellerOrderFulfilment {
 model CheckoutSession {
   id             String          @id @default(cuid())
   userId         String
+  sessionId      String?
   orderId        String          @unique
   addressId      String
   idempotencyKey String          @unique
@@ -515,10 +553,12 @@ model CheckoutSession {
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  session        Session?        @relation(fields: [sessionId], references: [id], onDelete: SetNull)
   order          Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
   payment        Payment?
 
   @@index([userId, createdAt])
+  @@index([sessionId, createdAt])
   @@index([status, expiresAt])
 }
 

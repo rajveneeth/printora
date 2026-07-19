@@ -145,7 +145,7 @@ export default function HomePage() {
             Shop all <ArrowRight size={15} />
           </Link>
         </div>
-        <ProductGrid products={trendingProducts} priorityCount={4} />
+        <ProductGrid products={trendingProducts} priorityCount={2} />
       </section>
 
       <section className={styles.customCta}>

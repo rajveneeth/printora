@@ -30,6 +30,7 @@ export interface PaymentFinalizationRecord {
 
 export interface CreatePendingCheckoutPersistenceInput {
   readonly userId: string;
+  readonly sessionId: string;
   readonly provider: 'MOCK' | 'RAZORPAY';
   readonly checkout: CreateCheckoutInput;
 }

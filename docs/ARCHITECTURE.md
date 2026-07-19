@@ -100,7 +100,7 @@ tests/
 - Tailwind v4 theme tokens are mapped to CSS custom properties in `src/styles/globals.scss`.
 - Reusable UI primitives expose public APIs through local barrels and keep accessibility states in native HTML where possible.
 - Strict TypeScript, ESLint, Prettier, Jest, React Testing Library, and CI are established before feature work.
-- Prompt 4 defines credential authentication, HTTP-only opaque session cookies, server-side role guards, middleware redirects for missing sessions, and role-specific dashboard entry points. The session token and account data are stored in PostgreSQL. Better Auth and Google OAuth are not currently initialised.
+- Credential authentication uses HTTP-only opaque session cookies, exact server-side role guards, request-proxy redirects for missing sessions, and role-specific dashboard entry points. PostgreSQL stores the user, a non-secret traceable session ID, and only the SHA-256 digest of the bearer token. Sign-out revokes the session row instead of deleting its cart, merge, and checkout trace links.
 
 ## Data ownership and API boundaries
 
@@ -135,7 +135,7 @@ tests/
 
 ## Prompt 7 seller decisions
 
-- Seller onboarding persists both the mutable seller profile and an application snapshot. A customer may apply, while existing seller accounts can complete or revise pending information.
+- Seller onboarding persists both the mutable seller profile and an application snapshot. Public registration can create a seller account; only an exact `SELLER` role can enter the seller workspace.
 - Seller workspace reads and writes use Prisma-backed seller repositories and server actions. Client components are limited to form interaction, image/variant field arrays, confirmations, and responsive navigation.
 - Product drafts remain private. A complete owned draft can move to `PENDING_REVIEW`; a seller can publish only after an administrator has moved it to `APPROVED`. Editing a published product removes it from public visibility and returns it to a private draft that must be resubmitted, so unmoderated content never remains public.
 - Product lifecycle changes create `ProductApprovalEvent` records. Seller permission helpers enforce active accounts, ownership, verification state, and suspended-seller restrictions before repository mutations.
@@ -146,9 +146,9 @@ tests/
 
 ## Prompt 8 cart, checkout, and payment decisions
 
-- The shopping bag is browser-owned interface state persisted with Zustand. It contains only display snapshots and stable product references; prices, seller eligibility, variants, purchase limits, and stock are reloaded from PostgreSQL before an order is created.
+- Anonymous shopping bags are browser-owned interface state persisted with Zustand for 30 days. On authentication, stable selections merge idempotently into a session-linked account cart in PostgreSQL; account items are omitted from local storage. Prices, seller eligibility, variants, purchase limits, and stock are reloaded before each merge/save and again before an order is created.
 - Checkout creates one marketplace order and retains seller ownership on every immutable order-item snapshot. Tax is calculated per line, and shipping is calculated once per seller group before being allocated to the seller's first order item.
-- Checkout preparation uses a serializable PostgreSQL transaction. It validates the delivery-address owner, creates the order and address snapshot, reserves inventory with optimistic predicates, records the initial status event, and creates the checkout and payment records under a unique idempotency key.
+- Checkout preparation uses a serializable PostgreSQL transaction. It validates the delivery-address owner, creates the order and address snapshot, reserves inventory with optimistic predicates, records the initiating database session ID and initial status event, and creates the checkout and payment records under a unique idempotency key.
 - External provider calls are kept outside database transactions. If provider-order creation fails, a compensating transaction marks the payment and checkout as failed, cancels the order, and releases every inventory reservation exactly once.
 - Inventory remains reserved while payment is pending. A verified provider success atomically consumes stock, releases the reservation, marks the payment successful and order paid, and appends payment and order events. A verified failure releases reservations and cancels the unpaid order. Replayed confirmations and webhook events return the already-recorded result without repeating fulfilment mutations.
 - Payment behaviour is behind a server-only adapter. The local mock returns an explicit simulated provider response and is labelled throughout the interface. Razorpay mode creates orders and fetches final payment state over the provider API, verifies checkout and webhook signatures with timing-safe comparisons, stores provider identifiers, and deduplicates webhook event IDs.
@@ -158,12 +158,12 @@ tests/
 ```mermaid
 sequenceDiagram
     actor Customer
-    participant Cart as Zustand cart
+    participant Cart as Guest/account cart
     participant Checkout as Checkout service
     participant DB as PostgreSQL transaction
     participant Provider as Payment provider
 
-    Customer->>Cart: Review persisted selections
+    Customer->>Cart: Review guest or database selections
     Cart->>Checkout: Submit product references and address
     Checkout->>DB: Revalidate catalogue and reserve stock
     DB-->>Checkout: Pending order and payment

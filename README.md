@@ -1,248 +1,165 @@
 # Formivo 3D
 
-Formivo 3D is a full-stack marketplace foundation for ready-made and custom 3D-printed products. It currently includes credential authentication, a PostgreSQL/Prisma domain model, database-backed deterministic search, category-guided discovery, accessible suggestions, recent searches, persistent URL filters, the buyer storefront foundation, a database-backed seller workspace, and a transactional cart-to-order checkout foundation.
+Formivo 3D is a full-stack marketplace for ready-made and custom 3D-printed products. It includes public discovery, credential authentication, persistent customer carts, server-verified checkout, payments, buyer orders, seller operations, review eligibility, and administration workflows.
 
-> **Architecture status:** `/search`, checkout validation, inventory, addresses, payments, order history, seller fulfilment, verified reviews, and administration use PostgreSQL. The homepage, general catalogue, category pages, and product detail pages still read a deterministic TypeScript fixture. Google OAuth, Better Auth, and GraphQL remain planned integrations. Razorpay is available only when explicitly selected and configured; the local demo defaults to the labelled mock provider. See [Backend and data evolution](docs/BACKEND_EVOLUTION.md) for the audited migration plan.
+The application is a Next.js modular monolith: browser interactions stay small, business rules live in feature services, persistence is isolated behind repositories, and PostgreSQL is authoritative for identity, carts, prices, stock, orders, payments, and permissions.
 
-## Product identity
+## Stack
 
-- Product: Formivo 3D
-- Tagline: Imagine it. Find it. Print it.
-- Currency: INR
-- Primary visual direction: calm green marketplace UI with spacious layouts, rounded cards, minimal shadows, and product-focused imagery.
-
-## Technology stack
-
-- Next.js App Router
-- React
-- TypeScript strict mode
-- Tailwind CSS v4 entrypoint mapped to shared CSS variables
-- SCSS token, base, and component-module styling architecture
-- Zod environment validation
-- PostgreSQL 16 and Prisma
-- Jest and React Testing Library
-- ESLint and Prettier
-- pnpm 10
+- Next.js App Router, React, and strict TypeScript
+- SCSS modules, shared design tokens, and Tailwind CSS v4 utilities
+- PostgreSQL 16, Prisma, and committed migrations
+- Zod, React Hook Form, Zustand, and server actions
+- Jest, React Testing Library, ESLint, Prettier, and GitHub Actions
+- Mock payments for local demonstrations or Razorpay for configured environments
 
 ## Architecture
 
 ```mermaid
 flowchart LR
-    User[Customer Seller Admin] --> Web[Next.js App Router]
-    Web --> Auth[Custom credential sessions]
-    Web --> Actions[Server Components and Route Handlers]
-    Actions --> Services[Domain Services]
-    Services --> Repositories[Repository Layer]
-    Repositories --> Database[(PostgreSQL via Prisma)]
-    Services --> Storage[Storage Provider]
-    Services --> Search[Database Search]
-    Services -. future .-> GraphQL[GraphQL API adapter]
-    Services --> Payment[Mock or Razorpay Payment Provider]
+    Browser[Browser] --> Router[Next.js App Router]
+    Router --> Auth[Session and role guards]
+    Router --> Actions[Server components, actions, route handlers]
+    Actions --> Services[Domain services]
+    Services --> Repositories[Repository layer]
+    Repositories --> PostgreSQL[(PostgreSQL / Prisma)]
+    Services --> Payment[Mock or Razorpay adapter]
+    Services --> Media[Media storage boundary]
 ```
-
-```mermaid
-flowchart TD
-    AppRouter[App Router] --> Layouts[Public Account Seller Admin Layouts]
-    Layouts --> Pages[Route Pages]
-    Pages --> Features[Feature Modules]
-    Features --> Components[Reusable Components]
-    Components --> DesignSystem[Design System]
-    DesignSystem --> Tokens[Shared Design Tokens]
-```
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant UI
-    participant API
-    participant Service
-    participant Repository
-    participant Database
-
-    User->>UI: Submit action
-    UI->>API: Validated request
-    API->>Service: Execute use case
-    Service->>Repository: Read or write data
-    Repository->>Database: Database operation
-    Database-->>Repository: Result
-    Repository-->>Service: Domain data
-    Service-->>API: Result
-    API-->>UI: Typed response
-    UI-->>User: Updated interface
-```
-
-## Folder structure
 
 ```text
 src/
-  app/                         Public and role-based App Router routes
-  components/                  Shared UI and public layout components
-  config/                      Central product identity
-  features/catalogue/          Catalogue models, data, services, components, tests
-  features/cart/               Persistent bag store, pricing, summary, and cart UI
-  features/checkout/           Addresses, checkout orchestration, payment UI, and tests
-  features/orders/             Buyer history, seller fulfilment, transitions, and timelines
-  features/reviews/            Delivered-purchase eligibility and product/seller ratings
-  features/administration/     Moderation, categories, metrics, and immutable audit events
-  features/permissions/        Central cross-role permission boundaries
-  features/seller/             Seller permissions, schemas, repositories, services, forms, and tests
-  lib/                         Authentication, payments, Prisma, and shared utilities
-  styles/                      Tokens, base styling, and global Tailwind bindings
-docs/
-  ENVIRONMENT.md               Local, OAuth, secret, and production runbook
-  BACKEND_EVOLUTION.md         Database and GraphQL delivery plan
-tests/
-.github/workflows/
+  app/                  Route groups, metadata endpoints, errors, APIs
+  components/           Shared layout and accessible UI primitives
+  config/               Product identity
+  features/             Domain modules: auth, cart, checkout, seller, orders, reviews, admin
+  lib/                  Auth, Prisma, payments, security, storage, validation
+  models/               Cross-domain model contracts
+  repositories/         Cross-domain repository contracts
+  styles/               Tokens, reset, typography, and global styles
+prisma/
+  migrations/           Ordered production migrations
+  schema.prisma         PostgreSQL data model
+  seed.ts               Idempotent demo catalogue and account seed
+docs/                   Architecture, environment, deployment, quality, and security records
 ```
 
-Server Components compose public catalogue pages from typed catalogue and search services. The `/search` route queries published products from approved active sellers through a Prisma repository and deterministically ranks the returned catalogue records. Filters, sort order, and page selection remain in URL search parameters. Focused Client Components handle autocomplete, recent-search storage, navigation drawers, the product gallery, product options, and wishlist feedback. Catalogue money is represented in paise and formatted centrally as INR.
+Server Components read SEO-critical data. Client Components handle focused interactions such as autocomplete, dialogs, cart controls, and forms. Client values are never authoritative for permission, price, stock, payment, review eligibility, or fulfilment state.
+
+More detail: [architecture](docs/ARCHITECTURE.md), [database](docs/DATABASE.md), and [backend evolution](docs/BACKEND_EVOLUTION.md).
+
+## Authentication, sessions, and roles
+
+- Sign-in creates a random 256-bit bearer token. Only its SHA-256 digest is stored in `Session`; the raw value stays in a secure, HTTP-only, SameSite cookie.
+- Each database session has its own non-secret ID linked to the user and records bounded IP/user-agent context for tracing. Session IDs, not bearer tokens, should appear in diagnostics.
+- Sessions expire after 30 days, are rotated on sign-in, are revoked on sign-out, and are rejected when the account is inactive. Revoked rows are retained for trace continuity; the raw bearer token is never retained.
+- `/admin/**` requires the exact `ADMIN` role and `/seller/**` requires the exact `SELLER` role. The Next.js request proxy handles missing-cookie redirects; server layouts and actions remain the authoritative guards.
+- Safe same-origin return paths preserve direct navigation through sign-in. External, protocol-relative, and cross-role destinations are rejected.
+- Customers can browse and build a cart anonymously. Authentication becomes mandatory for checkout and account routes.
+
+## Cart and checkout lifecycle
+
+```mermaid
+sequenceDiagram
+    participant Guest as Anonymous browser
+    participant Local as localStorage
+    participant Auth as Sign-in/session
+    participant Cart as Account cart
+    participant DB as PostgreSQL
+
+    Guest->>Local: Add selections
+    Note over Local: 30-day TTL, display data only
+    Guest->>Auth: Sign in to check out
+    Auth->>DB: Create traced session
+    Local->>Cart: Send guest cart ID and stable selections
+    Cart->>DB: Revalidate products, variants, stock, limits, prices
+    Cart->>DB: Merge once and record CartMerge
+    DB-->>Local: Return authoritative account cart
+    Note over Local: Account items are not retained locally
+```
+
+- Anonymous selections persist under `formivo-shopping-bag-v2` for 30 days. Price and stock snapshots are presentation-only.
+- The first authenticated hydration merges the guest cart exactly once using a UUID plus a database uniqueness constraint. Existing account quantities are combined and clamped to current limits.
+- Logged-in cart changes are debounced to the database and revalidated. Account cart items are intentionally omitted from local storage to avoid exposing the previous customer’s cart after sign-out on a shared browser.
+- The cart hydrator reacts to sign-in and sign-out route transitions: sign-in adopts the current guest UUID once, while sign-out immediately replaces in-memory account state with a fresh empty guest cart.
+- Checkout requires an active database session and records its non-secret session ID for later request-to-order tracing. It rechecks publication, seller status, variant status, quantity, price, and unreserved inventory in a serializable transaction.
+- Payment success consumes reservations and clears the account cart in the same database transaction. Browser payment claims never mark an order paid.
 
 ## Local setup
 
-Prerequisites are Node.js, pnpm 10, Docker, and Docker Compose. No Google, payment, or GraphQL credentials are required for the features implemented today.
+Prerequisites: Node.js 22, pnpm 10.28.1, Docker, and Docker Compose.
 
 ```bash
-pnpm install
-docker compose up -d postgres
 cp .env.example .env
+docker compose up -d postgres
+pnpm install --frozen-lockfile
 pnpm db:generate
 pnpm db:migrate
 pnpm db:seed
 pnpm dev
 ```
 
-The complete key-acquisition, local configuration, production secret-management, migration, and troubleshooting procedure is in [Environment and deployment configuration](docs/ENVIRONMENT.md).
-
-## Quality commands
-
-Linting uses the ESLint CLI rather than `next lint`, which is not available in Next.js 16. The production build script selects Next.js's webpack compiler explicitly because the Turbopack build did not terminate reliably in the constrained local tool environment; the emitted application remains a standard Next.js production build.
-
-```bash
-pnpm lint
-pnpm typecheck
-pnpm test
-pnpm build
-```
-
-## Environment variables
-
-| Variable                            | Required now                                        | Purpose                                                     |
-| ----------------------------------- | --------------------------------------------------- | ----------------------------------------------------------- |
-| `NEXT_PUBLIC_APP_URL`               | Yes                                                 | Canonical application origin. This is intentionally public. |
-| `DATABASE_URL`                      | Yes for database-backed runtime and Prisma commands | Server-only PostgreSQL connection string.                   |
-| `BETTER_AUTH_SECRET`                | No                                                  | Reserved; not consumed by current custom sessions.          |
-| `BETTER_AUTH_URL`                   | No                                                  | Reserved; not consumed until Better Auth is adopted.        |
-| `GOOGLE_CLIENT_ID`                  | No                                                  | Reserved until Google OAuth routes and UI are implemented.  |
-| `GOOGLE_CLIENT_SECRET`              | No                                                  | Reserved server-only OAuth credential.                      |
-| `PAYMENT_PROVIDER`                  | No; defaults to `mock`                              | Selects the labelled local mock or configured Razorpay.     |
-| `ALLOW_MOCK_PAYMENTS_IN_PRODUCTION` | No; defaults to `false`                             | Permits simulation only for an explicit production demo.    |
-| `RAZORPAY_KEY_ID`                   | Only in Razorpay mode                               | Public key ID returned only to Razorpay Checkout.           |
-| `RAZORPAY_KEY_SECRET`               | Only in Razorpay mode                               | Server-only API and checkout-verification credential.       |
-| `RAZORPAY_WEBHOOK_SECRET`           | Only in Razorpay mode                               | Server-only raw-webhook signature credential.               |
-| `CUSTOMER_DASHBOARD_ENABLED`        | No; defaults to true                                | Customer dashboard feature gate.                            |
-| `SELLER_DASHBOARD_ENABLED`          | No; defaults to true                                | Seller dashboard feature gate.                              |
-| `SELLER_IMAGE_MAX_COUNT`            | No; defaults to 8                                   | Maximum product image metadata entries per seller listing.  |
-| `SELLER_IMAGE_MAX_BYTES`            | No; defaults to 5 MiB                               | File-size limit enforced by the seller image abstraction.   |
-| `ADMIN_DASHBOARD_ENABLED`           | No; defaults to true                                | Admin dashboard feature gate.                               |
-
-Do not assume a feature is active because its variable appears in `.env.example`. Runtime integration status and exact setup steps are maintained in [`docs/ENVIRONMENT.md`](docs/ENVIRONMENT.md).
-
-## Backend and GraphQL direction
-
-The recommended product-stage architecture is a **single-repository modular monolith**. Next.js owns rendering and HTTP adapters; domain services own business rules; repository interfaces isolate Prisma and PostgreSQL. This avoids premature distributed-system overhead while leaving explicit seams for future extraction.
-
-The next data milestone is to replace fixture-backed catalogue reads with a Prisma catalogue repository. GraphQL should follow as an optional typed transport over the same services, rather than bypassing repositories or duplicating business logic. Server Components should continue to load SEO-critical pages directly on the server; focused Client Components can use generated GraphQL operations for interactive dashboards and mutations.
-
-See [`docs/BACKEND_EVOLUTION.md`](docs/BACKEND_EVOLUTION.md) for current-state findings, target and sequence diagrams, phased delivery, security controls, extraction criteria, and definition of done. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the repository-wide architecture record.
-
-## Implementation phases
-
-1. Architecture and project foundation.
-2. Design system and reusable UI foundation.
-3. Database schema, repository contracts, model contracts, Docker PostgreSQL setup, and seed data.
-4. Authentication, sessions, roles, and permissions.
-5. Customer storefront, categories, products, and discovery.
-6. Deterministic database search, suggestions, recent searches, persistent filters, and accessible keyboard flows.
-7. Seller dashboard and product management.
-8. Cart, addresses, checkout, payments, and order creation.
-9. Order history, seller fulfilment, verified reviews, administration, and audit workflows.
-10. Hardening, tests, visual review, performance, and deployment readiness.
-
-## Design system
-
-The visual foundation follows the approved green reference: fern primary actions, clay orange custom-order emphasis, warm neutral surfaces, thin borders, restrained radius, and subtle shadows. Runtime design tokens live in SCSS partials and are exposed to Tailwind utilities through `src/styles/globals.scss`. Reusable components use local barrels and colocated tests.
-
-## Cart, checkout, and payments
-
-- `/cart` persists display snapshots in a hydration-safe Zustand store and supports seller grouping, accessible quantity changes, removal, tax, delivery estimates, and the shared header count.
-- `/checkout` requires a server session, manages owned delivery addresses, reviews grouped items, and submits only stable product references and quantities.
-- The server reloads publication state, seller approval, active variants, current prices, purchase limits, and unreserved stock from PostgreSQL before creating an order.
-- A serializable transaction reserves inventory and creates immutable item/address snapshots, the initial order event, checkout session, and pending payment. Provider calls occur outside the transaction with compensating reservation release on setup failure.
-- Mock success and failure are clearly simulated. Razorpay mode creates provider orders server-side, opens Standard Checkout with only the key ID, verifies returned signatures and provider payment state server-side, and processes signed, idempotent webhooks.
-- `/checkout/success` displays only an order owned by the signed-in customer with a recorded paid-or-later state. `/checkout/failure` provides safe recovery without claiming payment success.
-
-## Known limitations
-
-- The homepage and `/products` catalogue still use the typed deterministic catalogue fixture from Prompt 5; `/search` is the first public product-discovery route backed by Prisma.
-- Search uses deterministic field matching and application ranking. No semantic or AI search provider is configured or claimed.
-- Wishlist persistence, custom requests, quotations, payouts, content authoring, disputes, refunds, and external shipping-carrier integration remain assigned to later work.
-- Local credential authentication is available from Prompt 4; optional Google OAuth remains deferred. Razorpay checkout requires valid sandbox or live credentials and a webhook secret, while local development uses an explicitly simulated mock payment provider.
-- Seller image management currently accepts deterministic local `/catalogue/` URLs. The provider validates image metadata and preserves a typed object-storage seam, but binary uploads and production object-storage credentials are not active yet.
-- The Prompt 7, Prompt 8, and Prompt 9 migrations and expanded seed are committed and validated at schema level. Apply them with `pnpm db:migrate && pnpm db:seed` after PostgreSQL starts.
-- Pending checkout expiry is stored but automated expiry cleanup requires a production scheduler or queue worker; abandoned reservations should be released by that job before launch at scale.
-
-## Catalogue routes
-
-- `/` — marketplace homepage and featured discovery
-- `/products` — complete catalogue with filtering, sorting, and pagination
-- `/categories` — browse all active product categories
-- `/categories/[slug]` — category-specific catalogue results
-- `/products/[slug]` — product media, options, seller trust details, and related products
-- `/search` — database-backed keyword search, category guidance, URL filters, sorting, and result states
-- `/api/search/suggestions?q=phone` — typed product, category, seller, and popular-search suggestions
-- `/cart` — persistent seller-grouped shopping bag and totals
-- `/checkout` — authenticated address, review, stock validation, and payment flow
-- `/checkout/success` and `/checkout/failure` — verified result and recovery states
-- `/account/addresses` — owned delivery-address management
-- `/account/orders` and `/account/orders/[orderId]` — buyer history, seller-group tracking, timelines, and verified review submission
-- `/api/payments/razorpay/webhook` — raw-signature-verified, idempotent provider events
-
-## Search and discovery
-
-- Search parameters are validated with Zod and include keyword, category, price, material, colour, rating, customisation, seller location, processing time, delivery estimate, stock, sort, and page.
-- Suggestion requests begin after two characters, debounce in the browser, return at most five entries, and support Arrow Up, Arrow Down, Enter, and Escape.
-- Submitted searches are stored only in local browser storage, capped at five unique recent entries, and retain optional category context.
-- The development seed includes minimal, adjustable, and foldable phone stands for the guided phone-stand workflow.
-
-## Seller workspace
-
-- `/seller` — database-backed revenue, order, product, inventory, and rating overview
-- `/seller/onboarding` — persisted seller application and capability profile
-- `/seller/profile` — owned store settings and capability management
-- `/seller/products` — responsive seller product listing with status and lifecycle actions
-- `/seller/products/new` — twelve-section product editor with draft and review submission actions
-- `/seller/products/[productId]/edit` — ownership-protected product editing
-- `/seller/products/[productId]/inventory` — product and variant inventory with reserved-stock protection
-- `/seller/orders` and `/seller/orders/[orderNumber]` — seller-owned fulfilment queues and sequential audited transitions
-
-Product drafts remain private. Approved sellers can submit complete drafts for administrator review, but cannot publish them until an administrator changes the product to `APPROVED`. Seller publication, pause, duplication, archive, image metadata, inventory, and every lifecycle mutation are authorised server-side. Editing an approved or published product moves it back to a private draft and removes its public publication date.
-
-## Administration and verified reviews
-
-- `/admin` — database-backed GMV, commission, seller, product, order, and review metrics
-- `/admin/products` and `/admin/products/[productId]` — complete product review surface with approve, publish, request-changes, and rejection actions
-- `/admin/sellers` and `/admin/sellers/[sellerId]` — verification, change request, rejection, and suspension workflows
-- `/admin/categories` — hierarchy, visibility, navigation order, imagery, and SEO management
-- `/admin/reviews` — review visibility moderation with mandatory reasons
-- `/admin/audit` — chronological actor, entity, reason, and timestamp history
-
-Each marketplace order has one seller fulfilment record per participating seller. Seller transitions are sequential and server-authorised; the overall buyer-facing order state is derived from the slowest active seller group. Delivered order items are eligible for one combined submission that creates separate product and seller ratings. Ownership, delivery, duplicate-review, and self-review checks are repeated inside a serializable database transaction.
+Open `http://localhost:3000`. See [environment configuration](docs/ENVIRONMENT.md) for every variable and [deployment](docs/DEPLOYMENT.md) for the release order.
 
 ## Demo credentials
 
-After running the idempotent seed, all demo accounts use password `Formivo123!`.
+Run `pnpm db:seed` first. All seeded login accounts use `Formivo123!`.
 
-- Seller: `seller@formivo.local`
-- Customer: `buyer@formivo.local`
-- Admin: `admin@formivo.local`
-- Pending seller moderation example: `pending-seller@formivo.local`
+| Role                         | Email                          | Landing page                   |
+| ---------------------------- | ------------------------------ | ------------------------------ |
+| Customer                     | `buyer@formivo.local`          | `/account`                     |
+| Approved seller              | `seller@formivo.local`         | `/seller`                      |
+| Administrator                | `admin@formivo.local`          | `/admin`                       |
+| Pending seller demonstration | `pending-seller@formivo.local` | Not a seller dashboard account |
+
+The seed is idempotent and includes all public fixture products and variants in PostgreSQL so every storefront cart selection can be revalidated and checked out. Demo credentials are for local/staging use only; never seed them into a real production customer database.
+
+## Quality and production checks
+
+```bash
+pnpm format:check
+pnpm typecheck
+pnpm lint
+pnpm test -- --runInBand --coverage
+pnpm db:validate
+pnpm build
+```
+
+GitHub Actions runs those checks against PostgreSQL 16 after `prisma migrate deploy` and the idempotent seed. The production build uses Next.js image optimisation, local font optimisation, route metadata, robots, sitemap, a web manifest, strict security headers, and route-level/root error boundaries.
+
+Review records: [quality, accessibility, responsive, and performance](docs/QUALITY.md) and [security and rate limiting](docs/SECURITY.md).
+
+## Deployment summary
+
+Release in this order:
+
+```bash
+pnpm install --frozen-lockfile
+pnpm db:generate
+pnpm db:validate
+pnpm db:deploy
+pnpm build
+pnpm start
+```
+
+Run migrations once per release, not from every replica. Use HTTPS, a TLS-enabled managed PostgreSQL database, encrypted secrets, backups, and a production Razorpay configuration for real payments. `RATE_LIMIT_SECRET` must be a unique random server-only value of at least 32 characters.
+
+## Known limitations
+
+- Public catalogue pages still render a deterministic TypeScript catalogue for fast demo delivery, while search, cart validation, checkout, orders, and dashboards use PostgreSQL. The seed mirrors every public product into PostgreSQL; the planned next step is one Prisma-backed catalogue read path.
+- Authentication supports local credentials only. Email verification, password reset, MFA, OAuth, device/session management UI, and session revocation UI are not implemented.
+- Fixed-window rate limits are atomic in PostgreSQL and cover authentication and search suggestions. At high global traffic, move counters to a managed distributed limiter and add policy coverage to every public mutation.
+- Product media uses shipped SVG demo assets and a local URL storage adapter. Production seller uploads still require object storage, malware/content scanning, signed upload URLs, and a CDN.
+- Razorpay requires real provider credentials and webhook setup. The mock provider is for local/demo environments and must remain disabled for production commerce.
+- There is no browser-driven end-to-end suite or measured Lighthouse budget yet. CI covers component/domain tests, database migration/seed, type/lint/format checks, and the production build; cross-browser payment testing remains a release checklist item.
+- Checkout reservation expiry does not yet have a scheduled worker that marks abandoned sessions expired and releases old reservations.
+
+## Documentation
+
+- [Architecture](docs/ARCHITECTURE.md)
+- [Environment variables](docs/ENVIRONMENT.md)
+- [Deployment](docs/DEPLOYMENT.md)
+- [Security and rate limiting](docs/SECURITY.md)
+- [Quality review](docs/QUALITY.md)
+- [Database](docs/DATABASE.md)
+- [Backend evolution](docs/BACKEND_EVOLUTION.md)

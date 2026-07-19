@@ -4,5 +4,7 @@ export type {
   CartItemOption,
   CartSellerGroup,
   CartState,
+  CartSyncLineInput,
+  CartSyncResult,
   CartTotals,
 } from './cart.model';

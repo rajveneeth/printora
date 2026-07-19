@@ -10,3 +10,4 @@ export {
   SELLER_SHIPPING_IN_PAISE,
 } from './cartPricing';
 export type { PricedCartLine } from './cartPricing';
+export { createCartLineId, mergeCartQuantity, toCartSyncLines } from './cartSync';

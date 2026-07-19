@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import { Button, Card } from '@/components/ui';
-import { requireRole } from '@/lib/auth/session';
+import { requireSession } from '@/lib/auth/session';
 import { signOutAction } from '@/features/authentication/actions';
 import { customerEnvironment } from '@/lib/validation/environment';
 import { redirect } from 'next/navigation';
 
 export default async function AccountPage() {
   if (!customerEnvironment.CUSTOMER_DASHBOARD_ENABLED) redirect('/unauthorised');
-  const session = await requireRole('CUSTOMER');
+  const session = await requireSession('/account');
   return (
     <main className="mx-auto grid min-h-screen w-full max-w-[var(--container-max)] gap-6 px-[var(--gutter)] py-12">
       <Card className="grid gap-3">

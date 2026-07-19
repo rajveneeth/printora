@@ -11,12 +11,13 @@
     "typecheck": "tsc --noEmit",
     "test": "node scripts/run-jest.mjs",
     "test:watch": "jest --watch",
-    "test:e2e": "playwright test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "ci": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test -- --runInBand",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:validate": "prisma validate",
     "db:seed": "prisma db seed",
     "db:reset": "prisma migrate reset",
     "prepare": "husky",
@@ -26,7 +27,6 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
-    "@next/env": "latest",
     "@prisma/client": "6.19.0",
     "@tailwindcss/postcss": "latest",
     "clsx": "latest",
@@ -41,7 +41,6 @@
   "devDependencies": {
     "@commitlint/cli": "latest",
     "@commitlint/config-conventional": "latest",
-    "@eslint/eslintrc": "latest",
     "@next/eslint-plugin-next": "latest",
     "@testing-library/jest-dom": "latest",
     "@testing-library/react": "latest",
@@ -50,6 +49,7 @@
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "dotenv": "^16.6.1",
     "eslint": "^9.39.2",
     "eslint-config-next": "latest",
     "husky": "latest",
@@ -70,8 +70,5 @@
     "*.{ts,tsx,js,jsx,mjs,cjs,json,md,scss,css,yml,yaml}": [
       "prettier --check"
     ]
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
   }
 }
