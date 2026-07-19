@@ -13,6 +13,7 @@ This document is the configuration runbook for Formivo 3D. Values in `.env.examp
 | Better Auth                              | Not installed or initialised | None; names are reserved     |
 | Razorpay                                 | Not implemented              | None; names are reserved     |
 | GraphQL                                  | Not installed or exposed     | None                         |
+| Seller workspace                         | Implemented                  | `SELLER_*` variables         |
 
 The current authentication code creates random session tokens and persists them in PostgreSQL. `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `GOOGLE_CLIENT_ID`, and `GOOGLE_CLIENT_SECRET` do not enable Google authentication by themselves. An authentication adapter and callback route must be implemented before those values are operational.
 
@@ -102,6 +103,18 @@ Use the hosting platform's encrypted environment/secret manager. Do not upload `
 | `GOOGLE_CLIENT_SECRET` | Required only after Google sign-in is implemented                            | Google Cloud OAuth client                   |
 | `RAZORPAY_KEY_ID`      | Required only after payment integration; use live key in production          | Razorpay dashboard                          |
 | `RAZORPAY_KEY_SECRET`  | Required only after payment integration                                      | Razorpay dashboard                          |
+
+### Dashboard-specific configuration
+
+Shared secrets and provider credentials remain server-only. Dashboard feature gates and seller media constraints are validated in separate customer, seller, and admin schemas, then composed by `src/lib/validation/env.ts` for the single Next.js runtime.
+
+| Dashboard | Variables                                                                      |
+| --------- | ------------------------------------------------------------------------------ |
+| Customer  | `CUSTOMER_DASHBOARD_ENABLED`                                                   |
+| Seller    | `SELLER_DASHBOARD_ENABLED`, `SELLER_IMAGE_MAX_COUNT`, `SELLER_IMAGE_MAX_BYTES` |
+| Admin     | `ADMIN_DASHBOARD_ENABLED`                                                      |
+
+All dashboard gates default to `true`. Seller image limits default to eight images and 5 MiB per upload metadata record. Prompt 7 uses the local URL provider for `/catalogue/` assets; the byte limit is already enforced by the provider contract for the later binary-upload adapter.
 
 Production release order:
 

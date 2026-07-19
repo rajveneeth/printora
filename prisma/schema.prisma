@@ -67,26 +67,27 @@ enum AddressKind {
 }
 
 model User {
-  id            String         @id @default(cuid())
-  name          String?
-  email         String         @unique
-  emailVerified Boolean        @default(false)
-  image         String?
-  role          UserRole       @default(CUSTOMER)
-  status        AccountStatus  @default(ACTIVE)
-  phone         String?
-  lastActiveAt  DateTime?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  sessions      Session[]
-  accounts      Account[]
-  buyerProfile  BuyerProfile?
-  sellerProfile SellerProfile?
-  addresses     Address[]
-  favourites    Favourite[]
-  carts         Cart[]
-  orders        Order[]        @relation("BuyerOrders")
-  reviews       Review[]
+  id                String             @id @default(cuid())
+  name              String?
+  email             String             @unique
+  emailVerified     Boolean            @default(false)
+  image             String?
+  role              UserRole           @default(CUSTOMER)
+  status            AccountStatus      @default(ACTIVE)
+  phone             String?
+  lastActiveAt      DateTime?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  sessions          Session[]
+  accounts          Account[]
+  buyerProfile      BuyerProfile?
+  sellerProfile     SellerProfile?
+  sellerApplication SellerApplication?
+  addresses         Address[]
+  favourites        Favourite[]
+  carts             Cart[]
+  orders            Order[]            @relation("BuyerOrders")
+  reviews           Review[]
 }
 
 model Session {
@@ -170,6 +171,37 @@ model SellerProfile {
   products            Product[]
 }
 
+model SellerApplication {
+  id                  String                   @id @default(cuid())
+  userId              String                   @unique
+  storeName           String
+  storeSlug           String
+  description         String
+  logoUrl             String?
+  bannerUrl           String?
+  contactEmail        String
+  contactPhone        String?
+  originCity          String
+  originState         String
+  originPostalCode    String
+  yearsExperience     Int                      @default(0)
+  supportedMaterials  String[]
+  printTechnologies   String[]
+  maxPrintDimensions  String?
+  customOrdersEnabled Boolean                  @default(true)
+  averageProcessDays  Int                      @default(5)
+  declarationAccepted Boolean                  @default(false)
+  status              SellerVerificationStatus @default(PENDING)
+  submittedAt         DateTime                 @default(now())
+  reviewedAt          DateTime?
+  changeRequestNote   String?
+  createdAt           DateTime                 @default(now())
+  updatedAt           DateTime                 @updatedAt
+  user                User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status, submittedAt])
+}
+
 model Category {
   id          String     @id @default(cuid())
   name        String
@@ -186,41 +218,42 @@ model Category {
 }
 
 model Product {
-  id                   String           @id @default(cuid())
+  id                   String                 @id @default(cuid())
   sellerId             String
   categoryId           String
   name                 String
-  slug                 String           @unique
+  slug                 String                 @unique
   shortDescription     String
   fullDescription      String
-  basePrice            Decimal          @db.Decimal(10, 2)
-  compareAtPrice       Decimal?         @db.Decimal(10, 2)
-  currency             String           @default("INR")
-  sku                  String           @unique
-  minOrderQuantity     Int              @default(1)
+  basePrice            Decimal                @db.Decimal(10, 2)
+  compareAtPrice       Decimal?               @db.Decimal(10, 2)
+  currency             String                 @default("INR")
+  sku                  String                 @unique
+  minOrderQuantity     Int                    @default(1)
   maxOrderQuantity     Int?
   dimensions           String?
   weightGrams          Int?
   material             String
   finish               String?
   colour               String?
-  processingDays       Int              @default(5)
+  processingDays       Int                    @default(5)
   shippingOrigin       String
-  customisationEnabled Boolean          @default(false)
+  customisationEnabled Boolean                @default(false)
   safetyNotes          String?
   intendedUse          String?
   ageRestriction       String?
   ipDeclaration        String
-  tags                 String[]         @default([])
+  tags                 String[]               @default([])
   searchKeywords       String[]
   seoTitle             String?
   seoDescription       String?
-  status               ProductStatus    @default(DRAFT)
+  status               ProductStatus          @default(DRAFT)
+  viewCount            Int                    @default(0)
   publishedAt          DateTime?
-  createdAt            DateTime         @default(now())
-  updatedAt            DateTime         @updatedAt
-  seller               SellerProfile    @relation(fields: [sellerId], references: [id])
-  category             Category         @relation(fields: [categoryId], references: [id])
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  seller               SellerProfile          @relation(fields: [sellerId], references: [id])
+  category             Category               @relation(fields: [categoryId], references: [id])
   images               ProductImage[]
   variants             ProductVariant[]
   inventory            Inventory?
@@ -228,11 +261,26 @@ model Product {
   cartItems            CartItem[]
   orderItems           OrderItem[]
   reviews              Review[]
+  approvalEvents       ProductApprovalEvent[]
 
   @@index([status, publishedAt])
+  @@index([sellerId, updatedAt])
   @@index([categoryId, status])
   @@index([createdAt])
   @@index([basePrice])
+}
+
+model ProductApprovalEvent {
+  id             String         @id @default(cuid())
+  productId      String
+  actorId        String
+  previousStatus ProductStatus?
+  newStatus      ProductStatus
+  note           String?
+  createdAt      DateTime       @default(now())
+  product        Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, createdAt])
 }
 
 model ProductImage {
@@ -255,6 +303,7 @@ model ProductVariant {
   colour     String?
   finish     String?
   priceDelta Decimal     @default(0) @db.Decimal(10, 2)
+  isActive   Boolean     @default(true)
   product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
   inventory  Inventory?
   cartItems  CartItem[]
@@ -364,6 +413,8 @@ model OrderItem {
   order                 Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product               Product?        @relation(fields: [productId], references: [id], onDelete: SetNull)
   variant               ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+
+  @@index([sellerId])
 }
 
 model Review {

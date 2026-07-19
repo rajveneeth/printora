@@ -1,6 +1,27 @@
-import { PrismaClient, ProductStatus, SellerVerificationStatus, UserRole } from '@prisma/client';
+import {
+  OrderStatus,
+  PrismaClient,
+  ProductStatus,
+  SellerVerificationStatus,
+  UserRole,
+} from '@prisma/client';
+import { hashPassword } from '../src/lib/auth/password';
 
 const prisma = new PrismaClient();
+const demoPassword = 'Formivo123!';
+
+const ensureCredentialAccount = async (userId: string, email: string): Promise<void> => {
+  await prisma.account.upsert({
+    where: { providerId_accountId: { providerId: 'credentials', accountId: email } },
+    update: {},
+    create: {
+      userId,
+      providerId: 'credentials',
+      accountId: email,
+      password: hashPassword(demoPassword),
+    },
+  });
+};
 
 async function main() {
   const buyer = await prisma.user.upsert({
@@ -37,6 +58,23 @@ async function main() {
     },
   });
 
+  const admin = await prisma.user.upsert({
+    where: { email: 'admin@formivo.local' },
+    update: { name: 'Formivo Admin', role: UserRole.ADMIN },
+    create: {
+      email: 'admin@formivo.local',
+      emailVerified: true,
+      name: 'Formivo Admin',
+      role: UserRole.ADMIN,
+    },
+  });
+
+  await Promise.all([
+    ensureCredentialAccount(buyer.id, buyer.email),
+    ensureCredentialAccount(sellerUser.id, sellerUser.email),
+    ensureCredentialAccount(admin.id, admin.email),
+  ]);
+
   const seller = await prisma.sellerProfile.upsert({
     where: { storeSlug: 'fern-fabrication' },
     update: {},
@@ -57,6 +95,33 @@ async function main() {
       verificationStatus: SellerVerificationStatus.APPROVED,
       averageRating: '4.8',
       completedOrderCount: 128,
+    },
+  });
+
+  await prisma.sellerApplication.upsert({
+    where: { userId: sellerUser.id },
+    update: { status: SellerVerificationStatus.APPROVED, declarationAccepted: true },
+    create: {
+      userId: sellerUser.id,
+      storeName: seller.storeName,
+      storeSlug: seller.storeSlug,
+      description: seller.description,
+      logoUrl: seller.logoUrl,
+      bannerUrl: seller.bannerUrl,
+      contactEmail: seller.contactEmail,
+      contactPhone: seller.contactPhone,
+      originCity: seller.originCity,
+      originState: seller.originState,
+      originPostalCode: seller.originPostalCode,
+      yearsExperience: seller.yearsExperience,
+      supportedMaterials: seller.supportedMaterials,
+      printTechnologies: seller.printTechnologies,
+      maxPrintDimensions: seller.maxPrintDimensions,
+      customOrdersEnabled: seller.customOrdersEnabled,
+      averageProcessDays: seller.averageProcessDays,
+      declarationAccepted: true,
+      status: SellerVerificationStatus.APPROVED,
+      reviewedAt: new Date(),
     },
   });
 
@@ -225,6 +290,19 @@ async function main() {
     },
   });
 
+  await prisma.productApprovalEvent.upsert({
+    where: { id: 'seed-modular-desk-organiser-published' },
+    update: { newStatus: ProductStatus.PUBLISHED },
+    create: {
+      id: 'seed-modular-desk-organiser-published',
+      productId: product.id,
+      actorId: admin.id,
+      previousStatus: ProductStatus.APPROVED,
+      newStatus: ProductStatus.PUBLISHED,
+      note: 'Seeded approved product for seller dashboard demonstration.',
+    },
+  });
+
   const searchProductSeeds = [
     {
       name: 'Minimal Phone Stand',
@@ -390,6 +468,79 @@ async function main() {
     update: {},
     create: { userId: buyer.id, productId: product.id },
   });
+
+  const sellerOrderSeeds = [
+    {
+      id: 'seed-seller-order-paid',
+      itemId: 'seed-seller-order-paid-item',
+      orderNumber: 'FMV-2026-1001',
+      status: OrderStatus.PAID,
+      quantity: 1,
+      unitPrice: '899.00',
+      tax: '161.82',
+      shippingFee: '79.00',
+      placedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+    },
+    {
+      id: 'seed-seller-order-production',
+      itemId: 'seed-seller-order-production-item',
+      orderNumber: 'FMV-2026-0994',
+      status: OrderStatus.IN_PRODUCTION,
+      quantity: 2,
+      unitPrice: '899.00',
+      tax: '323.64',
+      shippingFee: '99.00',
+      placedAt: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000),
+    },
+    {
+      id: 'seed-seller-order-delivered',
+      itemId: 'seed-seller-order-delivered-item',
+      orderNumber: 'FMV-2026-0941',
+      status: OrderStatus.DELIVERED,
+      quantity: 1,
+      unitPrice: '899.00',
+      tax: '161.82',
+      shippingFee: '79.00',
+      placedAt: new Date(Date.now() - 42 * 24 * 60 * 60 * 1000),
+    },
+  ] as const;
+
+  for (const orderSeed of sellerOrderSeeds) {
+    const subtotal = Number(orderSeed.unitPrice) * orderSeed.quantity;
+    const grandTotal = subtotal + Number(orderSeed.tax) + Number(orderSeed.shippingFee);
+    await prisma.order.upsert({
+      where: { orderNumber: orderSeed.orderNumber },
+      update: { status: orderSeed.status, placedAt: orderSeed.placedAt },
+      create: {
+        id: orderSeed.id,
+        orderNumber: orderSeed.orderNumber,
+        buyerId: buyer.id,
+        status: orderSeed.status,
+        subtotal: subtotal.toFixed(2),
+        taxTotal: orderSeed.tax,
+        shippingTotal: orderSeed.shippingFee,
+        grandTotal: grandTotal.toFixed(2),
+        placedAt: orderSeed.placedAt,
+      },
+    });
+    await prisma.orderItem.upsert({
+      where: { id: orderSeed.itemId },
+      update: { quantity: orderSeed.quantity, unitPrice: orderSeed.unitPrice },
+      create: {
+        id: orderSeed.itemId,
+        orderId: orderSeed.id,
+        productId: product.id,
+        sellerId: seller.id,
+        productNameSnapshot: product.name,
+        sellerNameSnapshot: seller.storeName,
+        productImageSnapshot: '/catalogue/desk-organiser.svg',
+        quantity: orderSeed.quantity,
+        unitPrice: orderSeed.unitPrice,
+        tax: orderSeed.tax,
+        shippingFee: orderSeed.shippingFee,
+      },
+    });
+  }
 }
 
 main().finally(async () => prisma.$disconnect());

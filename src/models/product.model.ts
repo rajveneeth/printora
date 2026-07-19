@@ -34,6 +34,7 @@ export interface ProductVariantModel {
   colour?: string;
   finish?: string;
   priceDelta: number;
+  isActive: boolean;
 }
 
 export interface InventoryModel {

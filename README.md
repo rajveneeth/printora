@@ -1,6 +1,6 @@
 # Formivo 3D
 
-Formivo 3D is a full-stack marketplace foundation for ready-made and custom 3D-printed products. It currently includes credential authentication, a PostgreSQL/Prisma domain model, database-backed deterministic search, category-guided discovery, accessible suggestions, recent searches, persistent URL filters, and the buyer storefront foundation.
+Formivo 3D is a full-stack marketplace foundation for ready-made and custom 3D-printed products. It currently includes credential authentication, a PostgreSQL/Prisma domain model, database-backed deterministic search, category-guided discovery, accessible suggestions, recent searches, persistent URL filters, the buyer storefront foundation, and a database-backed seller workspace with onboarding and product management.
 
 > **Architecture status:** `/search` and search suggestions use PostgreSQL. The homepage, general catalogue, category pages, and product detail pages still read a deterministic TypeScript fixture. Google OAuth, Better Auth, Razorpay, and GraphQL are planned integrations, not enabled features. See [Backend and data evolution](docs/BACKEND_EVOLUTION.md) for the audited migration plan.
 
@@ -79,6 +79,7 @@ src/
   components/                  Shared UI and public layout components
   config/                      Central product identity
   features/catalogue/          Catalogue models, data, services, components, tests
+  features/seller/             Seller permissions, schemas, repositories, services, forms, and tests
   lib/                         Authentication, Prisma, and shared utilities
   styles/                      Tokens, base styling, and global Tailwind bindings
 docs/
@@ -108,7 +109,7 @@ The complete key-acquisition, local configuration, production secret-management,
 
 ## Quality commands
 
-Linting uses the ESLint CLI rather than `next lint`, which is not available in Next.js 16.
+Linting uses the ESLint CLI rather than `next lint`, which is not available in Next.js 16. The production build script selects Next.js's webpack compiler explicitly because the Turbopack build did not terminate reliably in the constrained local tool environment; the emitted application remains a standard Next.js production build.
 
 ```bash
 pnpm lint
@@ -119,16 +120,21 @@ pnpm build
 
 ## Environment variables
 
-| Variable               | Required now                                        | Purpose                                                     |
-| ---------------------- | --------------------------------------------------- | ----------------------------------------------------------- |
-| `NEXT_PUBLIC_APP_URL`  | Yes                                                 | Canonical application origin. This is intentionally public. |
-| `DATABASE_URL`         | Yes for database-backed runtime and Prisma commands | Server-only PostgreSQL connection string.                   |
-| `BETTER_AUTH_SECRET`   | No                                                  | Reserved; not consumed by current custom sessions.          |
-| `BETTER_AUTH_URL`      | No                                                  | Reserved; not consumed until Better Auth is adopted.        |
-| `GOOGLE_CLIENT_ID`     | No                                                  | Reserved until Google OAuth routes and UI are implemented.  |
-| `GOOGLE_CLIENT_SECRET` | No                                                  | Reserved server-only OAuth credential.                      |
-| `RAZORPAY_KEY_ID`      | No                                                  | Reserved until payment integration.                         |
-| `RAZORPAY_KEY_SECRET`  | No                                                  | Reserved server-only payment credential.                    |
+| Variable                     | Required now                                        | Purpose                                                     |
+| ---------------------------- | --------------------------------------------------- | ----------------------------------------------------------- |
+| `NEXT_PUBLIC_APP_URL`        | Yes                                                 | Canonical application origin. This is intentionally public. |
+| `DATABASE_URL`               | Yes for database-backed runtime and Prisma commands | Server-only PostgreSQL connection string.                   |
+| `BETTER_AUTH_SECRET`         | No                                                  | Reserved; not consumed by current custom sessions.          |
+| `BETTER_AUTH_URL`            | No                                                  | Reserved; not consumed until Better Auth is adopted.        |
+| `GOOGLE_CLIENT_ID`           | No                                                  | Reserved until Google OAuth routes and UI are implemented.  |
+| `GOOGLE_CLIENT_SECRET`       | No                                                  | Reserved server-only OAuth credential.                      |
+| `RAZORPAY_KEY_ID`            | No                                                  | Reserved until payment integration.                         |
+| `RAZORPAY_KEY_SECRET`        | No                                                  | Reserved server-only payment credential.                    |
+| `CUSTOMER_DASHBOARD_ENABLED` | No; defaults to true                                | Customer dashboard feature gate.                            |
+| `SELLER_DASHBOARD_ENABLED`   | No; defaults to true                                | Seller dashboard feature gate.                              |
+| `SELLER_IMAGE_MAX_COUNT`     | No; defaults to 8                                   | Maximum product image metadata entries per seller listing.  |
+| `SELLER_IMAGE_MAX_BYTES`     | No; defaults to 5 MiB                               | File-size limit enforced by the seller image abstraction.   |
+| `ADMIN_DASHBOARD_ENABLED`    | No; defaults to true                                | Admin dashboard feature gate.                               |
 
 Do not assume a feature is active because its variable appears in `.env.example`. Runtime integration status and exact setup steps are maintained in [`docs/ENVIRONMENT.md`](docs/ENVIRONMENT.md).
 
@@ -161,8 +167,10 @@ The visual foundation follows the approved green reference: fern primary actions
 
 - The homepage and `/products` catalogue still use the typed deterministic catalogue fixture from Prompt 5; `/search` is the first public product-discovery route backed by Prisma.
 - Search uses deterministic field matching and application ranking. No semantic or AI search provider is configured or claimed.
-- Persisted wishlist/cart state, checkout, payments, shipping, seller dashboards, and admin moderation are intentionally assigned to later prompts.
+- Persisted wishlist/cart state, checkout, payments, shipping, seller order transitions, quotations, payouts, and admin moderation are intentionally assigned to later prompts.
 - Local credential authentication is available from Prompt 4; optional Google OAuth and Razorpay adapters remain deferred.
+- Seller image management currently accepts deterministic local `/catalogue/` URLs. The provider validates image metadata and preserves a typed object-storage seam, but binary uploads and production object-storage credentials are not active yet.
+- The Prompt 7 migration and seed are committed and validated at schema level. They were not applied in the implementation workspace because its Docker daemon was not running; start Docker and run `pnpm db:migrate && pnpm db:seed` locally.
 
 ## Catalogue routes
 
@@ -180,3 +188,23 @@ The visual foundation follows the approved green reference: fern primary actions
 - Suggestion requests begin after two characters, debounce in the browser, return at most five entries, and support Arrow Up, Arrow Down, Enter, and Escape.
 - Submitted searches are stored only in local browser storage, capped at five unique recent entries, and retain optional category context.
 - The development seed includes minimal, adjustable, and foldable phone stands for the guided phone-stand workflow.
+
+## Seller workspace
+
+- `/seller` — database-backed revenue, order, product, inventory, and rating overview
+- `/seller/onboarding` — persisted seller application and capability profile
+- `/seller/profile` — owned store settings and capability management
+- `/seller/products` — responsive seller product listing with status and lifecycle actions
+- `/seller/products/new` — twelve-section product editor with draft and review submission actions
+- `/seller/products/[productId]/edit` — ownership-protected product editing
+- `/seller/products/[productId]/inventory` — product and variant inventory with reserved-stock protection
+
+Product drafts remain private. Approved sellers can submit complete drafts for administrator review, but cannot publish them until an administrator changes the product to `APPROVED`. Seller publication, pause, duplication, archive, image metadata, inventory, and every lifecycle mutation are authorised server-side. Editing an approved or published product moves it back to a private draft and removes its public publication date.
+
+## Demo credentials
+
+After running the idempotent seed, all demo accounts use password `Formivo123!`.
+
+- Seller: `seller@formivo.local`
+- Customer: `buyer@formivo.local`
+- Admin: `admin@formivo.local`

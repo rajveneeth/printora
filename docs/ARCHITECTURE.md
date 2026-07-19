@@ -133,6 +133,17 @@ tests/
 - Search includes initial guidance, loading skeletons, normal results, empty recovery, suggestion failure, and database-unavailable states.
 - The implementation is deterministic database search. No AI or semantic-search integration is configured.
 
+## Prompt 7 seller decisions
+
+- Seller onboarding persists both the mutable seller profile and an application snapshot. A customer may apply, while existing seller accounts can complete or revise pending information.
+- Seller workspace reads and writes use Prisma-backed seller repositories and server actions. Client components are limited to form interaction, image/variant field arrays, confirmations, and responsive navigation.
+- Product drafts remain private. A complete owned draft can move to `PENDING_REVIEW`; a seller can publish only after an administrator has moved it to `APPROVED`. Editing a published product removes it from public visibility and returns it to a private draft that must be resubmitted, so unmoderated content never remains public.
+- Product lifecycle changes create `ProductApprovalEvent` records. Seller permission helpers enforce active accounts, ownership, verification state, and suspended-seller restrictions before repository mutations.
+- Inventory is managed separately for the base product and its variants. Quantity cannot fall below reserved stock, and all submitted quantities and thresholds are validated on the server.
+- Product image management uses a typed storage-provider contract. Prompt 7 activates a local public-path URL provider for deterministic development assets; direct binary uploads and production object-storage credentials remain deferred.
+- Dashboard metrics are calculated from persisted products, order items, orders, inventory, and reviews. Currency is converted from Prisma decimal rupees to integer paise at the presentation boundary.
+- Environment validation is composed from shared, customer, seller, and admin schemas. Variables remain in one Next.js runtime file but use domain prefixes and separate documentation sections to prevent dashboard-specific configuration from leaking across modules.
+
 ## Operational topology
 
 ```mermaid
