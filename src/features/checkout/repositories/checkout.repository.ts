@@ -292,6 +292,12 @@ export class PrismaCheckoutRepository {
                 note: 'Checkout created and inventory reserved.',
               },
             },
+            fulfilments: {
+              create: [...new Set(preparedItems.map((item) => item.sellerId))].map((sellerId) => ({
+                sellerId,
+                status: OrderStatus.PENDING_PAYMENT,
+              })),
+            },
           },
         });
         const checkout = await transaction.checkoutSession.create({
@@ -464,6 +470,10 @@ export class PrismaCheckoutRepository {
               },
             },
           });
+          await transaction.sellerOrderFulfilment.updateMany({
+            where: { orderId: payment.orderId },
+            data: { status: OrderStatus.PAID },
+          });
           return { status: 'SUCCEEDED', orderNumber: payment.order.orderNumber };
         }
         await this.releaseReservations(transaction, reservations);
@@ -488,6 +498,10 @@ export class PrismaCheckoutRepository {
               create: { status: OrderStatus.CANCELLED, note: 'Payment was not completed.' },
             },
           },
+        });
+        await transaction.sellerOrderFulfilment.updateMany({
+          where: { orderId: payment.orderId },
+          data: { status: OrderStatus.CANCELLED },
         });
         return {
           status: 'FAILED',

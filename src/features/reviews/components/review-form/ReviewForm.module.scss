@@ -1,0 +1,47 @@
+.form {
+  display: grid;
+  gap: var(--space-5);
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-5);
+}
+
+.form > div > p {
+  color: var(--primary);
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+  letter-spacing: var(--letter-spacing-label);
+  text-transform: uppercase;
+}
+
+.form h3 {
+  margin-top: var(--space-1);
+}
+
+.form fieldset {
+  display: grid;
+  gap: var(--space-3);
+  border: 0;
+}
+
+.form legend {
+  margin-bottom: var(--space-3);
+  font-weight: 800;
+}
+
+.ratings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--space-3);
+}
+
+.form button {
+  justify-self: start;
+}
+
+.success {
+  color: var(--success);
+}
+
+.error {
+  color: var(--error);
+}

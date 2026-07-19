@@ -1,6 +1,6 @@
 # Database Documentation
 
-Prompt 3 introduced the PostgreSQL and Prisma marketplace model. Prompt 8 extends it with transactional checkout, immutable delivery snapshots, payments, provider events, and order status history.
+Prompt 3 introduced the PostgreSQL and Prisma marketplace model. Prompt 8 extends it with transactional checkout, immutable delivery snapshots, payments, provider events, and order status history. Prompt 9 adds seller-scoped fulfilment, separate verified product and seller ratings, category metadata, moderation history, and general audit records.
 
 ## Local database
 
@@ -25,7 +25,7 @@ pnpm db:seed
 pnpm db:reset
 ```
 
-`pnpm db:seed` runs `prisma/seed.ts`. The seed is idempotent and creates a buyer, three approved sellers, starter categories, a desk organiser, three phone-stand variants, a planter, local product images, inventory, an address, and a favourite.
+`pnpm db:seed` runs `prisma/seed.ts`. The seed is idempotent and creates a buyer, an administrator, approved and pending sellers, ten categories, public and pending-review products, local product images, inventory, addresses, orders in multiple states, seller fulfilments, separate verified ratings, and an initial audit event.
 
 ## Core entities
 
@@ -41,7 +41,10 @@ pnpm db:reset
 - `Payment` stores the expected amount, provider, provider order and payment identifiers, verification time, and final result without accepting a browser-owned status.
 - `PaymentEvent` deduplicates provider callbacks and Razorpay webhook deliveries by external event ID.
 - `OrderStatusEvent` records the initial reservation, verified payment, and payment-failure transitions without overwriting history.
-- `Review` stores product review ratings that can later be moderated by administrators.
+- `SellerOrderFulfilment` gives each seller in a marketplace order an isolated status, carrier, and tracking record.
+- `Review` and `SellerReview` store separate verified product and seller dimensions with one unique record per delivered order item.
+- `ReviewModerationEvent` and `SellerModerationEvent` preserve before-and-after moderation states and reasons.
+- `AuditLog` records actor, action, entity, state snapshots, reason, and timestamp for important mutations.
 
 ## Important constraints
 
@@ -56,6 +59,9 @@ pnpm db:reset
 - Payment success consumes both stock and its reservation in the same transaction as the paid order state. Verified failure and provider-order setup failure release the reservation in the same transaction as cancellation.
 - Checkout idempotency keys, provider order IDs, provider payment IDs, and provider event IDs are unique. Replayed confirmations therefore return recorded state without repeating inventory mutations.
 - Address mutations always include the authenticated owner in their lookup; order history reads always include the buyer ID.
+- Seller fulfilment writes require an active approved owning seller and accept only the next valid status; every transition records actor, previous state, new state, note, and time.
+- Review submission reloads the order item inside a serializable transaction and rejects wrong owners, undelivered fulfilments, self-review, missing products, and duplicate product or seller ratings.
+- Seller suspension pauses public products in the same transaction as the moderation and audit events.
 - Product tags and search keywords use PostgreSQL arrays with GIN indexes for deterministic discovery queries.
 - Search also indexes product creation date and base price for common result ordering and filtering paths.
 
@@ -65,4 +71,4 @@ Payment provider network calls intentionally run outside database transactions. 
 
 ## Migration files
 
-The initial Prisma migration is under `prisma/migrations/20260717074700_init`. Prompt 6 adds `prisma/migrations/20260719120000_search_discovery` for tags and search indexes. Prompt 7 adds `prisma/migrations/20260719180000_seller_dashboard` for applications, product audit events, view counters, and active variants. Prompt 8 adds `prisma/migrations/20260719210000_checkout_foundation` for checkout sessions, immutable addresses, payments, provider events, and order status events. Apply all committed migrations with `pnpm db:migrate` after dependencies are installed and PostgreSQL is running.
+The initial Prisma migration is under `prisma/migrations/20260717074700_init`. Prompt 6 adds `prisma/migrations/20260719120000_search_discovery` for tags and search indexes. Prompt 7 adds `prisma/migrations/20260719180000_seller_dashboard` for applications, product audit events, view counters, and active variants. Prompt 8 adds `prisma/migrations/20260719210000_checkout_foundation` for checkout sessions, immutable addresses, payments, provider events, and order status events. Prompt 9 adds `prisma/migrations/20260719233000_orders_reviews_administration` for seller fulfilments, review integrity, moderation history, category metadata, and audit logs. Apply all committed migrations with `pnpm db:migrate` after dependencies are installed and PostgreSQL is running.

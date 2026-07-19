@@ -1,0 +1,16 @@
+.form {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.form button {
+  justify-self: start;
+}
+
+.success {
+  color: var(--success);
+}
+
+.error {
+  color: var(--error);
+}

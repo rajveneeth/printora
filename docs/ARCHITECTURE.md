@@ -14,9 +14,9 @@ The modular monolith is the formal near-term deployment decision. It provides tr
 4. Authentication, sessions, roles, and permissions.
 5. Customer storefront, categories, products, and discovery.
 6. Search suggestions, filters, sorting, and accessible keyboard flows.
-7. Custom requests, quotations, and custom projects.
-8. Seller dashboard and product/order management.
-9. Admin moderation, content, settings, and audit workflows.
+7. Seller dashboard and product management.
+8. Cart, addresses, checkout, payment, and order creation.
+9. Order history, seller fulfilment, verified reviews, administration, and audit workflows.
 10. Hardening, tests, visual review, performance, and deployment readiness.
 
 ## High-level architecture
@@ -175,6 +175,34 @@ sequenceDiagram
     Checkout->>Provider: Verify signature and provider state
     Checkout->>DB: Idempotently consume or release reservation
     DB-->>Customer: Paid confirmation or failure recovery
+```
+
+## Prompt 9 order, review, and administration decisions
+
+- One checkout remains one marketplace order, but every participating seller receives a unique `SellerOrderFulfilment`. Sellers query and mutate only their own fulfilment group, so a multi-seller order cannot be advanced by one seller on behalf of another.
+- Seller transitions follow an explicit forward-only state graph. The buyer-facing order status is derived from the slowest active fulfilment group, while cancelled groups no longer block the remaining groups. Every update persists the actor, seller, previous status, new status, note, and timestamp.
+- Buyer order history is loaded by authenticated buyer ownership. Immutable item and address snapshots remain the presentation source for historical accuracy; current product records are consulted only for delivered-item review eligibility.
+- Rating submission creates separate product and seller records. Ownership, delivered fulfilment, current product association, seller self-review, and duplicate review checks run again inside one serializable transaction before either rating is written.
+- Administration uses a dedicated protected layout and feature module. Product, seller, review, and category mutations are server actions over a Prisma repository; role helpers are central and each important transaction writes both its domain-specific history and a general `AuditLog` entry.
+- Seller suspension pauses published listings in the same transaction. Product publication sets `publishedAt`; request-changes and rejection require reasons. Review visibility changes always preserve previous visibility, new visibility, moderator, reason, and time.
+- Category removal is represented as archival through `isActive`; the interface does not expose destructive category deletion. Parent hierarchy, ordering, imagery, icons, and SEO fields remain editable.
+
+```mermaid
+sequenceDiagram
+    actor Seller
+    participant Action as Seller server action
+    participant Service as Transition rules
+    participant DB as PostgreSQL transaction
+    actor Buyer
+
+    Seller->>Action: Submit next fulfilment state
+    Action->>Action: Verify active approved owner
+    Action->>Service: Validate current to next state
+    Service-->>Action: Allowed transition
+    Action->>DB: Update seller fulfilment
+    Action->>DB: Derive marketplace order status
+    Action->>DB: Append status event and audit log
+    DB-->>Buyer: Updated grouped tracking history
 ```
 
 ## Operational topology

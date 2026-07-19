@@ -38,7 +38,7 @@ export function SiteHeader() {
               <Heart size={19} />
               <span>Wishlist</span>
             </Link>
-            <Link href="/account" aria-label="Your orders">
+            <Link href="/account/orders" aria-label="Your orders">
               <Package size={19} />
               <span>Orders</span>
             </Link>

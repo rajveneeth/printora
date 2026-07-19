@@ -15,6 +15,8 @@ This document is the configuration runbook for Formivo 3D. Values in `.env.examp
 | Razorpay checkout and webhook adapter    | Implemented; credentials optional | `PAYMENT_PROVIDER`, `RAZORPAY_*` |
 | GraphQL                                  | Not installed or exposed          | None                             |
 | Seller workspace                         | Implemented                       | `SELLER_*` variables             |
+| Buyer orders and reviews                 | Implemented                       | `CUSTOMER_DASHBOARD_ENABLED`     |
+| Administration and moderation            | Implemented                       | `ADMIN_DASHBOARD_ENABLED`        |
 
 The current authentication code creates random session tokens and persists them in PostgreSQL. `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `GOOGLE_CLIENT_ID`, and `GOOGLE_CLIENT_SECRET` do not enable Google authentication by themselves. An authentication adapter and callback route must be implemented before those values are operational.
 

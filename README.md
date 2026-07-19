@@ -2,7 +2,7 @@
 
 Formivo 3D is a full-stack marketplace foundation for ready-made and custom 3D-printed products. It currently includes credential authentication, a PostgreSQL/Prisma domain model, database-backed deterministic search, category-guided discovery, accessible suggestions, recent searches, persistent URL filters, the buyer storefront foundation, a database-backed seller workspace, and a transactional cart-to-order checkout foundation.
 
-> **Architecture status:** `/search`, checkout validation, inventory, addresses, payments, and orders use PostgreSQL. The homepage, general catalogue, category pages, and product detail pages still read a deterministic TypeScript fixture. Google OAuth, Better Auth, and GraphQL remain planned integrations. Razorpay is available only when explicitly selected and configured; the local demo defaults to the labelled mock provider. See [Backend and data evolution](docs/BACKEND_EVOLUTION.md) for the audited migration plan.
+> **Architecture status:** `/search`, checkout validation, inventory, addresses, payments, order history, seller fulfilment, verified reviews, and administration use PostgreSQL. The homepage, general catalogue, category pages, and product detail pages still read a deterministic TypeScript fixture. Google OAuth, Better Auth, and GraphQL remain planned integrations. Razorpay is available only when explicitly selected and configured; the local demo defaults to the labelled mock provider. See [Backend and data evolution](docs/BACKEND_EVOLUTION.md) for the audited migration plan.
 
 ## Product identity
 
@@ -81,7 +81,10 @@ src/
   features/catalogue/          Catalogue models, data, services, components, tests
   features/cart/               Persistent bag store, pricing, summary, and cart UI
   features/checkout/           Addresses, checkout orchestration, payment UI, and tests
-  features/orders/             Order confirmation queries and presentation
+  features/orders/             Buyer history, seller fulfilment, transitions, and timelines
+  features/reviews/            Delivered-purchase eligibility and product/seller ratings
+  features/administration/     Moderation, categories, metrics, and immutable audit events
+  features/permissions/        Central cross-role permission boundaries
   features/seller/             Seller permissions, schemas, repositories, services, forms, and tests
   lib/                         Authentication, payments, Prisma, and shared utilities
   styles/                      Tokens, base styling, and global Tailwind bindings
@@ -162,7 +165,7 @@ See [`docs/BACKEND_EVOLUTION.md`](docs/BACKEND_EVOLUTION.md) for current-state f
 6. Deterministic database search, suggestions, recent searches, persistent filters, and accessible keyboard flows.
 7. Seller dashboard and product management.
 8. Cart, addresses, checkout, payments, and order creation.
-9. Admin moderation, content, settings, and audit workflows.
+9. Order history, seller fulfilment, verified reviews, administration, and audit workflows.
 10. Hardening, tests, visual review, performance, and deployment readiness.
 
 ## Design system
@@ -182,10 +185,10 @@ The visual foundation follows the approved green reference: fern primary actions
 
 - The homepage and `/products` catalogue still use the typed deterministic catalogue fixture from Prompt 5; `/search` is the first public product-discovery route backed by Prisma.
 - Search uses deterministic field matching and application ranking. No semantic or AI search provider is configured or claimed.
-- Wishlist, shipping-carrier integration, seller order transitions, quotations, payouts, and admin moderation are intentionally assigned to later prompts.
+- Wishlist persistence, custom requests, quotations, payouts, content authoring, disputes, refunds, and external shipping-carrier integration remain assigned to later work.
 - Local credential authentication is available from Prompt 4; optional Google OAuth remains deferred. Razorpay checkout requires valid sandbox or live credentials and a webhook secret, while local development uses an explicitly simulated mock payment provider.
 - Seller image management currently accepts deterministic local `/catalogue/` URLs. The provider validates image metadata and preserves a typed object-storage seam, but binary uploads and production object-storage credentials are not active yet.
-- The Prompt 7 and Prompt 8 migrations and expanded seed are committed and validated at schema level. They were not applied in the implementation workspace because its Docker daemon was not running; start Docker and run `pnpm db:migrate && pnpm db:seed` locally.
+- The Prompt 7, Prompt 8, and Prompt 9 migrations and expanded seed are committed and validated at schema level. Apply them with `pnpm db:migrate && pnpm db:seed` after PostgreSQL starts.
 - Pending checkout expiry is stored but automated expiry cleanup requires a production scheduler or queue worker; abandoned reservations should be released by that job before launch at scale.
 
 ## Catalogue routes
@@ -201,6 +204,7 @@ The visual foundation follows the approved green reference: fern primary actions
 - `/checkout` — authenticated address, review, stock validation, and payment flow
 - `/checkout/success` and `/checkout/failure` — verified result and recovery states
 - `/account/addresses` — owned delivery-address management
+- `/account/orders` and `/account/orders/[orderId]` — buyer history, seller-group tracking, timelines, and verified review submission
 - `/api/payments/razorpay/webhook` — raw-signature-verified, idempotent provider events
 
 ## Search and discovery
@@ -219,8 +223,20 @@ The visual foundation follows the approved green reference: fern primary actions
 - `/seller/products/new` — twelve-section product editor with draft and review submission actions
 - `/seller/products/[productId]/edit` — ownership-protected product editing
 - `/seller/products/[productId]/inventory` — product and variant inventory with reserved-stock protection
+- `/seller/orders` and `/seller/orders/[orderNumber]` — seller-owned fulfilment queues and sequential audited transitions
 
 Product drafts remain private. Approved sellers can submit complete drafts for administrator review, but cannot publish them until an administrator changes the product to `APPROVED`. Seller publication, pause, duplication, archive, image metadata, inventory, and every lifecycle mutation are authorised server-side. Editing an approved or published product moves it back to a private draft and removes its public publication date.
+
+## Administration and verified reviews
+
+- `/admin` — database-backed GMV, commission, seller, product, order, and review metrics
+- `/admin/products` and `/admin/products/[productId]` — complete product review surface with approve, publish, request-changes, and rejection actions
+- `/admin/sellers` and `/admin/sellers/[sellerId]` — verification, change request, rejection, and suspension workflows
+- `/admin/categories` — hierarchy, visibility, navigation order, imagery, and SEO management
+- `/admin/reviews` — review visibility moderation with mandatory reasons
+- `/admin/audit` — chronological actor, entity, reason, and timestamp history
+
+Each marketplace order has one seller fulfilment record per participating seller. Seller transitions are sequential and server-authorised; the overall buyer-facing order state is derived from the slowest active seller group. Delivered order items are eligible for one combined submission that creates separate product and seller ratings. Ownership, delivery, duplicate-review, and self-review checks are repeated inside a serializable database transaction.
 
 ## Demo credentials
 
@@ -229,3 +245,4 @@ After running the idempotent seed, all demo accounts use password `Formivo123!`.
 - Seller: `seller@formivo.local`
 - Customer: `buyer@formivo.local`
 - Admin: `admin@formivo.local`
+- Pending seller moderation example: `pending-seller@formivo.local`

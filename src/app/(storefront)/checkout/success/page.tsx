@@ -100,7 +100,7 @@ export default async function CheckoutSuccessPage({ searchParams }: CheckoutSucc
         ) : null}
       </div>
       <div className={styles.actions}>
-        <Link href="/account">View your orders</Link>
+        <Link href="/account/orders">View your orders</Link>
         <Link href="/products">Continue shopping</Link>
       </div>
     </main>
