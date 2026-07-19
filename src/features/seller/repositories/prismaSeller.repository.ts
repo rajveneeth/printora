@@ -605,12 +605,14 @@ export class PrismaSellerRepository {
       this.listSellerProducts(sellerId),
       this.database.orderItem.findMany({
         where: { sellerId },
-        include: { order: true },
+        include: { order: { include: { fulfilments: { where: { sellerId }, take: 1 } } } },
         orderBy: { order: { placedAt: 'desc' } },
       }),
     ]);
+    const fulfilmentStatus = (item: (typeof orderItems)[number]): string =>
+      item.order.fulfilments[0]?.status ?? item.order.status;
     const payableItems = orderItems.filter((item) =>
-      revenueStatuses.some((status) => status === item.order.status),
+      revenueStatuses.some((status) => status === fulfilmentStatus(item)),
     );
     const itemRevenue = (item: (typeof orderItems)[number]): number =>
       rupeesToPaise(item.unitPrice) * item.quantity +
@@ -624,7 +626,7 @@ export class PrismaSellerRepository {
       .reduce((total, item) => total + itemRevenue(item), 0);
     const activeStatuses = new Set(['PAID', 'CONFIRMED', 'IN_PRODUCTION', 'READY_TO_SHIP']);
     const pendingPayout = payableItems
-      .filter((item) => item.order.status !== 'DELIVERED')
+      .filter((item) => fulfilmentStatus(item) !== 'DELIVERED')
       .reduce((total, item) => total + itemRevenue(item), 0);
     const revenueSeries = Array.from({ length: 6 }, (_, offset) => {
       const date = new Date(now.getFullYear(), now.getMonth() - (5 - offset), 1);
@@ -639,7 +641,8 @@ export class PrismaSellerRepository {
     });
     const orderStatusMap = new Map<string, number>();
     for (const item of orderItems) {
-      orderStatusMap.set(item.order.status, (orderStatusMap.get(item.order.status) ?? 0) + 1);
+      const status = fulfilmentStatus(item);
+      orderStatusMap.set(status, (orderStatusMap.get(status) ?? 0) + 1);
     }
     const productPerformance = new Map<
       string,
@@ -685,7 +688,9 @@ export class PrismaSellerRepository {
         },
         {
           label: 'Awaiting action',
-          value: String(orderItems.filter((item) => activeStatuses.has(item.order.status)).length),
+          value: String(
+            orderItems.filter((item) => activeStatuses.has(fulfilmentStatus(item))).length,
+          ),
           detail: 'Active order line items',
           tone: 'warning',
         },
@@ -713,7 +718,7 @@ export class PrismaSellerRepository {
       recentOrders: orderItems.slice(0, 5).map((item) => ({
         orderNumber: item.order.orderNumber,
         productName: item.productNameSnapshot,
-        status: item.order.status,
+        status: fulfilmentStatus(item),
         totalInPaise: itemRevenue(item),
         placedAt: item.order.placedAt,
       })),

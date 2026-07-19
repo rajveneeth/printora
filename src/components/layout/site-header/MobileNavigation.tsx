@@ -57,7 +57,7 @@ export function MobileNavigation({ categories }: MobileNavigationProps) {
             <Link href="/products" onClick={() => setIsOpen(false)}>
               <Heart size={18} /> Wishlist
             </Link>
-            <Link href="/account" onClick={() => setIsOpen(false)}>
+            <Link href="/account/orders" onClick={() => setIsOpen(false)}>
               <Package size={18} /> Orders
             </Link>
             <Link href="/account" onClick={() => setIsOpen(false)}>

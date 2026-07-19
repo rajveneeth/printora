@@ -1,5 +1,19 @@
 # Implementation Plan
 
+## Prompt 9 delivery checklist
+
+- Preserve Prompt 1–8 authentication, catalogue, search, seller, cart, checkout, payment, design-system, and repository boundaries.
+- Add buyer-owned order history, order detail, seller-group tracking, immutable snapshots, filters, and status timelines.
+- Add seller-owned order queues and sequential server-authorised fulfilment transitions with carrier and tracking capture at shipment.
+- Add separate product and seller rating records, delivered-order eligibility, self-review protection, unique order-item constraints, and serializable submission.
+- Add a protected dark-fern administration shell with database-backed marketplace metrics and responsive operational surfaces.
+- Add category hierarchy, order, active state, imagery, icon, and SEO management using archival rather than unsafe deletion.
+- Add product approval, approval-and-publication, requested-change, and rejection transactions with required adverse-decision reasons.
+- Add seller approval, requested-change, rejection, and suspension transactions; suspension removes public product visibility atomically.
+- Add review visibility moderation plus product, seller, review, order, and category audit trails containing actor, state change, reason, and timestamp.
+- Add central cross-role permission helpers and meaningful tests for permissions, transitions, review eligibility, validation, and accessible presentation.
+- Run Prisma generation and validation, strict TypeScript, ESLint, Prettier, Jest, and the Next.js production build.
+
 ## Prompt 8 delivery checklist
 
 - Preserve the Prompt 1–7 authentication, catalogue, search, seller workspace, reusable component, and green design-system foundation.
@@ -55,6 +69,14 @@
 - The complete Jest suite contains 31 suites and 71 tests after the cart and checkout delivery.
 - The committed migration and expanded idempotent seed could not be executed against PostgreSQL because the workspace Docker daemon remains unavailable. Run `pnpm db:migrate && pnpm db:seed` after Docker starts.
 
+## Prompt 9 validation record
+
+- Prisma client generation and schema validation pass with Prisma 6.19 for the order, review, and administration migration.
+- Strict TypeScript, ESLint, Prettier, Jest, React Testing Library, and the Next.js webpack production build pass.
+- The complete Jest suite contains 38 suites and 86 tests after the Prompt 9 delivery.
+- The migration includes a backfill that creates one seller fulfilment per existing order and seller pair before new workflows are used.
+- Applying the migration and running the expanded idempotent seed remain unverified against PostgreSQL because the workspace Docker daemon is unavailable. Run `pnpm db:migrate && pnpm db:seed` after Docker starts.
+
 ## Requirement mapping
 
 | Domain                                                       | Prompt |
@@ -65,9 +87,9 @@
 | Better Auth and roles                                        | 4      |
 | Storefront catalogue                                         | 5      |
 | Search                                                       | 6      |
-| Custom requests and quotes                                   | 7      |
-| Seller dashboard                                             | 8      |
-| Admin dashboard                                              | 9      |
+| Seller dashboard and product management                      | 7      |
+| Cart, addresses, checkout, payment, and order creation       | 8      |
+| Orders, reviews, administration, permissions, and audit      | 9      |
 | Quality, visual review, deployment                           | 10     |
 
 ## Deferred quality gate note

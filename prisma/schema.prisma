@@ -108,6 +108,8 @@ model User {
   orders            Order[]            @relation("BuyerOrders")
   checkoutSessions  CheckoutSession[]
   reviews           Review[]
+  sellerReviews     SellerReview[]
+  auditLogs         AuditLog[]
 }
 
 model Session {
@@ -189,6 +191,9 @@ model SellerProfile {
   updatedAt           DateTime                 @updatedAt
   user                User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
   products            Product[]
+  orderFulfilments    SellerOrderFulfilment[]
+  reviews             SellerReview[]
+  moderationEvents    SellerModerationEvent[]
 }
 
 model SellerApplication {
@@ -223,18 +228,22 @@ model SellerApplication {
 }
 
 model Category {
-  id          String     @id @default(cuid())
-  name        String
-  slug        String     @unique
-  description String?
-  parentId    String?
-  position    Int        @default(0)
-  isActive    Boolean    @default(true)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  parent      Category?  @relation("CategoryTree", fields: [parentId], references: [id])
-  children    Category[] @relation("CategoryTree")
-  products    Product[]
+  id             String     @id @default(cuid())
+  name           String
+  slug           String     @unique
+  description    String?
+  imageUrl       String?
+  icon           String?
+  seoTitle       String?
+  seoDescription String?
+  parentId       String?
+  position       Int        @default(0)
+  isActive       Boolean    @default(true)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  parent         Category?  @relation("CategoryTree", fields: [parentId], references: [id])
+  children       Category[] @relation("CategoryTree")
+  products       Product[]
 }
 
 model Product {
@@ -400,23 +409,24 @@ model Address {
 }
 
 model Order {
-  id            String             @id @default(cuid())
-  orderNumber   String             @unique
+  id            String                  @id @default(cuid())
+  orderNumber   String                  @unique
   buyerId       String
-  status        OrderStatus        @default(PENDING_PAYMENT)
-  currency      String             @default("INR")
-  subtotal      Decimal            @db.Decimal(10, 2)
-  taxTotal      Decimal            @default(0) @db.Decimal(10, 2)
-  shippingTotal Decimal            @default(0) @db.Decimal(10, 2)
-  grandTotal    Decimal            @db.Decimal(10, 2)
-  placedAt      DateTime           @default(now())
-  updatedAt     DateTime           @updatedAt
-  buyer         User               @relation("BuyerOrders", fields: [buyerId], references: [id])
+  status        OrderStatus             @default(PENDING_PAYMENT)
+  currency      String                  @default("INR")
+  subtotal      Decimal                 @db.Decimal(10, 2)
+  taxTotal      Decimal                 @default(0) @db.Decimal(10, 2)
+  shippingTotal Decimal                 @default(0) @db.Decimal(10, 2)
+  grandTotal    Decimal                 @db.Decimal(10, 2)
+  placedAt      DateTime                @default(now())
+  updatedAt     DateTime                @updatedAt
+  buyer         User                    @relation("BuyerOrders", fields: [buyerId], references: [id])
   items         OrderItem[]
   address       OrderAddress?
   checkout      CheckoutSession?
   payments      Payment[]
   statusEvents  OrderStatusEvent[]
+  fulfilments   SellerOrderFulfilment[]
 
   @@index([buyerId, placedAt])
   @@index([status, placedAt])
@@ -440,6 +450,8 @@ model OrderItem {
   order                 Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product               Product?        @relation(fields: [productId], references: [id], onDelete: SetNull)
   variant               ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+  review                Review?
+  sellerReview          SellerReview?
 
   @@index([sellerId])
 }
@@ -461,14 +473,33 @@ model OrderAddress {
 }
 
 model OrderStatusEvent {
-  id        String      @id @default(cuid())
-  orderId   String
-  status    OrderStatus
-  note      String?
-  createdAt DateTime    @default(now())
-  order     Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  id             String       @id @default(cuid())
+  orderId        String
+  sellerId       String?
+  actorId        String?
+  previousStatus OrderStatus?
+  status         OrderStatus
+  note           String?
+  createdAt      DateTime     @default(now())
+  order          Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   @@index([orderId, createdAt])
+}
+
+model SellerOrderFulfilment {
+  id             String        @id @default(cuid())
+  orderId        String
+  sellerId       String
+  status         OrderStatus
+  trackingNumber String?
+  carrier        String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  order          Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  seller         SellerProfile @relation(fields: [sellerId], references: [id], onDelete: Restrict)
+
+  @@unique([orderId, sellerId])
+  @@index([sellerId, status, updatedAt])
 }
 
 model CheckoutSession {
@@ -526,20 +557,89 @@ model PaymentEvent {
 }
 
 model Review {
-  id             String       @id @default(cuid())
-  productId      String
-  authorId       String
-  orderItemId    String?
-  rating         Int
-  qualityRating  Int
-  finishRating   Int
-  accuracyRating Int
-  valueRating    Int
-  title          String
-  body           String
-  status         ReviewStatus @default(PENDING)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  product        Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
-  author         User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  id               String                  @id @default(cuid())
+  productId        String
+  authorId         String
+  orderItemId      String?                 @unique
+  rating           Int
+  qualityRating    Int
+  finishRating     Int
+  accuracyRating   Int
+  valueRating      Int
+  title            String
+  body             String
+  status           ReviewStatus            @default(PENDING)
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+  product          Product                 @relation(fields: [productId], references: [id], onDelete: Cascade)
+  author           User                    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  orderItem        OrderItem?              @relation(fields: [orderItemId], references: [id], onDelete: Restrict)
+  moderationEvents ReviewModerationEvent[]
+
+  @@index([productId, status, createdAt])
+}
+
+model SellerReview {
+  id                  String                  @id @default(cuid())
+  sellerId            String
+  authorId            String
+  orderItemId         String                  @unique
+  rating              Int
+  communicationRating Int
+  dispatchSpeedRating Int
+  customisationRating Int
+  status              ReviewStatus            @default(PUBLISHED)
+  createdAt           DateTime                @default(now())
+  updatedAt           DateTime                @updatedAt
+  seller              SellerProfile           @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  author              User                    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  orderItem           OrderItem               @relation(fields: [orderItemId], references: [id], onDelete: Restrict)
+  moderationEvents    ReviewModerationEvent[]
+
+  @@index([sellerId, status, createdAt])
+}
+
+model ReviewModerationEvent {
+  id             String        @id @default(cuid())
+  reviewId       String?
+  sellerReviewId String?
+  moderatorId    String
+  previousStatus ReviewStatus
+  newStatus      ReviewStatus
+  reason         String
+  createdAt      DateTime      @default(now())
+  review         Review?       @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  sellerReview   SellerReview? @relation(fields: [sellerReviewId], references: [id], onDelete: Cascade)
+
+  @@index([reviewId, createdAt])
+  @@index([sellerReviewId, createdAt])
+}
+
+model SellerModerationEvent {
+  id             String                   @id @default(cuid())
+  sellerId       String
+  moderatorId    String
+  previousStatus SellerVerificationStatus
+  newStatus      SellerVerificationStatus
+  reason         String?
+  createdAt      DateTime                 @default(now())
+  seller         SellerProfile            @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  @@index([sellerId, createdAt])
+}
+
+model AuditLog {
+  id            String   @id @default(cuid())
+  actorId       String
+  action        String
+  entityType    String
+  entityId      String
+  previousState Json?
+  newState      Json?
+  reason        String?
+  createdAt     DateTime @default(now())
+  actor         User     @relation(fields: [actorId], references: [id], onDelete: Restrict)
+
+  @@index([entityType, entityId, createdAt])
+  @@index([actorId, createdAt])
 }

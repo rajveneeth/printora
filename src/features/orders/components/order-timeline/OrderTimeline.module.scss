@@ -1,0 +1,50 @@
+.timeline {
+  display: grid;
+  gap: var(--space-1);
+  list-style: none;
+}
+
+.timeline li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: var(--space-3);
+  min-height: 4.5rem;
+}
+
+.timeline li:not(:last-child)::after {
+  position: absolute;
+  top: 1.75rem;
+  bottom: 0;
+  left: 0.875rem;
+  width: 1px;
+  background: var(--border);
+  content: '';
+}
+
+.marker {
+  z-index: 1;
+  display: grid;
+  width: 1.8rem;
+  height: 1.8rem;
+  place-items: center;
+  border-radius: var(--radius-pill);
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.timeline div {
+  display: grid;
+  align-content: start;
+  gap: var(--space-1);
+}
+
+.timeline strong {
+  text-transform: capitalize;
+}
+
+.timeline time,
+.timeline p {
+  color: var(--muted-foreground);
+  font-size: var(--font-size-sm);
+}

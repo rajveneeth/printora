@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Button, Card } from '@/components/ui';
 import { requireRole } from '@/lib/auth/session';
 import { signOutAction } from '@/features/authentication/actions';
@@ -13,6 +14,11 @@ export default async function AccountPage() {
         <h1 className="text-4xl font-extrabold text-primary">Buyer dashboard</h1>
         <p className="text-muted-foreground">
           Signed in as {session.user.email}. Track orders, quotations, reviews, and favourites here.
+        </p>
+        <p>
+          <Link className="font-bold text-primary" href="/account/orders">
+            View order history
+          </Link>
         </p>
         <form action={signOutAction}>
           <Button type="submit" variant="outline">

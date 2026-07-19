@@ -2,6 +2,7 @@ import {
   OrderStatus,
   PrismaClient,
   ProductStatus,
+  ReviewStatus,
   SellerVerificationStatus,
   UserRole,
 } from '@prisma/client';
@@ -198,10 +199,69 @@ async function main() {
     searchSellers.set(searchSellerSeed.storeSlug, searchSeller);
   }
 
+  const pendingSellerUser = await prisma.user.upsert({
+    where: { email: 'pending-seller@formivo.local' },
+    update: { name: 'Devika Creator', role: UserRole.CUSTOMER },
+    create: {
+      email: 'pending-seller@formivo.local',
+      emailVerified: true,
+      name: 'Devika Creator',
+      role: UserRole.CUSTOMER,
+    },
+  });
+  await ensureCredentialAccount(pendingSellerUser.id, pendingSellerUser.email);
+  const pendingSeller = await prisma.sellerProfile.upsert({
+    where: { storeSlug: 'little-layer-lab' },
+    update: { verificationStatus: SellerVerificationStatus.PENDING },
+    create: {
+      userId: pendingSellerUser.id,
+      storeName: 'Little Layer Lab',
+      storeSlug: 'little-layer-lab',
+      description: 'Colourful educational models and personalised learning aids for classrooms.',
+      contactEmail: pendingSellerUser.email,
+      originCity: 'Jaipur',
+      originState: 'Rajasthan',
+      originPostalCode: '302001',
+      yearsExperience: 3,
+      supportedMaterials: ['PLA', 'PETG'],
+      printTechnologies: ['FDM'],
+      customOrdersEnabled: true,
+      verificationStatus: SellerVerificationStatus.PENDING,
+    },
+  });
+  await prisma.sellerApplication.upsert({
+    where: { userId: pendingSellerUser.id },
+    update: { status: SellerVerificationStatus.PENDING, reviewedAt: null },
+    create: {
+      userId: pendingSellerUser.id,
+      storeName: pendingSeller.storeName,
+      storeSlug: pendingSeller.storeSlug,
+      description: pendingSeller.description,
+      contactEmail: pendingSeller.contactEmail,
+      originCity: pendingSeller.originCity,
+      originState: pendingSeller.originState,
+      originPostalCode: pendingSeller.originPostalCode,
+      yearsExperience: pendingSeller.yearsExperience,
+      supportedMaterials: pendingSeller.supportedMaterials,
+      printTechnologies: pendingSeller.printTechnologies,
+      customOrdersEnabled: pendingSeller.customOrdersEnabled,
+      averageProcessDays: pendingSeller.averageProcessDays,
+      declarationAccepted: true,
+      status: SellerVerificationStatus.PENDING,
+    },
+  });
+
   const categorySeeds = [
     { name: 'Home and décor', slug: 'home-decor' },
     { name: 'Desk and workspace', slug: 'desk-workspace' },
     { name: 'Phone and electronics accessories', slug: 'phone-electronics-accessories' },
+    { name: 'Personalised gifts', slug: 'personalised-gifts' },
+    { name: 'Toys and collectibles', slug: 'toys-collectibles' },
+    { name: 'Miniatures and figurines', slug: 'miniatures-figurines' },
+    { name: 'Utility and replacement parts', slug: 'utility-replacement-parts' },
+    { name: 'Fashion and accessories', slug: 'fashion-accessories' },
+    { name: 'Education and models', slug: 'education-models' },
+    { name: 'Business and bulk orders', slug: 'business-bulk-orders' },
   ] as const;
   const categories = await Promise.all(
     categorySeeds.map(({ name, slug }, position) =>
@@ -300,6 +360,60 @@ async function main() {
       previousStatus: ProductStatus.APPROVED,
       newStatus: ProductStatus.PUBLISHED,
       note: 'Seeded approved product for seller dashboard demonstration.',
+    },
+  });
+
+  const pendingProduct = await prisma.product.upsert({
+    where: { slug: 'stackable-tool-tray' },
+    update: { status: ProductStatus.PENDING_REVIEW, publishedAt: null },
+    create: {
+      sellerId: seller.id,
+      categoryId: deskCategory.id,
+      name: 'Stackable Tool Tray',
+      slug: 'stackable-tool-tray',
+      shortDescription: 'A modular tray for precision tools and small workshop parts.',
+      fullDescription:
+        'Interlocking workshop trays with labelled compartments and reinforced corners for everyday maker tools.',
+      basePrice: '649.00',
+      sku: 'FERN-TRAY-REVIEW-001',
+      material: 'PETG',
+      finish: 'Matte',
+      colour: 'Fern green',
+      processingDays: 4,
+      shippingOrigin: 'Pune, Maharashtra',
+      customisationEnabled: true,
+      safetyNotes: 'Not intended for food contact.',
+      ipDeclaration: 'Original seller design available for marketplace production.',
+      searchKeywords: ['tool tray', 'workshop storage', 'stackable organiser'],
+      status: ProductStatus.PENDING_REVIEW,
+    },
+  });
+  await prisma.productImage.upsert({
+    where: { id: 'seed-stackable-tool-tray-primary' },
+    update: { url: '/catalogue/desk-organiser.svg', altText: 'Green stackable tool tray' },
+    create: {
+      id: 'seed-stackable-tool-tray-primary',
+      productId: pendingProduct.id,
+      url: '/catalogue/desk-organiser.svg',
+      altText: 'Green stackable tool tray',
+      isPrimary: true,
+    },
+  });
+  await prisma.inventory.upsert({
+    where: { productId: pendingProduct.id },
+    update: { quantity: 12 },
+    create: { productId: pendingProduct.id, quantity: 12 },
+  });
+  await prisma.productApprovalEvent.upsert({
+    where: { id: 'seed-stackable-tool-tray-submitted' },
+    update: { newStatus: ProductStatus.PENDING_REVIEW },
+    create: {
+      id: 'seed-stackable-tool-tray-submitted',
+      productId: pendingProduct.id,
+      actorId: sellerUser.id,
+      previousStatus: ProductStatus.DRAFT,
+      newStatus: ProductStatus.PENDING_REVIEW,
+      note: 'Submitted for marketplace approval.',
     },
   });
 
@@ -578,7 +692,79 @@ async function main() {
         shippingFee: orderSeed.shippingFee,
       },
     });
+    await prisma.sellerOrderFulfilment.upsert({
+      where: { orderId_sellerId: { orderId: orderSeed.id, sellerId: seller.id } },
+      update: { status: orderSeed.status },
+      create: {
+        id: `${orderSeed.id}-fulfilment`,
+        orderId: orderSeed.id,
+        sellerId: seller.id,
+        status: orderSeed.status,
+      },
+    });
+    await prisma.orderStatusEvent.upsert({
+      where: { id: `${orderSeed.id}-status` },
+      update: { status: orderSeed.status },
+      create: {
+        id: `${orderSeed.id}-status`,
+        orderId: orderSeed.id,
+        sellerId: seller.id,
+        actorId: sellerUser.id,
+        previousStatus: orderSeed.status === OrderStatus.PAID ? OrderStatus.PENDING_PAYMENT : null,
+        status: orderSeed.status,
+        note: 'Seeded fulfilment state for dashboard demonstration.',
+        createdAt: orderSeed.placedAt,
+      },
+    });
   }
+
+  await prisma.review.upsert({
+    where: { id: 'seed-delivered-product-review' },
+    update: { status: ReviewStatus.PUBLISHED },
+    create: {
+      id: 'seed-delivered-product-review',
+      productId: product.id,
+      authorId: buyer.id,
+      orderItemId: 'seed-seller-order-delivered-item',
+      rating: 5,
+      qualityRating: 5,
+      finishRating: 5,
+      accuracyRating: 5,
+      valueRating: 4,
+      title: 'Beautifully finished and practical',
+      body: 'The organiser arrived exactly as described and keeps the whole desk noticeably tidier.',
+      status: ReviewStatus.PUBLISHED,
+    },
+  });
+  await prisma.sellerReview.upsert({
+    where: { orderItemId: 'seed-seller-order-delivered-item' },
+    update: { status: ReviewStatus.PUBLISHED },
+    create: {
+      id: 'seed-delivered-seller-review',
+      sellerId: seller.id,
+      authorId: buyer.id,
+      orderItemId: 'seed-seller-order-delivered-item',
+      rating: 5,
+      communicationRating: 5,
+      dispatchSpeedRating: 5,
+      customisationRating: 5,
+      status: ReviewStatus.PUBLISHED,
+    },
+  });
+  await prisma.auditLog.upsert({
+    where: { id: 'seed-product-publication-audit' },
+    update: {},
+    create: {
+      id: 'seed-product-publication-audit',
+      actorId: admin.id,
+      action: 'PRODUCT_APPROVE_AND_PUBLISH',
+      entityType: 'PRODUCT',
+      entityId: product.id,
+      previousState: { status: ProductStatus.APPROVED },
+      newState: { status: ProductStatus.PUBLISHED },
+      reason: 'Seeded audit event for administration demonstration.',
+    },
+  });
 }
 
 main().finally(async () => prisma.$disconnect());

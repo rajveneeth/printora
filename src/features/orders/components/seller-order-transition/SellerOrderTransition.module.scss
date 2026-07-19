@@ -1,0 +1,28 @@
+.form,
+.shippingFields {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.shippingFields {
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+}
+
+.form button {
+  justify-self: start;
+}
+
+.terminal,
+.success,
+.error {
+  color: var(--muted-foreground);
+  font-size: var(--font-size-sm);
+}
+
+.success {
+  color: var(--success);
+}
+
+.error {
+  color: var(--error);
+}

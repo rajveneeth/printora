@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Boxes, LayoutDashboard, Settings2, Store } from 'lucide-react';
+import { Boxes, LayoutDashboard, PackageCheck, Settings2, Store } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import styles from './SellerShell.module.scss';
 
@@ -12,6 +12,7 @@ interface SellerNavigationProps {
 const sellerLinks = [
   { href: '/seller', label: 'Overview', icon: LayoutDashboard },
   { href: '/seller/products', label: 'Products', icon: Boxes },
+  { href: '/seller/orders', label: 'Orders', icon: PackageCheck },
   { href: '/seller/profile', label: 'Store profile', icon: Settings2 },
 ] as const;
 
