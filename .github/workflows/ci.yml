@@ -29,10 +29,8 @@ jobs:
           --health-retries 10
     env:
       DATABASE_URL: postgresql://formivo:formivo@localhost:5432/formivo
-      NEXT_PUBLIC_APP_URL: http://127.0.0.1:3000
       RATE_LIMIT_SECRET: ci-only-rate-limit-secret-at-least-32-characters
       PAYMENT_PROVIDER: mock
-      ALLOW_MOCK_PAYMENTS_IN_PRODUCTION: 'true'
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -52,3 +50,6 @@ jobs:
       - run: pnpm lint
       - run: pnpm test -- --runInBand --coverage
       - run: pnpm build
+        env:
+          NEXT_PUBLIC_APP_URL: http://127.0.0.1:3000
+          ALLOW_MOCK_PAYMENTS_IN_PRODUCTION: 'true'
