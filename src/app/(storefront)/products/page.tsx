@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import {
   CatalogueListing,
   categories,
+  catalogueColours,
   catalogueMaterials,
+  catalogueSellerLocations,
   listCatalogueProducts,
   parseCatalogueFilters,
 } from '@/features/catalogue';
@@ -32,6 +34,8 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         result={result}
         categories={categories}
         materials={catalogueMaterials}
+        colours={catalogueColours}
+        sellerLocations={catalogueSellerLocations}
         pathname="/products"
       />
     </main>

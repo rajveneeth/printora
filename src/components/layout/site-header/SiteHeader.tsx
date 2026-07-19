@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { Heart, Menu, Package, Search, ShoppingBag, UserRound } from 'lucide-react';
+import { Heart, Menu, Package, ShoppingBag, UserRound } from 'lucide-react';
 import { categories } from '@/features/catalogue';
+import { SearchAutocomplete } from '@/features/search';
 import { siteConfig } from '@/config/site';
 import { MobileNavigation } from './MobileNavigation';
 import styles from './SiteHeader.module.scss';
@@ -28,22 +29,9 @@ export function SiteHeader() {
             <BrandMark />
             <span>{siteConfig.shortName}</span>
           </Link>
-          <form className={styles.search} action="/products" role="search">
-            <Search size={18} aria-hidden="true" />
-            <label className="sr-only" htmlFor="site-search">
-              Search the marketplace
-            </label>
-            <input
-              id="site-search"
-              name="q"
-              type="search"
-              placeholder="What would you like to create?"
-              autoComplete="off"
-            />
-            <button type="submit" aria-label="Search products">
-              Search
-            </button>
-          </form>
+          <div className={styles.searchSlot}>
+            <SearchAutocomplete id="site-search" compact />
+          </div>
           <nav className={styles.actions} aria-label="Account actions">
             <Link href="/products" aria-label="Saved products">
               <Heart size={19} />

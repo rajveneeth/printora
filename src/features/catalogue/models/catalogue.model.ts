@@ -1,5 +1,12 @@
 export type CatalogueSort =
-  'featured' | 'rating' | 'price-low' | 'price-high' | 'newest' | 'fastest';
+  | 'featured'
+  | 'relevance'
+  | 'popular'
+  | 'rating'
+  | 'price-low'
+  | 'price-high'
+  | 'newest'
+  | 'fastest';
 
 export interface CategorySummary {
   readonly id: string;
@@ -53,9 +60,12 @@ export interface CatalogueProduct {
   readonly dimensions: string;
   readonly weightGrams: number;
   readonly processingDays: number;
+  readonly estimatedDeliveryDays: number;
   readonly customisable: boolean;
   readonly stock: number;
   readonly highlights: readonly string[];
+  readonly tags: readonly string[];
+  readonly searchKeywords: readonly string[];
   readonly createdAt: string;
   readonly popularity: number;
   readonly variants: readonly ProductVariantSummary[];
@@ -65,10 +75,14 @@ export interface CatalogueFilters {
   readonly query?: string;
   readonly category?: string;
   readonly material?: string;
+  readonly colour?: string;
   readonly minPrice?: number;
   readonly maxPrice?: number;
   readonly minimumRating?: number;
   readonly customisable?: boolean;
+  readonly sellerLocation?: string;
+  readonly maximumProcessingDays?: number;
+  readonly maximumDeliveryDays?: number;
   readonly inStock?: boolean;
   readonly sort: CatalogueSort;
   readonly page: number;

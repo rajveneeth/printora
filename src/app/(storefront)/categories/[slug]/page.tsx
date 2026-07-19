@@ -3,7 +3,9 @@ import { notFound } from 'next/navigation';
 import {
   CatalogueListing,
   categories,
+  catalogueColours,
   catalogueMaterials,
+  catalogueSellerLocations,
   findCategoryBySlug,
   listCatalogueProducts,
   parseCatalogueFilters,
@@ -36,6 +38,8 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
         result={result}
         categories={categories}
         materials={catalogueMaterials}
+        colours={catalogueColours}
+        sellerLocations={catalogueSellerLocations}
         pathname={`/categories/${category.slug}`}
         showCategory={false}
       />

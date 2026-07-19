@@ -1,0 +1,92 @@
+.discovery {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.discovery > div:first-child p {
+  color: var(--accent);
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+  letter-spacing: var(--letter-spacing-label);
+  text-transform: uppercase;
+}
+
+.discovery h2 {
+  font-size: var(--font-size-3xl);
+}
+
+.discoveryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.discoveryGrid a {
+  display: grid;
+  min-height: 13rem;
+  align-content: start;
+  gap: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  padding: var(--space-5);
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease;
+}
+
+.discoveryGrid a:hover {
+  transform: translateY(-2px);
+  border-color: var(--secondary);
+}
+
+.discoveryGrid a > span {
+  display: grid;
+  width: 2.6rem;
+  height: 2.6rem;
+  place-items: center;
+  border-radius: var(--radius-pill);
+  background: var(--sky);
+  color: var(--primary);
+}
+
+.discoveryGrid strong {
+  color: var(--primary);
+  font-family: var(--font-heading), sans-serif;
+  font-size: var(--font-size-lg);
+}
+
+.discoveryGrid small {
+  color: var(--muted-foreground);
+  font-size: var(--font-size-sm);
+}
+
+.discoveryGrid b {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: auto;
+  color: var(--primary);
+  font-size: var(--font-size-sm);
+}
+
+.retryLink {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  border-radius: var(--radius-sm);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding-inline: var(--space-5);
+  font-weight: 800;
+}
+
+@media (max-width: 48rem) {
+  .discoveryGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .discoveryGrid a {
+    min-height: auto;
+  }
+}

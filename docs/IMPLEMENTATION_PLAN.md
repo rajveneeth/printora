@@ -1,15 +1,17 @@
 # Implementation Plan
 
-## Prompt 5 delivery checklist
+## Prompt 6 delivery checklist
 
-- Preserve the Prompt 1–4 foundation, authentication, domain models, and design system.
-- Replace the foundation landing screen with the responsive Formivo storefront homepage.
-- Add the public `/products`, `/categories`, `/categories/[slug]`, and `/products/[slug]` routes.
-- Add typed catalogue models, fixtures, query parsing, sorting, filtering, and pagination services.
-- Add reusable site header, mobile navigation, footer, category navigation, product card, product grid, price, rating, filter, pagination, gallery, and purchase-panel components.
-- Use local reliable product artwork and `next/image` with stable aspect ratios.
-- Add route-level loading, empty, error, and missing-product states.
-- Add meaningful Jest and React Testing Library coverage for catalogue utilities and user-facing component behaviour.
+- Preserve the Prompt 1–5 authentication, catalogue, reusable component, and design-system foundation.
+- Add the public `/search` route and typed `/api/search/suggestions` endpoint.
+- Add a Prisma-backed deterministic product-search repository restricted to public products and approved active sellers.
+- Add Zod-normalised keyword, category, price, material, colour, rating, customisation, location, timing, stock, sort, and pagination parameters.
+- Persist filters in shareable URLs and retain category context through sorting, pagination, suggestion selection, and recent searches.
+- Add a shared debounced autocomplete with product, category, seller, popular, and recent suggestions.
+- Support Arrow Up, Arrow Down, Enter, Escape, active descendant state, and screen-reader result announcements.
+- Add initial guidance, loading, success, empty, suggestion-error, and database-error states.
+- Seed a minimal, adjustable, and foldable phone-stand workflow.
+- Add meaningful Jest and React Testing Library coverage for parsing, URL persistence, database query construction, recent searches, suggestions, and keyboard interactions.
 - Run type checking, linting, formatting checks, tests, and a production build.
 
 ## Requirement mapping

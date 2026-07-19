@@ -9,6 +9,8 @@ export function FilterSidebar({
   categories,
   filters,
   materials,
+  colours = [],
+  sellerLocations = [],
   pathname,
   showCategory = true,
   idPrefix = 'catalogue',
@@ -94,6 +96,22 @@ export function FilterSidebar({
           </select>
         </label>
       </fieldset>
+      {colours.length ? (
+        <fieldset>
+          <legend>Colour</legend>
+          <label htmlFor={`${idPrefix}-colour`}>
+            <span className="sr-only">Product colour</span>
+            <select id={`${idPrefix}-colour`} name="colour" defaultValue={filters.colour ?? ''}>
+              <option value="">Any colour</option>
+              {colours.map((colour) => (
+                <option key={colour} value={colour}>
+                  {colour}
+                </option>
+              ))}
+            </select>
+          </label>
+        </fieldset>
+      ) : null}
       <fieldset>
         <legend>Minimum rating</legend>
         <div className={styles.radioList}>
@@ -125,6 +143,61 @@ export function FilterSidebar({
           <label>
             <input type="checkbox" name="inStock" value="true" defaultChecked={filters.inStock} />
             <span>In stock</span>
+          </label>
+        </div>
+      </fieldset>
+      {sellerLocations.length ? (
+        <fieldset>
+          <legend>Seller location</legend>
+          <label htmlFor={`${idPrefix}-location`}>
+            <span className="sr-only">Seller location</span>
+            <select
+              id={`${idPrefix}-location`}
+              name="location"
+              defaultValue={filters.sellerLocation ?? ''}
+            >
+              <option value="">Anywhere in India</option>
+              {sellerLocations.map((location) => (
+                <option key={location} value={location}>
+                  {location}
+                </option>
+              ))}
+            </select>
+          </label>
+        </fieldset>
+      ) : null}
+      <fieldset>
+        <legend>Timing</legend>
+        <div className={styles.timingFields}>
+          <label htmlFor={`${idPrefix}-processing-days`}>
+            <span>Processing time</span>
+            <select
+              id={`${idPrefix}-processing-days`}
+              name="processingDays"
+              defaultValue={filters.maximumProcessingDays ?? ''}
+            >
+              <option value="">Any dispatch time</option>
+              {[2, 3, 5, 7].map((days) => (
+                <option key={days} value={days}>
+                  Up to {days} days
+                </option>
+              ))}
+            </select>
+          </label>
+          <label htmlFor={`${idPrefix}-delivery-days`}>
+            <span>Delivery estimate</span>
+            <select
+              id={`${idPrefix}-delivery-days`}
+              name="deliveryDays"
+              defaultValue={filters.maximumDeliveryDays ?? ''}
+            >
+              <option value="">Any delivery time</option>
+              {[5, 7, 10, 14].map((days) => (
+                <option key={days} value={days}>
+                  Within {days} days
+                </option>
+              ))}
+            </select>
           </label>
         </div>
       </fieldset>

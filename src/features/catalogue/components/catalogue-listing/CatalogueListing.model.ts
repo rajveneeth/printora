@@ -6,6 +6,8 @@ export interface CatalogueListingProps {
   readonly result: CatalogueResult;
   readonly categories: readonly CategorySummary[];
   readonly materials: readonly string[];
+  readonly colours?: readonly string[];
+  readonly sellerLocations?: readonly string[];
   readonly pathname: string;
   readonly showCategory?: boolean;
 }

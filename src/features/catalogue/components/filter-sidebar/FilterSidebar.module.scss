@@ -94,9 +94,17 @@
 }
 
 .radioList,
-.checkList {
+.checkList,
+.timingFields {
   display: grid;
   gap: var(--space-3);
+}
+
+.timingFields label {
+  display: grid;
+  gap: var(--space-1);
+  color: var(--muted-foreground);
+  font-size: var(--font-size-xs);
 }
 
 .radioList label,

@@ -60,22 +60,107 @@ async function main() {
     },
   });
 
+  const searchSellerSeeds = [
+    {
+      email: 'pixel@formivo.local',
+      name: 'Riya Printer',
+      storeName: 'Pixel Crafts',
+      storeSlug: 'pixel-crafts',
+      description: 'Compact, colourful accessories for phones, desks, and everyday fixes.',
+      originCity: 'Mumbai',
+      originState: 'Maharashtra',
+      originPostalCode: '400001',
+      supportedMaterials: ['PLA', 'PETG'],
+      averageRating: '4.7',
+      completedOrderCount: 189,
+    },
+    {
+      email: 'makeform@formivo.local',
+      name: 'Kabir Maker',
+      storeName: 'Makeform Works',
+      storeSlug: 'makeform-works',
+      description: 'Durable functional prints and carefully engineered adjustable products.',
+      originCity: 'Ahmedabad',
+      originState: 'Gujarat',
+      originPostalCode: '380001',
+      supportedMaterials: ['PLA', 'ABS', 'PETG'],
+      averageRating: '4.9',
+      completedOrderCount: 411,
+    },
+  ] as const;
+  const searchSellers = new Map<string, typeof seller>([['fern-fabrication', seller]]);
+
+  for (const searchSellerSeed of searchSellerSeeds) {
+    const searchSellerUser = await prisma.user.upsert({
+      where: { email: searchSellerSeed.email },
+      update: { name: searchSellerSeed.name, role: UserRole.SELLER },
+      create: {
+        email: searchSellerSeed.email,
+        emailVerified: true,
+        name: searchSellerSeed.name,
+        role: UserRole.SELLER,
+      },
+    });
+    const searchSeller = await prisma.sellerProfile.upsert({
+      where: { storeSlug: searchSellerSeed.storeSlug },
+      update: {
+        storeName: searchSellerSeed.storeName,
+        description: searchSellerSeed.description,
+        originCity: searchSellerSeed.originCity,
+        originState: searchSellerSeed.originState,
+        supportedMaterials: [...searchSellerSeed.supportedMaterials],
+        averageRating: searchSellerSeed.averageRating,
+        completedOrderCount: searchSellerSeed.completedOrderCount,
+        verificationStatus: SellerVerificationStatus.APPROVED,
+      },
+      create: {
+        userId: searchSellerUser.id,
+        storeName: searchSellerSeed.storeName,
+        storeSlug: searchSellerSeed.storeSlug,
+        description: searchSellerSeed.description,
+        contactEmail: searchSellerSeed.email,
+        originCity: searchSellerSeed.originCity,
+        originState: searchSellerSeed.originState,
+        originPostalCode: searchSellerSeed.originPostalCode,
+        yearsExperience: 4,
+        supportedMaterials: [...searchSellerSeed.supportedMaterials],
+        printTechnologies: ['FDM'],
+        verificationStatus: SellerVerificationStatus.APPROVED,
+        averageRating: searchSellerSeed.averageRating,
+        completedOrderCount: searchSellerSeed.completedOrderCount,
+      },
+    });
+    searchSellers.set(searchSellerSeed.storeSlug, searchSeller);
+  }
+
+  const categorySeeds = [
+    { name: 'Home and décor', slug: 'home-decor' },
+    { name: 'Desk and workspace', slug: 'desk-workspace' },
+    { name: 'Phone and electronics accessories', slug: 'phone-electronics-accessories' },
+  ] as const;
   const categories = await Promise.all(
-    [
-      ['Home and décor', 'home-decor'],
-      ['Desk and workspace', 'desk-workspace'],
-      ['Phone and electronics accessories', 'phone-electronics-accessories'],
-    ].map(([name, slug], position) =>
+    categorySeeds.map(({ name, slug }, position) =>
       prisma.category.upsert({ where: { slug }, update: {}, create: { name, slug, position } }),
     ),
   );
+  const homeCategory = categories.find((category) => category.slug === 'home-decor');
+  const deskCategory = categories.find((category) => category.slug === 'desk-workspace');
+  const phoneCategory = categories.find(
+    (category) => category.slug === 'phone-electronics-accessories',
+  );
+  if (!homeCategory || !deskCategory || !phoneCategory) {
+    throw new Error('Required seed categories could not be created');
+  }
 
   const product = await prisma.product.upsert({
     where: { slug: 'modular-desk-organiser' },
-    update: {},
+    update: {
+      tags: ['desk organiser', 'workspace', 'storage'],
+      searchKeywords: ['desk', 'organiser', 'workspace', 'modular', 'pen holder'],
+    },
     create: {
       sellerId: seller.id,
-      categoryId: categories[1].id,
+      categoryId: deskCategory.id,
       name: 'Modular Desk Organiser',
       slug: 'modular-desk-organiser',
       shortDescription: 'Stackable trays and pen cups for a tidy workspace.',
@@ -91,6 +176,7 @@ async function main() {
       shippingOrigin: 'Pune, Maharashtra',
       customisationEnabled: true,
       ipDeclaration: 'Original seller design available for marketplace production.',
+      tags: ['desk organiser', 'workspace', 'storage'],
       searchKeywords: ['desk', 'organiser', 'workspace', 'modular'],
       status: ProductStatus.PUBLISHED,
       publishedAt: new Date(),
@@ -122,6 +208,182 @@ async function main() {
       },
     },
   });
+
+  await prisma.productImage.upsert({
+    where: { id: 'seed-modular-desk-organiser-primary' },
+    update: {
+      url: '/catalogue/desk-organiser.svg',
+      altText: 'Green modular 3D-printed desk organiser',
+      isPrimary: true,
+    },
+    create: {
+      id: 'seed-modular-desk-organiser-primary',
+      productId: product.id,
+      url: '/catalogue/desk-organiser.svg',
+      altText: 'Green modular 3D-printed desk organiser',
+      isPrimary: true,
+    },
+  });
+
+  const searchProductSeeds = [
+    {
+      name: 'Minimal Phone Stand',
+      sellerSlug: 'pixel-crafts',
+      slug: 'minimal-phone-stand',
+      shortDescription: 'A compact angled stand that keeps your phone comfortably in view.',
+      fullDescription:
+        'A stable case-friendly phone stand with a charging cable channel for calm, clutter-free desks.',
+      basePrice: '349.00',
+      compareAtPrice: '449.00',
+      sku: 'FERN-PHONE-MINIMAL-001',
+      material: 'PLA',
+      finish: 'Matte',
+      colour: 'Charcoal',
+      processingDays: 2,
+      customisationEnabled: true,
+      tags: ['phone stand', 'desk accessory', 'charging'],
+      searchKeywords: ['phone', 'stand', 'mobile holder', 'smartphone dock'],
+      imageUrl: '/catalogue/minimal-phone-stand.svg',
+      altText: 'Minimal charcoal 3D-printed phone stand',
+      quantity: 18,
+    },
+    {
+      name: 'Adjustable Phone Stand',
+      sellerSlug: 'makeform-works',
+      slug: 'adjustable-phone-stand',
+      shortDescription: 'A tilting phone stand for calls, recipes, and comfortable viewing.',
+      fullDescription:
+        'An adjustable stand with a smooth pin joint, broad ledge, and folding support for phones with protective cases.',
+      basePrice: '499.00',
+      compareAtPrice: null,
+      sku: 'FERN-PHONE-ADJUST-001',
+      material: 'PETG',
+      finish: 'Satin',
+      colour: 'Forest green',
+      processingDays: 3,
+      customisationEnabled: true,
+      tags: ['phone stand', 'adjustable stand', 'video calls'],
+      searchKeywords: ['phone', 'stand', 'mobile holder', 'adjustable phone dock'],
+      imageUrl: '/catalogue/minimal-phone-stand.svg',
+      altText: 'Adjustable forest green 3D-printed phone stand',
+      quantity: 16,
+    },
+    {
+      name: 'Foldable Travel Phone Stand',
+      sellerSlug: 'pixel-crafts',
+      slug: 'foldable-travel-phone-stand',
+      shortDescription: 'A pocket-sized phone stand that folds flat for travel and commutes.',
+      fullDescription:
+        'A lightweight two-position mobile stand that folds into a slim shape for travel, café tables, and compact desks.',
+      basePrice: '279.00',
+      compareAtPrice: '329.00',
+      sku: 'FERN-PHONE-FOLD-001',
+      material: 'PLA',
+      finish: 'Matte',
+      colour: 'Fern green',
+      processingDays: 2,
+      customisationEnabled: false,
+      tags: ['phone stand', 'travel accessory', 'foldable'],
+      searchKeywords: ['phone', 'stand', 'portable mobile holder', 'compact phone dock'],
+      imageUrl: '/catalogue/minimal-phone-stand.svg',
+      altText: 'Foldable fern green 3D-printed travel phone stand',
+      quantity: 31,
+    },
+    {
+      name: 'Geometric Succulent Planter',
+      sellerSlug: 'fern-fabrication',
+      slug: 'geometric-succulent-planter',
+      shortDescription: 'A faceted planter with a hidden drainage tray for small indoor plants.',
+      fullDescription:
+        'A sculptural indoor planter with a removable liner and concealed drip tray for tidy watering.',
+      basePrice: '449.00',
+      compareAtPrice: '549.00',
+      sku: 'FERN-PLANTER-001',
+      material: 'Wood PLA',
+      finish: 'Textured',
+      colour: 'Sage',
+      processingDays: 3,
+      customisationEnabled: true,
+      tags: ['planter', 'home decor', 'succulent'],
+      searchKeywords: ['plant pot', 'geometric planter', 'indoor garden'],
+      imageUrl: '/catalogue/geometric-planter.svg',
+      altText: 'Sage geometric 3D-printed succulent planter',
+      quantity: 15,
+    },
+  ] as const;
+
+  for (const searchProductSeed of searchProductSeeds) {
+    const categoryId = searchProductSeed.slug.includes('planter')
+      ? homeCategory.id
+      : phoneCategory.id;
+    const searchProductSeller = searchSellers.get(searchProductSeed.sellerSlug);
+    if (!searchProductSeller) throw new Error('Required seed seller could not be created');
+    const searchableProduct = await prisma.product.upsert({
+      where: { slug: searchProductSeed.slug },
+      update: {
+        sellerId: searchProductSeller.id,
+        categoryId,
+        name: searchProductSeed.name,
+        shortDescription: searchProductSeed.shortDescription,
+        fullDescription: searchProductSeed.fullDescription,
+        basePrice: searchProductSeed.basePrice,
+        compareAtPrice: searchProductSeed.compareAtPrice,
+        material: searchProductSeed.material,
+        finish: searchProductSeed.finish,
+        colour: searchProductSeed.colour,
+        processingDays: searchProductSeed.processingDays,
+        customisationEnabled: searchProductSeed.customisationEnabled,
+        tags: [...searchProductSeed.tags],
+        searchKeywords: [...searchProductSeed.searchKeywords],
+        status: ProductStatus.PUBLISHED,
+        publishedAt: new Date(),
+      },
+      create: {
+        sellerId: searchProductSeller.id,
+        categoryId,
+        name: searchProductSeed.name,
+        slug: searchProductSeed.slug,
+        shortDescription: searchProductSeed.shortDescription,
+        fullDescription: searchProductSeed.fullDescription,
+        basePrice: searchProductSeed.basePrice,
+        compareAtPrice: searchProductSeed.compareAtPrice,
+        sku: searchProductSeed.sku,
+        material: searchProductSeed.material,
+        finish: searchProductSeed.finish,
+        colour: searchProductSeed.colour,
+        processingDays: searchProductSeed.processingDays,
+        shippingOrigin: 'Pune, Maharashtra',
+        customisationEnabled: searchProductSeed.customisationEnabled,
+        ipDeclaration: 'Original seller design available for marketplace production.',
+        tags: [...searchProductSeed.tags],
+        searchKeywords: [...searchProductSeed.searchKeywords],
+        status: ProductStatus.PUBLISHED,
+        publishedAt: new Date(),
+      },
+    });
+
+    await prisma.productImage.upsert({
+      where: { id: `seed-${searchProductSeed.slug}-primary` },
+      update: {
+        url: searchProductSeed.imageUrl,
+        altText: searchProductSeed.altText,
+        isPrimary: true,
+      },
+      create: {
+        id: `seed-${searchProductSeed.slug}-primary`,
+        productId: searchableProduct.id,
+        url: searchProductSeed.imageUrl,
+        altText: searchProductSeed.altText,
+        isPrimary: true,
+      },
+    });
+
+    await prisma.inventory.upsert({
+      where: { productId: searchableProduct.id },
+      update: { quantity: searchProductSeed.quantity },
+      create: { productId: searchableProduct.id, quantity: searchProductSeed.quantity },
+    });
+  }
 
   await prisma.favourite.upsert({
     where: { userId_productId: { userId: buyer.id, productId: product.id } },
