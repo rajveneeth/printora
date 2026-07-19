@@ -20,7 +20,7 @@ export const categories: readonly CategorySummary[] = [
     slug: 'desk-workspace',
     description: 'Organisers, stands, and tools designed to make work feel lighter.',
     imageUrl: '/catalogue/desk-organiser.svg',
-    productCount: 2,
+    productCount: 4,
   },
   {
     id: 'category-phone',
@@ -182,9 +182,12 @@ interface ProductSeed {
   readonly dimensions: string;
   readonly weightGrams: number;
   readonly processingDays: number;
+  readonly estimatedDeliveryDays?: number;
   readonly customisable?: boolean;
   readonly stock: number;
   readonly highlights: readonly string[];
+  readonly tags?: readonly string[];
+  readonly searchKeywords?: readonly string[];
   readonly createdAt: string;
   readonly popularity: number;
 }
@@ -223,9 +226,12 @@ const createProduct = (seed: ProductSeed): CatalogueProduct => ({
   dimensions: seed.dimensions,
   weightGrams: seed.weightGrams,
   processingDays: seed.processingDays,
+  estimatedDeliveryDays: seed.estimatedDeliveryDays ?? seed.processingDays + 4,
   customisable: seed.customisable ?? false,
   stock: seed.stock,
   highlights: seed.highlights,
+  tags: seed.tags ?? [],
+  searchKeywords: seed.searchKeywords ?? [],
   createdAt: seed.createdAt,
   popularity: seed.popularity,
   variants: createVariants(seed),
@@ -255,8 +261,64 @@ export const products: readonly CatalogueProduct[] = [
     customisable: true,
     stock: 18,
     highlights: ['Cable pass-through', 'Case-friendly ledge', 'Non-slip felt feet'],
+    tags: ['phone stand', 'desk accessory', 'charging'],
+    searchKeywords: ['mobile holder', 'smartphone stand', 'phone dock'],
     createdAt: '2026-06-22',
     popularity: 98,
+  }),
+  createProduct({
+    id: 'product-phone-adjustable',
+    name: 'Adjustable Phone Stand',
+    slug: 'adjustable-phone-stand',
+    shortDescription: 'A tilting phone stand for calls, recipes, and comfortable viewing.',
+    description:
+      'A smooth pin joint lets you set a comfortable viewing angle while the broad ledge supports larger phones and protective cases. The folding rear support keeps the footprint stable.',
+    categorySlug: 'phone-electronics-accessories',
+    sellerSlug: 'makeform-works',
+    priceInPaise: 49900,
+    rating: 4.7,
+    reviewCount: 88,
+    imageUrl: '/catalogue/minimal-phone-stand.svg',
+    material: 'PETG',
+    availableMaterials: ['PETG', 'PLA'],
+    colours: ['Charcoal', 'Forest green', 'Stone'],
+    dimensions: '9 × 8 × 13 cm',
+    weightGrams: 146,
+    processingDays: 3,
+    customisable: true,
+    stock: 16,
+    highlights: ['Adjustable viewing angle', 'Case-friendly ledge', 'Stable folding support'],
+    tags: ['phone stand', 'adjustable stand', 'video calls'],
+    searchKeywords: ['mobile holder', 'smartphone stand', 'desk phone stand'],
+    createdAt: '2026-07-15',
+    popularity: 94,
+  }),
+  createProduct({
+    id: 'product-phone-foldable',
+    name: 'Foldable Travel Phone Stand',
+    slug: 'foldable-travel-phone-stand',
+    shortDescription: 'A pocket-sized phone stand that folds flat for travel and commutes.',
+    description:
+      'This lightweight stand folds into a slim shape that slips into a pouch or laptop sleeve. Two viewing positions make it useful for train journeys, café tables, and compact desks.',
+    categorySlug: 'phone-electronics-accessories',
+    sellerSlug: 'pixel-crafts',
+    priceInPaise: 27900,
+    compareAtPriceInPaise: 32900,
+    rating: 4.6,
+    reviewCount: 54,
+    imageUrl: '/catalogue/minimal-phone-stand.svg',
+    material: 'PLA',
+    availableMaterials: ['PLA', 'PETG'],
+    colours: ['Fern green', 'Clay', 'Warm cream'],
+    dimensions: '8 × 6 × 1.5 cm folded',
+    weightGrams: 62,
+    processingDays: 2,
+    stock: 31,
+    highlights: ['Folds flat', 'Two viewing positions', 'Pocket-friendly shape'],
+    tags: ['phone stand', 'travel accessory', 'foldable'],
+    searchKeywords: ['portable mobile holder', 'phone stand', 'compact phone dock'],
+    createdAt: '2026-07-17',
+    popularity: 89,
   }),
   createProduct({
     id: 'product-dragon',

@@ -1,8 +1,11 @@
 export {
   buildCatalogueHref,
   calculateDiscountPercentage,
+  catalogueColours,
   catalogueMaterials,
+  catalogueSellerLocations,
   catalogueSortOptions,
+  createCatalogueResult,
   findCategoryBySlug,
   findProductBySlug,
   formatPrice,

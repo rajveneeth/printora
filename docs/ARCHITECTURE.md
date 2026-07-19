@@ -109,3 +109,14 @@ tests/
 - Client Component boundaries are limited to the mobile navigation, mobile filter drawer, product gallery, wishlist feedback, and product option selection.
 - Local SVG product artwork is stored under `public/catalogue` so marketplace pages remain visually stable and do not depend on third-party image hosts.
 - Public marketplace routes provide loading, empty, error, and not-found recovery states without exposing technical error details.
+
+## Prompt 6 search decisions
+
+- `/search` is dynamic and uses a dedicated Prisma repository. It exposes only published products owned by approved, active sellers.
+- Keyword matching is deterministic across product names, descriptions, category names, maker names, material, tags, and search keywords. Relevance is calculated with explicit field weights after the database has selected matching public records.
+- The search service owns typed Zod-normalised parameters and a repository contract so a future dedicated search provider can replace Prisma without changing route components.
+- Category, price, material, colour, rating, customisation, seller location, processing time, delivery estimate, stock, sort, and pagination state remain in the URL.
+- The shared autocomplete client debounces `/api/search/suggestions`, validates its response, caps results at five, exposes combobox semantics, supports keyboard selection, and announces asynchronous result counts.
+- Recent searches are a bounded browser-only preference. Server-owned catalogue results are not duplicated into client state.
+- Search includes initial guidance, loading skeletons, normal results, empty recovery, suggestion failure, and database-unavailable states.
+- The implementation is deterministic database search. No AI or semantic-search integration is configured.

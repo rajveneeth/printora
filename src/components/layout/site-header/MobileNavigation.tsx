@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Heart, Menu, Package, Search, UserRound, X } from 'lucide-react';
+import { Heart, Menu, Package, UserRound, X } from 'lucide-react';
 import type { CategorySummary } from '@/features/catalogue';
+import { SearchAutocomplete } from '@/features/search';
 import styles from './SiteHeader.module.scss';
 
 export interface MobileNavigationProps {
@@ -27,13 +28,14 @@ export function MobileNavigation({ categories }: MobileNavigationProps) {
       </button>
       {isOpen ? (
         <div className={styles.mobilePanel} id="mobile-navigation-panel">
-          <form className={styles.mobileSearch} action="/products" role="search">
-            <Search size={18} aria-hidden="true" />
-            <label className="sr-only" htmlFor="mobile-site-search">
-              Search the marketplace
-            </label>
-            <input id="mobile-site-search" name="q" type="search" placeholder="Search products" />
-          </form>
+          <div className={styles.mobileSearchSlot}>
+            <SearchAutocomplete
+              id="mobile-site-search"
+              compact
+              placeholder="Search products"
+              onNavigate={() => setIsOpen(false)}
+            />
+          </div>
           <nav aria-label="Mobile marketplace navigation">
             <Link href="/products" onClick={() => setIsOpen(false)}>
               Shop all products

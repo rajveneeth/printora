@@ -1,0 +1,182 @@
+.root {
+  position: relative;
+  width: 100%;
+}
+
+.inputShell {
+  display: grid;
+  min-height: 3.4rem;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  padding-left: var(--space-5);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.inputShell:focus-within {
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus-ring) 32%, transparent);
+}
+
+.inputShell > svg {
+  color: var(--muted-foreground);
+}
+
+.inputShell input {
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: var(--font-size-base);
+}
+
+.inputShell button {
+  display: inline-flex;
+  min-height: 3.4rem;
+  align-items: center;
+  gap: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding-inline: var(--space-5);
+  font-size: var(--font-size-sm);
+  font-weight: 800;
+}
+
+.inputShell button:hover {
+  background: var(--primary-hover);
+}
+
+.panel {
+  position: absolute;
+  z-index: 80;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  left: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+}
+
+.panelHeading {
+  display: flex;
+  min-height: 2.5rem;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  padding-inline: var(--space-4);
+  color: var(--muted-foreground);
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+  letter-spacing: var(--letter-spacing-label);
+  text-transform: uppercase;
+}
+
+.panelHeading button {
+  min-height: 2rem;
+  border: 0;
+  background: transparent;
+  color: var(--primary);
+  font: inherit;
+  text-transform: none;
+}
+
+.option {
+  display: grid;
+  width: 100%;
+  min-height: 3.75rem;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-3);
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink);
+  padding: var(--space-2) var(--space-4);
+  text-align: left;
+}
+
+.option:last-child {
+  border-bottom: 0;
+}
+
+.option:hover,
+.option[aria-selected='true'] {
+  background: var(--surface-subtle);
+}
+
+.optionIcon {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: var(--radius-pill);
+  background: var(--sky);
+  color: var(--primary);
+}
+
+.option > span:last-child {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.option b {
+  font-size: var(--font-size-sm);
+}
+
+.option small {
+  overflow: hidden;
+  color: var(--muted-foreground);
+  font-size: var(--font-size-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.option mark {
+  border-radius: 0.15rem;
+  background: var(--sky);
+  color: var(--primary);
+}
+
+.panelState {
+  color: var(--muted-foreground);
+  padding: var(--space-5);
+  font-size: var(--font-size-sm);
+}
+
+.root[data-compact='true'] .inputShell {
+  min-height: 2.9rem;
+  background: var(--surface-subtle);
+  padding-left: var(--space-4);
+}
+
+.root[data-compact='true'] .inputShell button {
+  min-height: 2.9rem;
+}
+
+@media (max-width: 42rem) {
+  .inputShell {
+    min-height: 3rem;
+    padding-left: var(--space-4);
+  }
+
+  .inputShell button {
+    min-width: 3rem;
+    min-height: 3rem;
+    justify-content: center;
+    padding-inline: var(--space-3);
+  }
+
+  .inputShell button span {
+    display: none;
+  }
+}

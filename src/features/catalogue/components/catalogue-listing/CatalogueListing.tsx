@@ -22,6 +22,7 @@ function HiddenFilterFields({ filters, includeCategory }: HiddenFilterFieldsProp
         <input type="hidden" name="category" value={filters.category} />
       ) : null}
       {filters.material ? <input type="hidden" name="material" value={filters.material} /> : null}
+      {filters.colour ? <input type="hidden" name="colour" value={filters.colour} /> : null}
       {filters.minPrice !== undefined ? (
         <input type="hidden" name="minPrice" value={filters.minPrice} />
       ) : null}
@@ -33,6 +34,15 @@ function HiddenFilterFields({ filters, includeCategory }: HiddenFilterFieldsProp
       ) : null}
       {filters.customisable ? <input type="hidden" name="customisable" value="true" /> : null}
       {filters.inStock ? <input type="hidden" name="inStock" value="true" /> : null}
+      {filters.sellerLocation ? (
+        <input type="hidden" name="location" value={filters.sellerLocation} />
+      ) : null}
+      {filters.maximumProcessingDays !== undefined ? (
+        <input type="hidden" name="processingDays" value={filters.maximumProcessingDays} />
+      ) : null}
+      {filters.maximumDeliveryDays !== undefined ? (
+        <input type="hidden" name="deliveryDays" value={filters.maximumDeliveryDays} />
+      ) : null}
     </>
   );
 }
@@ -43,6 +53,8 @@ export function CatalogueListing({
   result,
   categories,
   materials,
+  colours = [],
+  sellerLocations = [],
   pathname,
   showCategory = true,
 }: CatalogueListingProps) {
@@ -58,6 +70,7 @@ export function CatalogueListing({
         }
       : null,
     filters.material ? { key: 'material', label: filters.material } : null,
+    filters.colour ? { key: 'colour', label: filters.colour } : null,
     filters.minPrice !== undefined ? { key: 'minPrice', label: `From ₹${filters.minPrice}` } : null,
     filters.maxPrice !== undefined
       ? { key: 'maxPrice', label: `Up to ₹${filters.maxPrice}` }
@@ -67,6 +80,13 @@ export function CatalogueListing({
       : null,
     filters.customisable ? { key: 'customisable', label: 'Customisable' } : null,
     filters.inStock ? { key: 'inStock', label: 'In stock' } : null,
+    filters.sellerLocation ? { key: 'location', label: filters.sellerLocation } : null,
+    filters.maximumProcessingDays !== undefined
+      ? { key: 'processingDays', label: `Dispatch in ${filters.maximumProcessingDays} days` }
+      : null,
+    filters.maximumDeliveryDays !== undefined
+      ? { key: 'deliveryDays', label: `Delivery in ${filters.maximumDeliveryDays} days` }
+      : null,
   ].filter((chip): chip is { key: string; label: string } => chip !== null);
 
   return (
@@ -92,6 +112,8 @@ export function CatalogueListing({
               categories={categories}
               filters={filters}
               materials={materials}
+              colours={colours}
+              sellerLocations={sellerLocations}
               pathname={pathname}
               showCategory={showCategory}
               idPrefix="mobile-catalogue"
@@ -134,6 +156,8 @@ export function CatalogueListing({
             categories={categories}
             filters={filters}
             materials={materials}
+            colours={colours}
+            sellerLocations={sellerLocations}
             pathname={pathname}
             showCategory={showCategory}
             idPrefix="desktop-catalogue"

@@ -1,6 +1,6 @@
 # Formivo 3D
 
-Formivo 3D is a full-stack marketplace foundation for ready-made and custom 3D-printed products. The current implementation includes Prompt 5: a responsive buyer storefront, category discovery, product listing, URL-based filtering and sorting, pagination, product details, and reusable catalogue components on top of the existing authentication, design-system, and database foundation.
+Formivo 3D is a full-stack marketplace foundation for ready-made and custom 3D-printed products. The current implementation includes Prompt 6: deterministic database search, category-guided discovery, accessible suggestions, recent searches, persistent URL filters, responsive result states, and the existing buyer storefront and catalogue foundation.
 
 ## Product identity
 
@@ -82,13 +82,17 @@ tests/
 .github/workflows/
 ```
 
-Server Components compose public catalogue pages from typed catalogue service results. Filters, sort order, and page selection remain in URL search parameters. Focused Client Components handle navigation drawers, the product gallery, product options, and wishlist feedback. Catalogue money is represented in paise and formatted centrally as INR.
+Server Components compose public catalogue pages from typed catalogue and search services. The `/search` route queries published products from approved active sellers through a Prisma repository and deterministically ranks the returned catalogue records. Filters, sort order, and page selection remain in URL search parameters. Focused Client Components handle autocomplete, recent-search storage, navigation drawers, the product gallery, product options, and wishlist feedback. Catalogue money is represented in paise and formatted centrally as INR.
 
 ## Local setup
 
 ```bash
 pnpm install
+docker compose up -d postgres
 cp .env.example .env
+pnpm db:generate
+pnpm db:migrate
+pnpm db:seed
 pnpm dev
 ```
 
@@ -123,7 +127,7 @@ pnpm build
 3. Database schema, repository contracts, model contracts, Docker PostgreSQL setup, and seed data.
 4. Authentication, sessions, roles, and permissions.
 5. Customer storefront, categories, products, and discovery.
-6. Search suggestions, filters, sorting, and accessible keyboard flows.
+6. Deterministic database search, suggestions, recent searches, persistent filters, and accessible keyboard flows.
 7. Custom requests, quotations, and custom projects.
 8. Seller dashboard and product/order management.
 9. Admin moderation, content, settings, and audit workflows.
@@ -135,8 +139,9 @@ The visual foundation follows the approved green reference: fern primary actions
 
 ## Known limitations
 
-- Prompt 5 uses a typed deterministic catalogue source shaped for a repository adapter; expanding the Prisma seed and switching the public service to Prisma remains part of the later database integration pass.
-- Search autocomplete, persisted wishlist/cart state, checkout, payments, shipping, seller dashboards, and admin moderation are intentionally assigned to later prompts.
+- The homepage and `/products` catalogue still use the typed deterministic catalogue fixture from Prompt 5; `/search` is the first public product-discovery route backed by Prisma.
+- Search uses deterministic field matching and application ranking. No semantic or AI search provider is configured or claimed.
+- Persisted wishlist/cart state, checkout, payments, shipping, seller dashboards, and admin moderation are intentionally assigned to later prompts.
 - Local credential authentication is available from Prompt 4; optional Google OAuth and Razorpay adapters remain deferred.
 
 ## Catalogue routes
@@ -146,3 +151,12 @@ The visual foundation follows the approved green reference: fern primary actions
 - `/categories` — browse all active product categories
 - `/categories/[slug]` — category-specific catalogue results
 - `/products/[slug]` — product media, options, seller trust details, and related products
+- `/search` — database-backed keyword search, category guidance, URL filters, sorting, and result states
+- `/api/search/suggestions?q=phone` — typed product, category, seller, and popular-search suggestions
+
+## Search and discovery
+
+- Search parameters are validated with Zod and include keyword, category, price, material, colour, rating, customisation, seller location, processing time, delivery estimate, stock, sort, and page.
+- Suggestion requests begin after two characters, debounce in the browser, return at most five entries, and support Arrow Up, Arrow Down, Enter, and Escape.
+- Submitted searches are stored only in local browser storage, capped at five unique recent entries, and retain optional category context.
+- The development seed includes minimal, adjustable, and foldable phone stands for the guided phone-stand workflow.

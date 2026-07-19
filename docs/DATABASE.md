@@ -25,7 +25,7 @@ pnpm db:seed
 pnpm db:reset
 ```
 
-`pnpm db:seed` runs `prisma/seed.ts`. The seed is idempotent and creates a buyer, an approved seller, starter categories, one published product, images, variants, inventory, an address, and a favourite.
+`pnpm db:seed` runs `prisma/seed.ts`. The seed is idempotent and creates a buyer, three approved sellers, starter categories, a desk organiser, three phone-stand variants, a planter, local product images, inventory, an address, and a favourite.
 
 ## Core entities
 
@@ -43,6 +43,8 @@ pnpm db:reset
 - Favourites are unique per user and product.
 - Cart items are unique per cart, product, and variant.
 - Seller stores and product slugs are unique for stable public URLs.
+- Product tags and search keywords use PostgreSQL arrays with GIN indexes for deterministic discovery queries.
+- Search also indexes product creation date and base price for common result ordering and filtering paths.
 
 ## Deferred integrations
 
@@ -50,4 +52,4 @@ Payment verification, payment events, shipment tracking, external file storage, 
 
 ## Migration files
 
-The initial Prisma migration directory is present under `prisma/migrations/20260717074700_init`. Regenerate and apply the full SQL migration with `pnpm db:migrate` after dependencies are installed and PostgreSQL is running.
+The initial Prisma migration is under `prisma/migrations/20260717074700_init`. Prompt 6 adds `prisma/migrations/20260719120000_search_discovery` for tags and search indexes. Apply both with `pnpm db:migrate` after dependencies are installed and PostgreSQL is running.
