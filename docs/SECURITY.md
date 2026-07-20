@@ -17,6 +17,8 @@
 
 Current fixed-window counters use an atomic PostgreSQL upsert. Keys contain a SHA-256 hash of the scope, normalised identifier, time window, and `RATE_LIMIT_SECRET`, so raw IP/email identifiers are not stored in the bucket table.
 
+Forwarded client addresses are ignored by default. Behind a controlled proxy chain, `TRUSTED_PROXY_HOPS` must match the exact number of trusted hops and direct access to the application must be blocked. The rate limiter then selects and validates the address relative to the trusted end of `X-Forwarded-For`, so client-prepended values cannot create new buckets.
+
 | Surface            | Identity   | Limit             |
 | ------------------ | ---------- | ----------------- |
 | Sign-in            | IP + email | 5 per 15 minutes  |

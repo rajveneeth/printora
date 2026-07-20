@@ -10,6 +10,7 @@ Copy `.env.example` to `.env` for local development. `.env` and `.env*.local` ar
 | `NEXT_PUBLIC_APP_URL`               | Production     | Public absolute origin used for canonical metadata, sitemap, and robots; no secret                  |
 | `DATABASE_URL`                      | Runtime        | PostgreSQL connection URL; use TLS in production                                                    |
 | `RATE_LIMIT_SECRET`                 | Production     | Server-only random pepper, minimum 32 characters; the development default is rejected in production |
+| `TRUSTED_PROXY_HOPS`                | No             | Exact trusted reverse-proxy hop count, integer 0–10; defaults to `0` (forwarding headers ignored)   |
 | `PAYMENT_PROVIDER`                  | No             | `mock` by default or `razorpay`                                                                     |
 | `ALLOW_MOCK_PAYMENTS_IN_PRODUCTION` | No             | Must remain `false` for commerce; explicit demo escape hatch only                                   |
 | `RAZORPAY_KEY_ID`                   | With Razorpay  | Provider key ID returned to Razorpay Checkout when needed                                           |
@@ -72,6 +73,7 @@ Configure `https://your-origin.example/api/payments/razorpay/webhook` for `payme
 - Use the hosting platform’s encrypted secret manager.
 - Use a least-privileged PostgreSQL role, TLS, pooling appropriate to the runtime, automated backups, and restoration tests.
 - Run `pnpm db:deploy` once before shifting traffic to code that depends on the new schema.
+- Set `TRUSTED_PROXY_HOPS` only when direct application access is blocked and every listed hop is controlled; the application selects the address relative to the trusted end of `X-Forwarded-For` rather than trusting its attacker-controlled first entry.
 - Keep mock payments disabled unless the deployment is explicitly a non-commerce demo.
 - Do not expose server values with a `NEXT_PUBLIC_` prefix.
 
