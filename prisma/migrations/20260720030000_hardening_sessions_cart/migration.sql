@@ -1,6 +1,11 @@
 ALTER TABLE "Cart"
 ADD COLUMN "expiresAt" TIMESTAMP(3);
 
+-- Sessions created before bearer-token hardening contain the raw cookie value.
+-- Convert them before the application starts looking sessions up by digest.
+UPDATE "Session"
+SET "token" = encode(sha256(convert_to("token", 'UTF8')), 'hex');
+
 ALTER TABLE "CartItem"
 ADD COLUMN "lineKey" TEXT;
 
