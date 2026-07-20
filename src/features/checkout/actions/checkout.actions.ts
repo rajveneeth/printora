@@ -92,7 +92,11 @@ export const createCheckoutAction = async (values: unknown): Promise<CheckoutAct
   try {
     const session = await requireSession();
     const service = new CheckoutService(checkoutRepository, createPaymentProvider());
-    return await service.createCheckout(session.user.id, createCheckoutSchema.parse(values));
+    return await service.createCheckout(
+      session.user.id,
+      session.id,
+      createCheckoutSchema.parse(values),
+    );
   } catch (error) {
     return { status: 'error', message: actionFailureMessage(error) };
   }

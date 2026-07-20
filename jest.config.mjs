@@ -17,6 +17,14 @@ const config = {
       },
     ],
   },
+  coverageThreshold: {
+    global: {
+      branches: 40,
+      functions: 45,
+      lines: 70,
+      statements: 70,
+    },
+  },
 };
 
 export default config;

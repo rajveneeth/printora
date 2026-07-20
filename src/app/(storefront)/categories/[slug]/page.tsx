@@ -21,7 +21,11 @@ export interface CategoryPageProps {
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const category = findCategoryBySlug((await params).slug);
   if (!category) return { title: 'Category not found' };
-  return { title: category.name, description: category.description };
+  return {
+    title: category.name,
+    description: category.description,
+    alternates: { canonical: `/categories/${category.slug}` },
+  };
 }
 
 export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {

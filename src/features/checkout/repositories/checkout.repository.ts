@@ -303,6 +303,7 @@ export class PrismaCheckoutRepository {
         const checkout = await transaction.checkoutSession.create({
           data: {
             userId: input.userId,
+            sessionId: input.sessionId,
             orderId: order.id,
             addressId: address.id,
             idempotencyKey: input.checkout.idempotencyKey,
@@ -473,6 +474,9 @@ export class PrismaCheckoutRepository {
           await transaction.sellerOrderFulfilment.updateMany({
             where: { orderId: payment.orderId },
             data: { status: OrderStatus.PAID },
+          });
+          await transaction.cartItem.deleteMany({
+            where: { cart: { userId: payment.order.buyerId } },
           });
           return { status: 'SUCCEEDED', orderNumber: payment.order.orderNumber };
         }

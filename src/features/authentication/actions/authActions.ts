@@ -1,16 +1,20 @@
 'use server';
 
 import { Prisma } from '@prisma/client';
+import type { Route } from 'next';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import {
   clearSessionCookie,
   createSession,
-  setSessionCookie,
   getCurrentSession,
+  setSessionCookie,
 } from '@/lib/auth/session';
+import { getRequestMetadata } from '@/lib/auth/request';
 import { createSellerSlugBase, normaliseCredentialEmail } from '@/lib/auth/credentials';
 import { hashPassword, verifyPassword } from '@/lib/auth/password';
+import { resolvePostAuthPath } from '@/lib/auth/roles';
+import { enforceRateLimit, RateLimitExceededError } from '@/lib/security';
 import { signInSchema, signUpSchema } from '../schemas';
 
 export interface AuthActionState {
@@ -20,6 +24,37 @@ export interface AuthActionState {
 const getStringValue = (formData: FormData, key: string): string => {
   const value = formData.get(key);
   return typeof value === 'string' ? value : '';
+};
+
+const invalidCredentialHash = hashPassword('invalid-credential-sentinel');
+
+const authRateLimitMessage = (error: unknown): AuthActionState | null => {
+  if (!(error instanceof RateLimitExceededError)) return null;
+  const minutes = Math.max(1, Math.ceil(error.retryAfterInSeconds / 60));
+  return {
+    message: `Too many attempts. Try again in about ${minutes} minute${minutes === 1 ? '' : 's'}.`,
+  };
+};
+
+const enforceAuthLimits = async (
+  operation: 'sign-in' | 'sign-up',
+  email: string,
+): Promise<Awaited<ReturnType<typeof getRequestMetadata>>> => {
+  const metadata = await getRequestMetadata();
+  const ipAddress = metadata.ipAddress ?? 'unknown';
+  await Promise.all([
+    enforceRateLimit(`${ipAddress}:${email}`, {
+      scope: `${operation}:identity`,
+      limit: operation === 'sign-in' ? 5 : 3,
+      windowInMilliseconds: operation === 'sign-in' ? 15 * 60_000 : 60 * 60_000,
+    }),
+    enforceRateLimit(ipAddress, {
+      scope: `${operation}:ip`,
+      limit: operation === 'sign-in' ? 30 : 10,
+      windowInMilliseconds: operation === 'sign-in' ? 15 * 60_000 : 60 * 60_000,
+    }),
+  ]);
+  return metadata;
 };
 
 const createUniqueSellerSlug = async (name: string): Promise<string> => {
@@ -38,8 +73,7 @@ const getConstraintMessage = (error: unknown): AuthActionState | null => {
     return null;
   }
   return {
-    message:
-      'An account or seller profile already exists with these details. Please sign in or adjust your seller name.',
+    message: 'An account could not be created with those details.',
   };
 };
 
@@ -57,11 +91,19 @@ export const signUpAction = async (
     return { message: 'Enter a valid name, email, password, and role.' };
   }
   const email = normaliseCredentialEmail(parsed.data.email);
+  let requestMetadata: Awaited<ReturnType<typeof getRequestMetadata>>;
+  try {
+    requestMetadata = await enforceAuthLimits('sign-up', email);
+  } catch (error) {
+    return (
+      authRateLimitMessage(error) ?? { message: 'Account creation is temporarily unavailable.' }
+    );
+  }
   const existingUser = await prisma.user.findFirst({
     where: { email: { equals: email, mode: 'insensitive' } },
   });
   if (existingUser) {
-    return { message: 'An account already exists for this email.' };
+    return { message: 'An account could not be created with those details.' };
   }
   const storeSlug =
     parsed.data.role === 'SELLER' ? await createUniqueSellerSlug(parsed.data.name) : '';
@@ -99,7 +141,7 @@ export const signUpAction = async (
           : {}),
       },
     });
-    const token = await createSession(user.id);
+    const token = await createSession(user.id, requestMetadata);
     await setSessionCookie(token);
   } catch (error) {
     const constraintMessage = getConstraintMessage(error);
@@ -108,7 +150,7 @@ export const signUpAction = async (
     }
     throw error;
   }
-  redirect(parsed.data.role === 'SELLER' ? '/seller' : '/account');
+  redirect(resolvePostAuthPath(parsed.data.role, getStringValue(formData, 'returnTo')) as Route);
 };
 
 export const signInAction = async (
@@ -123,33 +165,43 @@ export const signInAction = async (
     return { message: 'Enter a valid email and password.' };
   }
   const email = normaliseCredentialEmail(parsed.data.email);
+  let requestMetadata: Awaited<ReturnType<typeof getRequestMetadata>>;
+  try {
+    requestMetadata = await enforceAuthLimits('sign-in', email);
+  } catch (error) {
+    return authRateLimitMessage(error) ?? { message: 'Sign-in is temporarily unavailable.' };
+  }
   const account = await prisma.account.findUnique({
     include: { user: true },
     where: { providerId_accountId: { providerId: 'credentials', accountId: email } },
   });
-  if (
-    !account?.password ||
-    !verifyPassword(parsed.data.password, account.password) ||
-    account.user.status !== 'ACTIVE'
-  ) {
+  const passwordMatches = verifyPassword(
+    parsed.data.password,
+    account?.password ?? invalidCredentialHash,
+  );
+  if (!account?.password || !passwordMatches || account.user.status !== 'ACTIVE') {
     return { message: 'Email or password is incorrect.' };
   }
+  const previousSession = await getCurrentSession();
+  if (previousSession) {
+    await prisma.session.update({
+      where: { id: previousSession.id },
+      data: { revokedAt: new Date() },
+    });
+  }
   await prisma.user.update({ data: { lastActiveAt: new Date() }, where: { id: account.userId } });
-  const token = await createSession(account.userId);
+  const token = await createSession(account.userId, requestMetadata);
   await setSessionCookie(token);
-  redirect(
-    account.user.role === 'ADMIN'
-      ? '/admin'
-      : account.user.role === 'SELLER'
-        ? '/seller'
-        : '/account',
-  );
+  redirect(resolvePostAuthPath(account.user.role, getStringValue(formData, 'returnTo')) as Route);
 };
 
 export const signOutAction = async (): Promise<void> => {
   const session = await getCurrentSession();
   if (session) {
-    await prisma.session.deleteMany({ where: { token: session.token } });
+    await prisma.session.updateMany({
+      where: { id: session.id, revokedAt: null },
+      data: { revokedAt: new Date() },
+    });
   }
   await clearSessionCookie();
   redirect('/sign-in');

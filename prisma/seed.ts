@@ -7,6 +7,10 @@ import {
   UserRole,
 } from '@prisma/client';
 import { hashPassword } from '../src/lib/auth/password';
+import {
+  products as catalogueProducts,
+  sellers as catalogueSellers,
+} from '../src/features/catalogue/data/catalogue.data';
 
 const prisma = new PrismaClient();
 const demoPassword = 'Formivo123!';
@@ -197,6 +201,48 @@ async function main() {
       },
     });
     searchSellers.set(searchSellerSeed.storeSlug, searchSeller);
+  }
+
+  for (const catalogueSeller of catalogueSellers) {
+    if (searchSellers.has(catalogueSeller.slug)) continue;
+    const catalogueSellerUser = await prisma.user.upsert({
+      where: { email: `${catalogueSeller.slug}@formivo.local` },
+      update: { name: catalogueSeller.name, role: UserRole.SELLER },
+      create: {
+        email: `${catalogueSeller.slug}@formivo.local`,
+        emailVerified: true,
+        name: catalogueSeller.name,
+        role: UserRole.SELLER,
+      },
+    });
+    const catalogueSellerProfile = await prisma.sellerProfile.upsert({
+      where: { storeSlug: catalogueSeller.slug },
+      update: {
+        storeName: catalogueSeller.name,
+        originCity: catalogueSeller.city,
+        originState: catalogueSeller.state,
+        supportedMaterials: [...catalogueSeller.supportedMaterials],
+        verificationStatus: SellerVerificationStatus.APPROVED,
+        averageRating: catalogueSeller.rating.toFixed(2),
+        completedOrderCount: catalogueSeller.completedOrders,
+      },
+      create: {
+        userId: catalogueSellerUser.id,
+        storeName: catalogueSeller.name,
+        storeSlug: catalogueSeller.slug,
+        description: `Verified Formivo maker based in ${catalogueSeller.city}.`,
+        contactEmail: catalogueSellerUser.email,
+        originCity: catalogueSeller.city,
+        originState: catalogueSeller.state,
+        originPostalCode: '000000',
+        supportedMaterials: [...catalogueSeller.supportedMaterials],
+        printTechnologies: ['FDM'],
+        verificationStatus: SellerVerificationStatus.APPROVED,
+        averageRating: catalogueSeller.rating.toFixed(2),
+        completedOrderCount: catalogueSeller.completedOrders,
+      },
+    });
+    searchSellers.set(catalogueSeller.slug, catalogueSellerProfile);
   }
 
   const pendingSellerUser = await prisma.user.upsert({
@@ -611,6 +657,101 @@ async function main() {
         where: { variantId: variant.id },
         update: { quantity: searchProductSeed.quantity },
         create: { variantId: variant.id, quantity: searchProductSeed.quantity },
+      });
+    }
+  }
+
+  for (const catalogueProduct of catalogueProducts) {
+    const catalogueSeller = searchSellers.get(catalogueProduct.seller.slug);
+    const catalogueCategory = categories.find(
+      (category) => category.slug === catalogueProduct.category.slug,
+    );
+    if (!catalogueSeller || !catalogueCategory) {
+      throw new Error(`Missing catalogue relation for ${catalogueProduct.slug}`);
+    }
+    const productValues = {
+      sellerId: catalogueSeller.id,
+      categoryId: catalogueCategory.id,
+      name: catalogueProduct.name,
+      shortDescription: catalogueProduct.shortDescription,
+      fullDescription: catalogueProduct.description,
+      basePrice: (catalogueProduct.priceInPaise / 100).toFixed(2),
+      compareAtPrice:
+        catalogueProduct.compareAtPriceInPaise === undefined
+          ? null
+          : (catalogueProduct.compareAtPriceInPaise / 100).toFixed(2),
+      maxOrderQuantity: catalogueProduct.stock,
+      dimensions: catalogueProduct.dimensions,
+      weightGrams: catalogueProduct.weightGrams,
+      material: catalogueProduct.material,
+      finish: catalogueProduct.finish,
+      colour: catalogueProduct.colours[0] ?? null,
+      processingDays: catalogueProduct.processingDays,
+      shippingOrigin: `${catalogueProduct.seller.city}, ${catalogueProduct.seller.state}`,
+      customisationEnabled: catalogueProduct.customisable,
+      tags: [...catalogueProduct.tags],
+      searchKeywords: [...catalogueProduct.searchKeywords, catalogueProduct.name],
+      status: ProductStatus.PUBLISHED,
+      publishedAt: new Date(catalogueProduct.createdAt),
+    };
+    const databaseProduct = await prisma.product.upsert({
+      where: { slug: catalogueProduct.slug },
+      update: productValues,
+      create: {
+        id: catalogueProduct.id,
+        slug: catalogueProduct.slug,
+        sku: `CAT-${catalogueProduct.slug.toUpperCase()}`,
+        ipDeclaration: 'Seeded catalogue design approved for Formivo demonstration.',
+        ...productValues,
+      },
+    });
+    await prisma.productImage.upsert({
+      where: { id: `catalogue-${catalogueProduct.id}-primary` },
+      update: {
+        url: catalogueProduct.imageUrl,
+        altText: catalogueProduct.name,
+        isPrimary: true,
+      },
+      create: {
+        id: `catalogue-${catalogueProduct.id}-primary`,
+        productId: databaseProduct.id,
+        url: catalogueProduct.imageUrl,
+        altText: catalogueProduct.name,
+        isPrimary: true,
+      },
+    });
+    await prisma.inventory.upsert({
+      where: { productId: databaseProduct.id },
+      update: { quantity: catalogueProduct.stock },
+      create: { productId: databaseProduct.id, quantity: catalogueProduct.stock },
+    });
+    for (const [variantIndex, catalogueVariant] of catalogueProduct.variants.entries()) {
+      const databaseVariant = await prisma.productVariant.upsert({
+        where: { id: catalogueVariant.id },
+        update: {
+          name: catalogueVariant.name,
+          material: catalogueVariant.material,
+          colour: catalogueVariant.colour,
+          finish: catalogueVariant.finish,
+          priceDelta: (catalogueVariant.priceDeltaInPaise / 100).toFixed(2),
+          isActive: true,
+        },
+        create: {
+          id: catalogueVariant.id,
+          productId: databaseProduct.id,
+          name: catalogueVariant.name,
+          sku: `CAT-${catalogueProduct.slug.toUpperCase()}-V${variantIndex + 1}`,
+          material: catalogueVariant.material,
+          colour: catalogueVariant.colour,
+          finish: catalogueVariant.finish,
+          priceDelta: (catalogueVariant.priceDeltaInPaise / 100).toFixed(2),
+          isActive: true,
+        },
+      });
+      await prisma.inventory.upsert({
+        where: { variantId: databaseVariant.id },
+        update: { quantity: catalogueProduct.stock },
+        create: { variantId: databaseVariant.id, quantity: catalogueProduct.stock },
       });
     }
   }

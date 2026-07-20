@@ -1,5 +1,24 @@
 # Implementation Plan
 
+## Prompt 10 delivery checklist
+
+- Add 30-day anonymous-cart retention, idempotent server cart merging, authenticated cart persistence, shared-browser isolation, and checkout cart clearing.
+- Hash stored bearer session tokens, trace carts with non-secret session IDs, capture bounded request context, rotate sessions, and preserve safe post-login destinations.
+- Enforce exact seller/admin workspaces, protect checkout in the request proxy, rate-limit authentication/search, bound webhook payloads, and apply production security headers.
+- Add root and route error recovery, complete metadata endpoints, focus trapping, unique ARIA IDs, reduced-motion support, responsive overflow fixes, and image/performance configuration.
+- Replace placeholder CI with database migration/seed, coverage, type, lint, format, Prisma, and production-build gates.
+- Document environment variables, architecture, deployment, security, rate limiting, quality review, demo credentials, seed behavior, and known limitations.
+- Remove unused environment placeholders, dependencies, scripts, and reference-only repository artifacts.
+
+## Prompt 10 validation record
+
+- Prisma client generation and schema validation pass with Prisma 6.19; all seven committed migrations apply successfully to PostgreSQL 16.
+- The idempotent seed runs successfully and mirrors all 14 public catalogue products for authoritative cart and checkout validation.
+- Strict TypeScript, ESLint, Prettier, Jest/React Testing Library with coverage, and the Next.js webpack production build pass.
+- The complete Jest suite contains 41 suites and 95 tests, including anonymous-to-account cart adoption, revoked-session detection, and sign-out isolation.
+- Production smoke tests return `307` safe-return redirects for anonymous `/checkout`, `/seller`, and `/admin` requests, `200` for public metadata, and the documented security headers.
+- Historical Prompt 7–9 notes about an unavailable Docker daemon are superseded by this completed PostgreSQL validation.
+
 ## Prompt 9 delivery checklist
 
 - Preserve Prompt 1–8 authentication, catalogue, search, seller, cart, checkout, payment, design-system, and repository boundaries.
@@ -84,14 +103,10 @@
 | Project foundation                                           | 1      |
 | Green design system                                          | 2      |
 | Prisma, model contracts, repository contracts, and seed data | 3      |
-| Better Auth and roles                                        | 4      |
+| Credential authentication and roles                          | 4      |
 | Storefront catalogue                                         | 5      |
 | Search                                                       | 6      |
 | Seller dashboard and product management                      | 7      |
 | Cart, addresses, checkout, payment, and order creation       | 8      |
 | Orders, reviews, administration, permissions, and audit      | 9      |
 | Quality, visual review, deployment                           | 10     |
-
-## Deferred quality gate note
-
-The CI quality gate note originated after Prompt 1 because the marketplace is not fully implemented yet. The configured lint, typecheck, test, build, migration, seed, and visual review steps must return in Prompt 10 before the MVP is considered complete.

@@ -29,9 +29,14 @@ export class CheckoutService {
     private readonly paymentProvider: PaymentProviderAdapter,
   ) {}
 
-  async createCheckout(userId: string, input: CreateCheckoutInput): Promise<CheckoutActionResult> {
+  async createCheckout(
+    userId: string,
+    sessionId: string,
+    input: CreateCheckoutInput,
+  ): Promise<CheckoutActionResult> {
     const pendingCheckout = await this.repository.createPendingCheckout({
       userId,
+      sessionId,
       provider: this.paymentProvider.provider,
       checkout: input,
     });

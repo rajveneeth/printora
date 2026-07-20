@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Formivo 3D">
+  <rect width="64" height="64" rx="15" fill="#174a3a"/>
+  <path d="M17 18h31v9H27v8h18v9H27v14H17z" fill="#f8f5ed"/>
+  <circle cx="48" cy="17" r="6" fill="#e7ad5c"/>
+</svg>

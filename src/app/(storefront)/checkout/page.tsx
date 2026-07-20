@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function CheckoutPage() {
-  const session = await requireSession();
+  const session = await requireSession('/checkout');
   const addresses = (await new PrismaAddressRepository(prisma).listByUser(session.user.id)).filter(
     (address) => address.kind !== 'BILLING',
   );
